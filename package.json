@@ -18,7 +18,8 @@
     "publish": "pnpm run rm && pnpm run clean && pnpm run pnpm",
     "clean": "pnpm cache clean",
     "pnpm": "pnpm install",
-    "git-push": "git push --tags"
+    "git-push": "git push --tags",
+    "prepublishOnly": "pnpm run tsc"
   },
   "devDependencies": {
     "@bemedev/npm-publish": "^0.0.1-pnpm2",
