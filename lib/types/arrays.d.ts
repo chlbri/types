@@ -12,5 +12,13 @@ export type ReduceArrayByKey<T, K extends string> = ReduceArray<T> extends Recor
 export type Reverse<T> = T extends [] ? T : T extends [infer Head, ...infer Tail] ? [...Reverse<Tail>, Head] : T;
 export type _NArrayOmit<T extends readonly object[], K extends keyof T[number] = never> = Extract<UnionOmit<T[number], K>, object>;
 export type NArrayOmit<T extends readonly object[], K extends keyof T[number] = never> = _NArrayOmit<T, K> extends infer N extends object ? UnionToTuple<N> : never;
+export type ExtractArray<T extends any[], U> = T extends [
+    infer A,
+    ...infer B
+] ? A extends U ? [A, ...ExtractArray<B, U>] : [...ExtractArray<B, U>] : [];
+export type ExcludeArray<T extends any[], U> = T extends [
+    infer A,
+    ...infer B
+] ? A extends U ? ExcludeArray<B, U> : [A, ...ExcludeArray<B, U>] : [];
 export {};
 //# sourceMappingURL=arrays.d.ts.map
