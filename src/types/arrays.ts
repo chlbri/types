@@ -1,4 +1,4 @@
-import { NOmit } from './objects';
+import type { UnionOmit, UnionToTuple } from './unions';
 
 export type IndexOfArray<
   T extends readonly unknown[],
@@ -13,8 +13,8 @@ type _DivideBy<
 > = T['length'] extends N
   ? [true]
   : T extends readonly [...TupleOf<T[number], N>, ...infer U]
-  ? [true, ..._DivideBy<N, U>]
-  : never;
+    ? [true, ..._DivideBy<N, U>]
+    : never;
 
 export type DivideTupleLengthBy<
   N extends number,
@@ -37,40 +37,29 @@ export type TupleOf<T = any, N extends number = number> = N extends N
 
 export type GetTupleType<T> = T extends TupleOf<infer U, any> ? U : never;
 
-export type GetTupleNumber<T> = T extends TupleOf<any, infer U>
-  ? U
-  : never;
+export type GetTupleNumber<T> =
+  T extends TupleOf<any, infer U> ? U : never;
 
-type _UnionToIntersection<U> = (
-  U extends any ? (k: U) => void : never
-) extends (k: infer I) => void
-  ? I
-  : never;
+export type ReduceArray<T> = T extends any[] ? T[number] : T;
 
-type _LastOf<T> = _UnionToIntersection<
-  T extends any ? () => T : never
-> extends () => infer R
-  ? R
-  : never;
-
-type _Push<T extends any[], V> = [...T, V];
-
-type _TuplifyUnionBoolean<T> = [T] extends [never] ? true : false;
-
-// TS4.1+
-export type TuplifyUnion<T> = true extends _TuplifyUnionBoolean<T>
-  ? []
-  : _Push<TuplifyUnion<Exclude<T, _LastOf<T>>>, _LastOf<T>>;
-
-// #endregion
+export type ReduceArrayByKey<T, K extends string> =
+  ReduceArray<T> extends Record<K, infer V> ? V : never;
 
 export type Reverse<T> = T extends []
   ? T
   : T extends [infer Head, ...infer Tail]
-  ? [...Reverse<Tail>, Head]
-  : T;
+    ? [...Reverse<Tail>, Head]
+    : T;
+
+export type _NArrayOmit<
+  T extends readonly object[],
+  K extends keyof T[number] = never,
+> = Extract<UnionOmit<T[number], K>, object>;
 
 export type NArrayOmit<
-  T extends readonly unknown[],
-  K extends keyof T[number] = keyof T[number],
-> = NOmit<T[number], K>[];
+  T extends readonly object[],
+  K extends keyof T[number] = never,
+> =
+  _NArrayOmit<T, K> extends infer N extends object
+    ? UnionToTuple<N>
+    : never;

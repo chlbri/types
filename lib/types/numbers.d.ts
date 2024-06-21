@@ -1,1 +1,2 @@
-export declare type ToString<T extends number | string> = `${T}`;
+export type ToString<T extends number | string> = `${T}`;
+//# sourceMappingURL=numbers.d.ts.map

@@ -1,4 +1,3 @@
-import { expectType } from 'tsd';
 import { Domain } from './domain';
 
 const useCase1 = {
@@ -12,7 +11,7 @@ const useCase2 = {
 
 declare const domain: Domain<[typeof useCase1, typeof useCase2]>;
 
-expectType<{
+expectTypeOf<{
   useCase1: (arg1: number, arg2: number) => number;
   useCase2: (arg1: boolean, arg2: boolean) => boolean;
 }>(domain);

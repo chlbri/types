@@ -1,47 +1,89 @@
 {
   "name": "@bemedev/types",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "https://github.com/chlbri/types.git",
   "author": "chlbri <bri_lvi@icloud.com>",
   "license": "MIT",
-  "main": "index.js",
-  "typings": "index.d.ts",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib/index.js",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    },
+    "./colors": {
+      "import": "./lib/colors.js",
+      "require": "./lib/colors.cjs"
+    },
+    "./colors/*": {
+      "import": "./lib/colors/*.js",
+      "require": "./lib/colors/*.cjs"
+    },
+    "./functions": {
+      "import": "./lib/functions.js",
+      "require": "./lib/functions.cjs"
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "tsc": "tsc",
-    "build": "pnpm run tsc && pnpm run lint",
-    "test": "jest",
+    "config": "pnpm install",
+    "config:off": "pnpm run config --offline",
+    "ci": "pnpm run config:off && pnpm run lint && pnpm run build && pnpm run test:coverage && pnpm run build",
+    "ci:admin": "pnpm run rm && pnpm run ci",
+    "rollup": "rollup -c",
+    "build": "pnpm rm:lib && pnpm run rollup",
+    "rm": "rm -rf node_modules pnpm-lock.yaml",
+    "rinit": "pnpm run rm && pnpm run config",
+    "rinit:off": "pnpm run rm && pnpm run config:off",
+    "test": "pnpm run test:coverage --no-coverage",
+    "post:test": "vitest run -c vitest.post.config.ts",
+    "test:coverage": "vitest run",
+    "test:watch": "vitest",
+    "rm:lib": "rm -rf lib",
+    "clean": "pnpm run remove && pnpm run config",
     "prettier": "prettier --write \"src/**/*.{ts,tsx}\"",
     "eslint": "eslint \"{src/**/*,App}.{ts,tsx}\"",
     "lint": "pnpm run prettier && pnpm run eslint --fix",
-    "rm": "./node_modules/.bin/rimraf -rf node_modules pnpm-lock.yaml",
-    "rinit": "yarn run rm && yarn cache clean && pnpm run pnpm",
-    "publish": "pnpm run rm && pnpm run clean && pnpm run pnpm",
-    "clean": "pnpm cache clean",
-    "pnpm": "pnpm install",
-    "git-push": "git push --tags",
-    "prepublishOnly": "pnpm run tsc"
+    "lint-watch": "onchange --await-write-finish 5500 \"**/*\" -- pnpm run lint",
+    "prepublishOnly": "",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@bemedev/npm-publish": "^0.0.1-pnpm2",
-    "@types/faker": "^6.6.9",
-    "@types/jest": "^27.4.0",
-    "@typescript-eslint/eslint-plugin": "^5.12.0",
-    "@typescript-eslint/parser": "^5.12.0",
-    "dayjs": "^1.10.7",
-    "edit-json-file": "^1.7.0",
-    "eslint": "^8.9.0",
-    "faker": "^6.6.6",
-    "immer": "^9.0.12",
-    "jest": "^27.5.1",
-    "jest-cucumber": "^3.0.1",
-    "jest-extended": "^2.0.0",
-    "nanoid": "^3.3.1",
-    "prettier": "^2.5.1",
-    "rimraf": "^3.0.2",
-    "shelljs": "^0.8.5",
-    "ts-jest": "^27.1.3",
-    "tsd": "^0.19.1",
-    "typescript": "^4.5.5"
+    "@bemedev/fsf": "^0.7.0",
+    "@bemedev/vitest-alias": "^0.0.3",
+    "@bemedev/vitest-cov-exclude": "^0.0.2",
+    "@bemedev/vitest-exclude": "^0.0.2",
+    "@bemedev/vitest-extended": "^0.3.5",
+    "@types/node": "^20.12.8",
+    "@types/rollup-plugin-peer-deps-external": "^2.2.5",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "@vitest/coverage-v8": "^1.5.2",
+    "eslint": "^8.57.0",
+    "glob": "^10.4.2",
+    "husky": "^9.0.11",
+    "@bemedev/types": "link:",
+    "onchange": "^7.1.0",
+    "prettier": "^3.3.2",
+    "pretty-quick": "^4.0.0",
+    "promisify-child-process": "^4.1.2",
+    "rollup": "^4.14.1",
+    "rollup-plugin-node-externals": "^7.1.2",
+    "rollup-plugin-tsc-alias": "^1.1.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.4",
+    "vitest": "1.6.0"
   },
-  "repository": "https://github.com/chlbri/types.git"
+  "repository": {
+    "url": "https://github.com/chlbri/types.git",
+    "type": "git"
+  }
 }

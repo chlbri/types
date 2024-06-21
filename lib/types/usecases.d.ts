@@ -2,3 +2,4 @@ export interface IUseCase<N extends string = string, F extends (...args: any[]) 
     call: F;
     readonly __name: N;
 }
+//# sourceMappingURL=usecases.d.ts.map
