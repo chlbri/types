@@ -63,3 +63,21 @@ export type NArrayOmit<
   _NArrayOmit<T, K> extends infer N extends object
     ? UnionToTuple<N>
     : never;
+
+export type ExtractArray<T extends any[], U> = T extends [
+  infer A,
+  ...infer B,
+]
+  ? A extends U
+    ? [A, ...ExtractArray<B, U>]
+    : [...ExtractArray<B, U>]
+  : [];
+
+export type ExcludeArray<T extends any[], U> = T extends [
+  infer A,
+  ...infer B,
+]
+  ? A extends U
+    ? ExcludeArray<B, U>
+    : [A, ...ExcludeArray<B, U>]
+  : [];
