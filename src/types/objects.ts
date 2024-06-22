@@ -177,13 +177,14 @@ type WithChildren<
 
 type DefaultK<S extends string, D extends string> = S extends '' ? D : S;
 
+// #region type _FlatMapByKey
 export type _FlatMapByKey<
   T extends object,
-  _omit extends string,
+  _omit extends PickKeysBy<T, object>,
   _withChildren extends boolean = false,
   Delimiter extends string = '.',
   Keys extends string = '',
-  K extends string = keyof T[Extract<_omit, keyof T>] & string,
+  K extends string = keyof T[_omit] & string,
 > = T extends {
   [Key in _omit]?: any;
 }
@@ -219,15 +220,17 @@ export type _FlatMapByKey<
         _withChildren
       >;
     };
+// #endregion
 
 type FlatMapByKeyOptions = {
   with?: boolean;
   delimiter?: string;
 };
 
+// #region type FlatMapByKeys
 export type FlatMapByKeys<
   T extends object,
-  _omit extends string,
+  _omit extends PickKeysBy<T, object>,
   options extends FlatMapByKeyOptions = {
     with: false;
     delimiter: '.';
@@ -240,3 +243,4 @@ export type FlatMapByKeys<
     options['delimiter'] extends infer D extends string ? D : '.'
   >
 >;
+// #endregion
