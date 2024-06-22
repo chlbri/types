@@ -227,7 +227,7 @@ type FlatMapByKeyOptions = {
 
 export type FlatMapByKeys<
   T extends object,
-  _omit extends PickKeysBy<T, object>,
+  _omit extends string,
   options extends FlatMapByKeyOptions = {
     with: false;
     delimiter: '.';
