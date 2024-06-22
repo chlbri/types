@@ -1,9 +1,9 @@
-import { IndexOfArray, NArrayOmit, Reverse } from './arrays';
+import { IndexOfArray, NArrayOmit, ReverseArray } from './arrays';
 
 declare const indexOfArray1: IndexOfArray<['index1', 'index 2', 3]>;
 declare const indexOfArray2: IndexOfArray<['index1', 'retr']>;
-declare const arrayReverse1: Reverse<['index1', 'index2', 3]>;
-declare const arrayReverse2: Reverse<['index1', 'retr']>;
+declare const arrayReverse1: ReverseArray<['index1', 'index2', 3]>;
+declare const arrayReverse2: ReverseArray<['index1', 'retr']>;
 declare const arrayOmit: NArrayOmit<
   [
     { value: 3; name: '3'; data: true },

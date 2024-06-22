@@ -1,6 +1,6 @@
 {
   "name": "@bemedev/types",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "https://github.com/chlbri/types.git",
   "author": "chlbri <bri_lvi@icloud.com>",
   "license": "MIT",
@@ -8,24 +8,6 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib/index.js",
-  "exports": {
-    ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.cjs"
-    },
-    "./colors": {
-      "import": "./lib/colors.js",
-      "require": "./lib/colors.cjs"
-    },
-    "./colors/*": {
-      "import": "./lib/colors/*.js",
-      "require": "./lib/colors/*.cjs"
-    },
-    "./functions": {
-      "import": "./lib/functions.js",
-      "require": "./lib/functions.cjs"
-    }
-  },
   "files": [
     "lib"
   ],

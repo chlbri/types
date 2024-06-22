@@ -13,6 +13,7 @@ describe('#1 => t.anify & t.identity & notUndefined & constants', () => {
     'symbol',
     'bigint',
     'function',
+    'object',
   ] as const;
 
   const cTests = CONSTANTS.map(c => [
@@ -34,7 +35,7 @@ describe('#1 => t.anify & t.identity & notUndefined & constants', () => {
   );
 });
 
-describe('#2 => t.object & t.readonlyObject', () => {
+describe('#2 => t.buildObject & t.deepReadonly & t.deepNotReadOnly & t.notReadOnly & t.readonly', () => {
   const tests = [
     ['simple object', [{ a: 1 }], { a: 1 }],
     [
@@ -44,14 +45,13 @@ describe('#2 => t.object & t.readonlyObject', () => {
     ],
   ] satisfies TestArgs<(arg: any) => any>;
 
-  describe('#1 => t.object', () => {
-    const useTests = createTests(t.object);
-    useTests(...tests);
-  });
-
-  describe('#2 => t.readonlyObject', () => {
-    const useTests = createTests(t.readonlyObject);
-    useTests(...tests);
+  (
+    ['deepReadonly', 'deepNotReadOnly', 'notReadOnly', 'readonly'] as const
+  ).forEach((type, index) => {
+    describe(`#${index + 1} => t.${type}`, () => {
+      const useTests = createTests(t[type]);
+      useTests(...tests);
+    });
   });
 });
 

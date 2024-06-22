@@ -34,23 +34,23 @@ export type AddString<
 export type StringEndWith<
   S extends string,
   E extends string,
-> = S extends `${infer S1}${E}`
-  ? { response: true; data: S1; full: S }
-  : { response: false; data: S };
+> = S extends `${infer Prev}${E}`
+  ? { response: true; full: S; prev: Prev }
+  : { response: false; full: S; prev: S };
 
 export type StringStartWith<
   S extends string,
   E extends string,
-> = S extends `${E}${infer S1}`
-  ? { response: true; data: S1; full: S }
-  : { response: false; data: S };
+> = S extends `${E}${infer Next}`
+  ? { response: true; full: S; next: Next }
+  : { response: false; full: S; next: S };
 
 export type StringContains<
   S extends string,
   E extends string,
-> = S extends `${string}${E}${string}`
-  ? { response: true; data: S }
-  : { response: false; data: S };
+> = S extends `${infer Prev}${E}${infer Next}`
+  ? { response: true; full: S; prev: Prev; next: Next }
+  : { response: false; full: S; prev: string; next: string };
 
 /**
  * Credit to {@link https://stackoverflow.com/a/70831818/11704485 | Matthieu Riegler}

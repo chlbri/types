@@ -4,13 +4,29 @@ import type { UnionToIntersection } from './unions';
 
 export type NOmit<T, K extends keyof T> = Omit<T, K>;
 
+export type ReverseMap<T extends Record<string, string>> = {
+  [K in keyof T as T[K]]: K;
+};
+
 export type DeepReadonly<T> = T extends Primitive
   ? T
-  : { readonly [P in keyof T]: DeepReadonly<T[P]> };
+  : {
+      readonly [P in keyof T]: T[P] extends Fn
+        ? T[P]
+        : T[P] extends object
+          ? DeepReadonly<T[P]>
+          : T[P];
+    };
 
 export type DeepPartial<T> = T extends Primitive
   ? T
-  : { [P in keyof T]?: DeepPartial<T[P]> };
+  : {
+      [P in keyof T]?: T[P] extends Fn
+        ? T[P]
+        : T[P] extends object
+          ? DeepPartial<T[P]>
+          : T[P];
+    };
 
 export type DeepNotUndefined<T extends object | undefined> = NotUndefined<{
   [P in keyof T]-?: T[P] extends Fn
@@ -24,12 +40,6 @@ export type NotReadonly<T extends object> = {
   -readonly [P in keyof T]: T[P];
 };
 
-export type ValuesOf<T, U = any> = Extract<T[keyof T], U>;
-export type ObjectValuesOf<T> = Exclude<
-  Extract<ValuesOf<T>, object>,
-  Array<any>
->;
-
 export type DeepNotReadonly<T extends object> = NotReadonly<{
   [P in keyof T]: T[P] extends Fn
     ? T[P]
@@ -37,6 +47,12 @@ export type DeepNotReadonly<T extends object> = NotReadonly<{
       ? DeepNotReadonly<T[P]>
       : T[P];
 }>;
+
+export type ValuesOf<T, U = any> = Extract<T[keyof T], U>;
+export type ObjectValuesOf<T> = Exclude<
+  Extract<ValuesOf<T>, object>,
+  Array<any>
+>;
 
 export type Require<T, K extends keyof T> = NOmit<T, K> &
   Required<Pick<T, K>>;
@@ -129,7 +145,7 @@ type TransformFlatKeys<
 > = S extends ''
   ? Delimiter
   : S extends string
-    ? StringEndWith<S, Delimiter>['data']
+    ? StringEndWith<S, Delimiter>['prev']
     : never;
 
 /**

@@ -45,10 +45,10 @@ export type ReduceArray<T> = T extends any[] ? T[number] : T;
 export type ReduceArrayByKey<T, K extends string> =
   ReduceArray<T> extends Record<K, infer V> ? V : never;
 
-export type Reverse<T> = T extends []
+export type ReverseArray<T> = T extends []
   ? T
   : T extends [infer Head, ...infer Tail]
-    ? [...Reverse<Tail>, Head]
+    ? [...ReverseArray<Tail>, Head]
     : T;
 
 export type _NArrayOmit<
