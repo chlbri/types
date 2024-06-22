@@ -171,19 +171,19 @@ export type StringKeys<
 
 type WithChildren<
   T,
-  _omit extends PickKeysBy<T, object>,
+  _omit extends string,
   _withChildren extends boolean = false,
-> = _withChildren extends true ? T : NOmit<T, _omit>;
+> = _withChildren extends true ? T : Omit<T, _omit>;
 
 type DefaultK<S extends string, D extends string> = S extends '' ? D : S;
 
 export type _FlatMapByKey<
   T extends object,
-  _omit extends PickKeysBy<T, object>,
+  _omit extends string,
   _withChildren extends boolean = false,
   Delimiter extends string = '.',
   Keys extends string = '',
-  K extends string = keyof T[_omit] & string,
+  K extends string = keyof T[Extract<_omit, keyof T>] & string,
 > = T extends {
   [Key in _omit]?: any;
 }
