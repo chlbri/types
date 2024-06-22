@@ -45,13 +45,17 @@ describe('#2 => t.buildObject & t.deepReadonly & t.deepNotReadOnly & t.notReadOn
     ],
   ] satisfies TestArgs<(arg: any) => any>;
 
-  (
-    ['deepReadonly', 'deepNotReadOnly', 'notReadOnly', 'readonly'] as const
-  ).forEach((type, index) => {
-    describe(`#${index + 1} => t.${type}`, () => {
-      const useTests = createTests(t[type]);
-      useTests(...tests);
-    });
+  const eachs = t.tuple(
+    'deepReadonly',
+    'deepNotReadOnly',
+    'notReadOnly',
+    'readonly',
+    'buildObject',
+  );
+
+  describe.each(eachs)('#%# => t.%s', type => {
+    const useTests = createTests(t[type]);
+    useTests(...tests);
   });
 });
 
