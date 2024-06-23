@@ -1,4 +1,4 @@
-import type { DeepNotReadonly, NotReadonly } from '../types';
+import type { NotReadonly } from '../types';
 import type { NotUndefined } from '../types/common';
 
 export function anify<T>(value?: unknown) {
@@ -25,11 +25,6 @@ const notUndefined = <T>(value: T) => {
 
 const notReadOnly = <const T extends object>(value: T) =>
   anify<NotReadonly<T>>(value);
-
-const deepNotReadOnly = <const T extends object>(value: T) =>
-  anify<DeepNotReadonly<T>>(value);
-
-const deepReadonly = <const T>(value: T) => value;
 
 export const typings = {
   /**
@@ -99,11 +94,8 @@ export const typings = {
   readonlyArray,
   tuple,
   notUndefined,
-  readonly: <const T extends object>(value: T) =>
-    anify<Readonly<DeepNotReadonly<T>>>(value),
-  deepReadonly,
+  readonly: <const T>(value: T) => value,
   notReadOnly,
-  deepNotReadOnly,
 };
 
 export const t = typings;

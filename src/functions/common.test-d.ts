@@ -41,7 +41,7 @@ expectTypeOf(tuple1).toEqualTypeOf<[1, 2, 3]>();
 
 expectTypeOf<1 | 2 | 3>(t.union(1, 2, 3));
 expectTypeOf<{ readonly a: 43; readonly b: 32 }>(
-  t.deepReadonly({ a: 43, b: 32 }),
+  t.readonly({ a: 43, b: 32 }),
 );
 expectTypeOf<{ a: 43; b: 32 }>(t.buildObject({ a: 43, b: 32 }));
 
@@ -54,7 +54,7 @@ expectTypeOf<string>(t.notUndefined(notUn2));
 const notUnd3 = t.notUndefined(undefined);
 expectTypeOf<never>(notUnd3);
 
-const deepReadonly1 = t.deepReadonly({
+const deepReadonly1 = t.readonly({
   a: 1,
   b: {
     c: 2,
@@ -93,13 +93,6 @@ expectTypeOf(t.notReadOnly(deepReadonly1)).toEqualTypeOf<{
   };
 }>();
 
-expectTypeOf(t.deepNotReadOnly(deepReadonly1)).toEqualTypeOf<{
-  a: 1;
-  b: {
-    c: 2;
-  };
-}>();
-
 const readonly1 = t.readonly({
   a: 1,
   b: {
@@ -107,14 +100,14 @@ const readonly1 = t.readonly({
   },
 });
 
-expectTypeOf(readonly1).toEqualTypeOf<{
+expectTypeOf(readonly1).not.toEqualTypeOf<{
   readonly a: 1;
   readonly b: {
     c: 2;
   };
 }>();
 
-expectTypeOf(readonly1).not.toEqualTypeOf<{
+expectTypeOf(readonly1).toEqualTypeOf<{
   readonly a: 1;
   readonly b: {
     readonly c: 2;

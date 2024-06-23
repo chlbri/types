@@ -37,16 +37,8 @@ export type DeepNotUndefined<T extends object | undefined> = NotUndefined<{
 }>;
 
 export type NotReadonly<T extends object> = {
-  -readonly [P in keyof T]: T[P];
+  -readonly [P in keyof T]-?: T[P];
 };
-
-export type DeepNotReadonly<T extends object> = NotReadonly<{
-  [P in keyof T]: T[P] extends Fn
-    ? T[P]
-    : T[P] extends object
-      ? DeepNotReadonly<T[P]>
-      : T[P];
-}>;
 
 export type ValuesOf<T, U = any> = Extract<T[keyof T], U>;
 export type ObjectValuesOf<T> = Exclude<
