@@ -17,9 +17,6 @@ importers:
       '@bemedev/vitest-alias':
         specifier: ^0.0.3
         version: 0.0.3(vitest@1.6.0(@types/node@20.14.7))
-      '@bemedev/vitest-cov-exclude':
-        specifier: ^0.0.2
-        version: 0.0.2(glob@10.4.2)(vitest@1.6.0(@types/node@20.14.7))
       '@bemedev/vitest-exclude':
         specifier: ^0.0.2
         version: 0.0.2(glob@10.4.2)(vitest@1.6.0(@types/node@20.14.7))
@@ -117,14 +114,6 @@ packages:
     resolution: {integrity: sha512-vityTbBADqeprxluVQyprk46lMo8dehtorJEa2RoUoHdKgLm/GOv4WJC9Ngd2mD9RE+Xp3xFDKtQEYWSsSlDjA==}
     engines: {node: '>=20'}
     peerDependencies:
-      vitest: ^1.5.2
-
-  '@bemedev/vitest-cov-exclude@0.0.2':
-    resolution: {integrity: sha512-tMj+KSwiCMsjh8kvMJToQOR32gbJWArUUoF4G9KWKSCsBYHk3NccKwznhXfcGlXEl2UAisPd8+G5WRIhHFj6eA==}
-    engines: {node: '>=20'}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    peerDependencies:
-      glob: ^10.3.15
       vitest: ^1.5.2
 
   '@bemedev/vitest-exclude@0.0.2':
@@ -1540,11 +1529,6 @@ snapshots:
 
   '@bemedev/vitest-alias@0.0.3(vitest@1.6.0(@types/node@20.14.7))':
     dependencies:
-      vitest: 1.6.0(@types/node@20.14.7)
-
-  '@bemedev/vitest-cov-exclude@0.0.2(glob@10.4.2)(vitest@1.6.0(@types/node@20.14.7))':
-    dependencies:
-      glob: 10.4.2
       vitest: 1.6.0(@types/node@20.14.7)
 
   '@bemedev/vitest-exclude@0.0.2(glob@10.4.2)(vitest@1.6.0(@types/node@20.14.7))':
