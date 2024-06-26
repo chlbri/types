@@ -5,6 +5,8 @@ export type NExclude<T, U extends T> = Exclude<T, U>;
 
 export type NotUndefined<T> = Exclude<T, undefined>;
 
+export type Undefiny<T> = T | undefined;
+
 export type Fn<Args extends any[] = any[], R = any> = (...args: Args) => R;
 
 export type Cast<A, B> = A extends B ? A : B;

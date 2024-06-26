@@ -72,7 +72,7 @@ export type OnPropChangedMethods<T, I extends keyof T = keyof T> = T & {
   ) => void;
 };
 
-export type Undefiny<T> = PickNotBy<T, undefined> &
+export type PartialUndefiny<T> = PickNotBy<T, undefined> &
   Partial<PickBy<T, undefined>>;
 
 export type Nullify<T> = PickNotBy<T, null> & Partial<PickBy<T, null>>;
@@ -83,7 +83,7 @@ type _OmitWithoutPartial<T, O extends string> = {
     : T[key];
 };
 
-type _OmitWithPartial<T, O extends string> = Undefiny<
+type _OmitWithPartial<T, O extends string> = PartialUndefiny<
   Nullify<_OmitWithoutPartial<T, O>>
 >;
 

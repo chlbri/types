@@ -1,5 +1,4 @@
-import type { NotReadonly } from '../types';
-import type { NotUndefined } from '../types/common';
+import type { NotReadonly, NotUndefined, Undefiny } from '../types';
 
 export function anify<T>(value?: unknown) {
   return value as T;
@@ -18,6 +17,10 @@ const tuple = <const T extends any[]>(...args: T) => anify<T>(args);
 
 const union = <const T extends any[]>(...args: T) =>
   anify<T[number]>(args[0]);
+
+const undefiny = <T>(value: T) => {
+  return anify<Undefiny<T>>(value);
+};
 
 const notUndefined = <T>(value: T) => {
   return anify<NotUndefined<T>>(value);
@@ -47,6 +50,10 @@ export const typings = {
    * value and type are undefined
    */
   undefined,
+  /**
+   * value and type are undefined
+   */
+  undefiny,
   /**
    * value is undefined, type is null
    */
