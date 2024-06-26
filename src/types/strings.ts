@@ -1,12 +1,11 @@
-import type { NUMBERS, STRINGS } from '../constants';
+import type { STRINGS } from '../constants';
+import type { Digit } from './numbers';
 
 export type LowerLetters = (typeof STRINGS.ENGLISH_LETTERS)[number];
 
 export type UpperLetters = Uppercase<LowerLetters>;
 
 export type Letters = UpperLetters | LowerLetters;
-
-export type Digit = (typeof NUMBERS.DIGITS)[number];
 
 export type StringLocalLitterals = Letters | Digit;
 

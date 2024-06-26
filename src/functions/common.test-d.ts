@@ -1,9 +1,8 @@
 import type { DeepReadonly } from '../types';
 import { t, typings } from './common';
 
-expectTypeOf(t.identity(1)).toEqualTypeOf<1>();
+expectTypeOf(t.identity(1)).toEqualTypeOf<number>();
 expectTypeOf(t.identity(1)).toMatchTypeOf(34);
-expectTypeOf(t.identity(1)).toMatchTypeOf<number>();
 expectTypeOf(t.identity('str')).not.toMatchTypeOf<number>();
 
 // #region Anify match any and unknown only

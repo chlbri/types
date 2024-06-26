@@ -1,5 +1,4 @@
 export * from './arrays';
-export * from './colors';
 export * from './common';
 export * from './domain';
 export * from './nullish';

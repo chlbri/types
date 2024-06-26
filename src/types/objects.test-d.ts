@@ -1,5 +1,11 @@
 import { anify } from '../functions/common';
-import type { FlatMapAll, FlatMapByKeys, StringKeys } from './objects';
+import type {
+  DeepNever,
+  FlatMapAll,
+  FlatMapByKeys,
+  Neverify,
+  StringKeys,
+} from './objects';
 
 type FlatTest1 = {
   a: {
@@ -182,3 +188,19 @@ assertType<{
     };
   };
 }>(anify<FlatMapByKeys3>());
+
+type Neverify1 = Neverify<{
+  a: 1;
+  b: {
+    c: 2;
+  };
+}>;
+expectTypeOf<Neverify1>().toEqualTypeOf<{
+  a: 1;
+  b: {
+    c: 2;
+  };
+}>();
+
+type Neverify2 = Neverify<DeepNever>;
+expectTypeOf<Neverify2>().toEqualTypeOf<never>();

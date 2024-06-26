@@ -4,6 +4,14 @@ import type { UnionToIntersection } from './unions';
 
 export type NOmit<T, K extends keyof T> = Omit<T, K>;
 
+export type DeepOmit<T, K extends Keys> = {
+  [P in Exclude<keyof T, K>]: T[P] extends Fn
+    ? T[P]
+    : T[P] extends object
+      ? DeepOmit<T[P], K>
+      : T[P];
+};
+
 export type ReverseMap<T extends Record<string, string>> = {
   [K in keyof T as T[K]]: K;
 };
@@ -236,3 +244,19 @@ export type FlatMapByKeys<
   >
 >;
 // #endregion
+
+interface _Never {
+  [key: Keys]: DeepNever;
+}
+
+export type DeepNever = never | _Never;
+
+export type Dn = DeepNever;
+
+export type Neverify<T extends object> = T extends DeepNever ? never : T;
+
+export type Ru = Record<Keys, unknown>;
+
+export type Rn = Record<Keys, never>;
+
+export type Ra = Record<Keys, any>;

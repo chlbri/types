@@ -35,7 +35,7 @@ describe('#1 => t.anify & t.identity & notUndefined & constants', () => {
   );
 });
 
-describe('#2 => t.buildObject & t.deepReadonly & t.deepNotReadOnly & t.notReadOnly & t.readonly', () => {
+describe('#2 => t.buildObject & t.undefiny & t.notReadOnly & t.notUndifined & t.readonly', () => {
   const tests = [
     ['simple object', [{ a: 1 }], { a: 1 }],
     [
@@ -45,7 +45,17 @@ describe('#2 => t.buildObject & t.deepReadonly & t.deepNotReadOnly & t.notReadOn
     ],
   ] satisfies TestArgs<(arg: any) => any>;
 
-  const eachs = t.tuple('notReadOnly', 'readonly', 'buildObject');
+  const eachs = t.tuple(
+    'notReadOnly',
+    'readonly',
+    'buildObject',
+    'partial',
+    'notUndefined',
+    'deepPartial',
+    'neverify',
+    'deepNotUndefined',
+    'identity',
+  );
 
   describe.each(eachs)('#%# => t.%s', type => {
     const useTests = createTests(t[type]);
