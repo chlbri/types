@@ -9,7 +9,13 @@ const useCase2 = {
   __name: 'useCase2',
 } as const;
 
-declare const domain: Domain<[typeof useCase1, typeof useCase2]>;
+/**
+ * Add definition of variable just for linting
+ */
+const domain: Domain<[typeof useCase1, typeof useCase2]> = {
+  useCase1,
+  useCase2,
+} as any;
 
 expectTypeOf<{
   useCase1: (arg1: number, arg2: number) => number;
