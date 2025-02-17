@@ -1,5 +1,5 @@
 import type { STRINGS } from '../constants';
-import type { Digit } from './numbers';
+import type { Digit } from './numbers.types';
 
 export type LowerLetters = (typeof STRINGS.ENGLISH_LETTERS)[number];
 
@@ -64,3 +64,5 @@ export type SplitStringBy<
     : S extends `${infer T}${By}${infer U}`
       ? [T, ...SplitStringBy<U, By>]
       : [S];
+
+export type ExtractS<T> = Extract<T, string>;

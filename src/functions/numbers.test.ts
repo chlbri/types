@@ -1,11 +1,11 @@
-import { DIGITS } from '../constants/numbers';
+import { DIGITS as array } from '../constants/numbers';
 import { buildTests } from './fixtures';
-import { IsDigit } from './numbers';
+import { IsDigit as fn } from './numbers';
 
-describe('#1 => isEnglishLetters', () => {
+describe('#1 => IsDigit', () => {
   buildTests({
-    fn: IsDigit,
-    array: DIGITS,
+    fn,
+    array,
     notIn: 'a',
   });
 });

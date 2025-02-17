@@ -9,11 +9,19 @@ type Args = {
 };
 
 export const buildTests = ({ fn, array, notIn }: Args) => {
-  const useTests = createTests(fn);
+  const { success } = createTests(fn);
   const tests = [
-    ...array.map(color => [color, [color], true] as any),
-    ['not in', [notIn], false],
-  ] as TestArgs<any>;
+    ...array.map((color: any) => ({
+      invite: `color ${color}`,
+      parameters: color,
+      expected: true,
+    })),
+    {
+      invite: 'not in',
+      parameters: notIn,
+      expected: false,
+    },
+  ] as TestArgs<Fn>;
 
-  useTests(...tests);
+  success(...tests)();
 };

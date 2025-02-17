@@ -1,4 +1,4 @@
-import { Domain } from './domain';
+import { Domain } from './domain.types';
 
 const useCase1 = {
   call: (arg1: number, arg2: number) => arg1 + arg2,

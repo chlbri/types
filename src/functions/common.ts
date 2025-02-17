@@ -10,74 +10,73 @@ import type {
   Undefiny,
 } from '../types';
 
-export function anify<T>(value?: unknown) {
-  return value as T;
-}
+export const _unknown = <T>(value?: unknown) => value as T;
+export const _any = <T = any>(value?: unknown) => value as T;
 
 const identity = <T>(value: T) => value;
 
 const buildObject = <T extends object>(value: T) => identity(value);
 
-const array = <T extends any[]>(...args: T) => anify<T[number][]>(args);
+const array = <T extends any[]>(...args: T) => _unknown<T[number][]>(args);
 
 const readonlyArray = <const T extends any[]>(...args: T) =>
-  anify<ReadonlyArray<T[number]>>(args);
+  _unknown<ReadonlyArray<T[number]>>(args);
 
-const tuple = <const T extends any[]>(...args: T) => anify<T>(args);
+const tuple = <const T extends any[]>(...args: T) => _unknown<T>(args);
 
 const union = <const T extends any[]>(...args: T) =>
-  anify<T[number]>(args[0]);
+  _unknown<T[number]>(args[0]);
 
 const partial = <T>(value: T) => {
-  return anify<Undefiny<T>>(value);
+  return _unknown<Undefiny<T>>(value);
 };
 
 const deepPartial = <T>(value: T) => {
-  return anify<DeepPartial<T>>(value);
+  return _unknown<DeepPartial<T>>(value);
 };
 
 const notUndefined = <T>(value?: T) => {
-  return anify<NotUndefined<T>>(value);
+  return _unknown<NotUndefined<T>>(value);
 };
 
 const deepNotUndefined = <T extends object | undefined>(value: T) => {
-  return anify<DeepNotUndefined<T>>(value);
+  return _unknown<DeepNotUndefined<T>>(value);
 };
 
 const _readonly = <const T>(value: T) => value;
 
 const notReadOnly = <const T extends object>(value: T) =>
-  anify<NotReadonly<T>>(value);
+  _unknown<NotReadonly<T>>(value);
 
-const _never = anify<never>();
+const _never = _unknown<never>();
 
 const neverify = <T extends object>(value: T) => {
-  return anify<Neverify<T>>(value);
+  return _unknown<Neverify<T>>(value);
 };
 
-const _string = anify<string>();
+const _string = _unknown<string>();
 
-const _number = anify<number>();
+const _number = _unknown<number>();
 
-const _date = anify<Date>();
+const _date = _unknown<Date>();
 
-const _boolean = anify<boolean>();
+const _boolean = _unknown<boolean>();
 
-const _null = anify<null>();
+const _null = _unknown<null>();
 
-const _symbol = anify<symbol>();
+const _symbol = _unknown<symbol>();
 
-const _bigint = anify<bigint>();
+const _bigint = _unknown<bigint>();
 
-const _object = anify<object>();
+const _object = _unknown<object>();
 
-const _function = anify<(...args: any[]) => any>();
+const _function = _unknown<(...args: any[]) => any>();
 
-const rn = anify<Rn>();
+const rn = _unknown<Rn>();
 
-const ru = anify<Ru>();
+const ru = _unknown<Ru>();
 
-const ra = anify<Ra>();
+const ra = _unknown<Ra>();
 
 export const typings = {
   /**
@@ -146,7 +145,13 @@ export const typings = {
    *
    * Otherwise, the type is ***unknown***
    */
-  anify,
+  unknown: _unknown,
+  /**
+   * return the value with a choosen type,
+   *
+   * Otherwise, the type is ***any***
+   */
+  any: _any,
   /**
    * Function to build object
    */

@@ -1,3 +1,4 @@
+import type { TimeLike } from 'fs';
 import type { DeepReadonly } from '../types';
 import { t, typings } from './common';
 
@@ -5,14 +6,31 @@ expectTypeOf(t.identity(1)).toEqualTypeOf<number>();
 expectTypeOf(t.identity(1)).toMatchTypeOf(34);
 expectTypeOf(t.identity('str')).not.toMatchTypeOf<number>();
 
-// #region Anify match any and unknown only
-expectTypeOf(typings.anify(1)).toEqualTypeOf<unknown>();
-expectTypeOf(typings.anify(1)).not.toEqualTypeOf<any>();
-expectTypeOf(typings.anify(1)).toMatchTypeOf<any>();
-expectTypeOf(typings.anify(1)).not.toMatchTypeOf<number>();
+// #region Unknown match any and unknown only
+expectTypeOf(typings.unknown(1)).toEqualTypeOf<unknown>();
+expectTypeOf(typings.unknown(1)).not.toEqualTypeOf<any>();
+expectTypeOf(typings.unknown(1)).toMatchTypeOf<any>();
+expectTypeOf(typings.unknown(1)).not.toMatchTypeOf<number>();
 // #endregion
 
-expectTypeOf<{ a: 43; b: 32 }>(t.anify<{ a: 43; b: 32 }>());
+// #region any match any and unknown only
+expectTypeOf(typings.any(1)).toMatchTypeOf<any>();
+expectTypeOf(typings.any(true)).toEqualTypeOf<any>();
+expectTypeOf(typings.any('bri')).toMatchTypeOf<unknown>();
+expectTypeOf(typings.any(Date.now)).not.toEqualTypeOf<unknown>();
+expectTypeOf(typings.any(15)).toMatchTypeOf<string>();
+expectTypeOf(typings.any(new Date())).not.toEqualTypeOf<string>();
+expectTypeOf(typings.any(new Set())).toMatchTypeOf<number>();
+expectTypeOf(typings.any(new Map())).not.toEqualTypeOf<number>();
+expectTypeOf(typings.any(new WeakMap())).toMatchTypeOf<boolean>();
+expectTypeOf(typings.any(Symbol)).not.toEqualTypeOf<boolean>();
+expectTypeOf(typings.any(1)).toMatchTypeOf<Date>();
+expectTypeOf(typings.any(1)).not.toEqualTypeOf<Date>();
+expectTypeOf(typings.any(1)).toMatchTypeOf<TimeLike>();
+expectTypeOf(typings.any(1)).not.toEqualTypeOf<TimeLike>();
+// #endregion
+
+expectTypeOf<{ a: 43; b: 32 }>(t.unknown<{ a: 43; b: 32 }>());
 expectTypeOf(t.undefined).toEqualTypeOf(undefined);
 expectTypeOf<string>(t.string).toEqualTypeOf<string>();
 expectTypeOf<number>(t.number).toEqualTypeOf<number>();

@@ -1,11 +1,11 @@
-import { anify } from '../functions/common';
+import { t } from '../functions/common';
 import type {
   DeepNever,
   FlatMapAll,
   FlatMapByKeys,
   Neverify,
   StringKeys,
-} from './objects';
+} from './objects.types';
 
 type FlatTest1 = {
   a: {
@@ -55,7 +55,7 @@ assertType<{
   'a.b.a.c': string;
   'f.a.c': string;
   'f.g': number;
-}>(anify<FlatMapAll1>());
+}>(t.any<FlatMapAll1>());
 
 type StringKeys1 = StringKeys<FlatTest1>;
 assertType<
@@ -70,7 +70,7 @@ assertType<
   | 'a.b'
   | 'a.b.a'
   | 'f.a'
->(anify<StringKeys1>());
+>(t.any<StringKeys1>());
 
 type FlatMapAll2 = FlatMapAll<FlatTest1, '/'>;
 assertType<{
@@ -104,7 +104,7 @@ assertType<{
   'a/b/a/c': string;
   'f/a/c': string;
   'f/g': number;
-}>(anify<FlatMapAll2>());
+}>(t.any<FlatMapAll2>());
 
 type StringKeys2 = StringKeys<FlatTest1, '/'>;
 assertType<
@@ -119,7 +119,7 @@ assertType<
   | 'a/b'
   | 'a/b/a'
   | 'f/a'
->(anify<StringKeys2>());
+>(t.any<StringKeys2>());
 
 type FlatMapByKeys1 = FlatMapByKeys<FlatTest1, 'a', { delimiter: '/' }>;
 assertType<{
@@ -134,7 +134,7 @@ assertType<{
     };
   };
   '/b': Record<string, never>;
-}>(anify<FlatMapByKeys1>());
+}>(t.any<FlatMapByKeys1>());
 
 type FlatTestRecursive1 = {
   a: {
@@ -164,7 +164,7 @@ assertType<{
   };
   '/b': Record<string, never>;
   '/b/c': Record<string, never>;
-}>(anify<FlatMapByKeys2>());
+}>(t.any<FlatMapByKeys2>());
 
 type FlatMapByKeys3 = FlatMapByKeys<
   FlatTestRecursive1,
@@ -187,7 +187,7 @@ assertType<{
       d: boolean;
     };
   };
-}>(anify<FlatMapByKeys3>());
+}>(t.any<FlatMapByKeys3>());
 
 type Neverify1 = Neverify<{
   a: 1;

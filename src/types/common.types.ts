@@ -18,3 +18,9 @@ export type Fn<Args extends any[] = any[], R = any> = (...args: Args) => R;
 export type Cast<A, B> = A extends B ? A : B;
 
 export type Keys = keyof any;
+
+export type Defaulted<T, U extends NonNullable<T>> = T extends
+  | undefined
+  | never
+  ? U
+  : T;

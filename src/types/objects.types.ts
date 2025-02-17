@@ -1,6 +1,6 @@
-import type { Fn, Keys, NotUndefined, Primitive } from './common';
-import { AddString, type StringEndWith } from './strings';
-import type { UnionToIntersection } from './unions';
+import type { Fn, Keys, NotUndefined, Primitive } from './common.types';
+import { AddString, type StringEndWith } from './strings.types';
+import type { UnionToIntersection } from './unions.types';
 
 export type NOmit<T, K extends keyof T> = Omit<T, K>;
 
@@ -39,7 +39,7 @@ export type DeepPartial<T> = T extends Primitive
 export type DeepNotUndefined<T extends object | undefined> = NotUndefined<{
   [P in keyof T]-?: T[P] extends Fn
     ? T[P]
-    : T[P] extends object | undefined
+    : T[P] extends object
       ? DeepNotUndefined<T[P]>
       : T[P];
 }>;
@@ -220,7 +220,6 @@ export type _FlatMapByKey<
         _withChildren
       >;
     };
-// #endregion
 
 type FlatMapByKeyOptions = {
   with?: boolean;
@@ -243,6 +242,37 @@ export type FlatMapByKeys<
     options['delimiter'] extends infer D extends string ? D : '.'
   >
 >;
+// #endregion
+
+// #region SubTypes
+type FilterFlags<Base, Condition> = {
+  [Key in keyof Base]: Base[Key] extends Condition ? Key : never;
+};
+
+type NotFilterFlags<Base, Condition> = {
+  [Key in keyof Base]: Base[Key] extends Condition ? never : Key;
+};
+
+export type AllowedNames<Base, Condition> = FilterFlags<
+  Base,
+  Condition
+>[keyof Base];
+
+export type NotAllowedNames<Base, Condition> = NotFilterFlags<
+  Base,
+  Condition
+>[keyof Base];
+
+export type SubType<Base extends object, Condition> = Pick<
+  Base,
+  AllowedNames<Base, Condition>
+>;
+
+export type NotSubType<Base extends object, Condition> = Pick<
+  Base,
+  NotAllowedNames<Base, Condition>
+>;
+
 // #endregion
 
 interface _Never {

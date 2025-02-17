@@ -1,4 +1,4 @@
-import type { Keys } from './common';
+import type { Keys } from './common.types';
 
 export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
 

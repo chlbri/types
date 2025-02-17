@@ -1,4 +1,4 @@
-import { IndexOfArray, NArrayOmit, ReverseArray } from './arrays';
+import { IndexOfArray, NArrayOmit, ReverseArray } from './arrays.types';
 
 declare const indexOfArray1: IndexOfArray<['index1', 'index 2', 3]>;
 declare const indexOfArray2: IndexOfArray<['index1', 'retr']>;

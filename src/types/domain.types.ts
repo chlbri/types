@@ -1,4 +1,4 @@
-import { IUseCase } from './usecases';
+import { IUseCase } from './usecases.types';
 
 export type Domain<T extends readonly IUseCase[]> = T['length'] extends 0
   ? unknown
