@@ -1,62 +1,10 @@
-# @bemedev/types
-
-A collection of utility TypeScript types for application development.
+# Changelog
 
 <br/>
 
-## Installation
-
-```bash
-npm install @bemedev/types
-# or
-yarn add @bemedev/types
-# or
-pnpm add @bemedev/types
-```
+All notable changes to this project will be documented in this file.
 
 <br/>
-
-## Features
-
-- Types for array manipulation
-- Types for object manipulation
-- Types for promises
-- Types for strings
-- Types for unions
-- Types for use cases
-- Types for domain
-- Types for nullable values
-
-<br/>
-
-## Usage
-
-```typescript
-import { IndexOfArray, ReverseArray } from '@bemedev/types';
-
-// Example with IndexOfArray
-type Indices = IndexOfArray<['a', 'b', 'c']>; // 0 | 1 | 2
-
-// Example with ReverseArray
-type Reversed = ReverseArray<['a', 'b', 'c']>; // ['c', 'b', 'a']
-```
-
-<br/>
-
-## Documentation
-
-For more details on the available types, check the test files:
-`src/types/*.test-d.ts`.
-
-<br/>
-
-## CHANGE_LOG
-
-<details>
-
-<summary>
-...
-</summary>
 
 ## [0.1.4] - 2025/02/17 16:30
 
@@ -88,8 +36,6 @@ For more details on the available types, check the test files:
 - N/A
 
 <br/>
-
-</details>
 
 ## License
 
