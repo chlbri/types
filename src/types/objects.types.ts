@@ -228,7 +228,7 @@ type FlatMapByKeyOptions = {
 
 // #region type FlatMapByKeys
 export type FlatMapByKeys<
-  T extends object,
+  T extends TrueO,
   _omit extends PickKeysBy<T, object>,
   options extends FlatMapByKeyOptions = {
     with: false;
@@ -290,3 +290,11 @@ export type Ru = Record<Keys, unknown>;
 export type Rn = Record<Keys, never>;
 
 export type Ra = Record<Keys, any>;
+
+export type TrueObject = object & {
+  [Symbol.iterator]?: never;
+  //@ts-expect-error - 'SymbolConstructor' does not exist on type 'object'
+  [SymbolConstructor]?: never;
+};
+
+export type TrueO = TrueObject;

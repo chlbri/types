@@ -1,4 +1,4 @@
-import { DIGITS } from '../constants/numbers';
+import { DIGITS } from '~constants';
 import type { Digit } from '../types';
 import { eq } from './utils';
 

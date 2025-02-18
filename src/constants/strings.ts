@@ -26,3 +26,5 @@ export const ENGLISH_LETTERS = [
   'y',
   'z',
 ] as const;
+
+export const DEFAULT_DELIMITER = '.';

@@ -58,6 +58,15 @@ For more details on the available types, check the test files:
 ...
 </summary>
 
+## [0.1.5] - 2025/02/18 16:00
+
+### Added
+
+- Add type TrueObject
+- Add function for FlatMapByKeys
+
+<br/>
+
 ## [0.1.4] - 2025/02/17 16:30
 
 ### Added

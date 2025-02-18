@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+## [0.1.5] - 2025/02/18 16:00
+
+### Added
+
+- Add type TrueObject
+- Add function for FlatMapByKeys
+
+<br/>
+
 ## [0.1.4] - 2025/02/17 16:30
 
 ### Added

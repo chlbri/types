@@ -48,7 +48,7 @@ const _readonly = <const T>(value: T) => value;
 const notReadOnly = <const T extends object>(value: T) =>
   _unknown<NotReadonly<T>>(value);
 
-const _never = _unknown<never>();
+const _never = _unknown<never>;
 
 const neverify = <T extends object>(value: T) => {
   return _unknown<Neverify<T>>(value);

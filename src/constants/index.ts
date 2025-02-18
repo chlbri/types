@@ -1,2 +1,2 @@
-export * as NUMBERS from './numbers';
-export * as STRINGS from './strings';
+export * from './numbers';
+export * from './strings';

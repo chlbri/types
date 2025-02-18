@@ -23,6 +23,10 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noEmit": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "baseUrl": "./src",
+    "paths": {
+      "~constants": ["./constants/index.ts"]
+    }
   }
 }

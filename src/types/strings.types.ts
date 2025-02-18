@@ -1,7 +1,7 @@
-import type { STRINGS } from '../constants';
+import type { ENGLISH_LETTERS } from '../constants';
 import type { Digit } from './numbers.types';
 
-export type LowerLetters = (typeof STRINGS.ENGLISH_LETTERS)[number];
+export type LowerLetters = (typeof ENGLISH_LETTERS)[number];
 
 export type UpperLetters = Uppercase<LowerLetters>;
 
