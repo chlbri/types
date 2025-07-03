@@ -1,3 +1,3 @@
 // export * from './constants';
-export { t } from './functions/common';
+export { commons as t } from './functions/common';
 export * from './types';

@@ -1,6 +1,5 @@
 export * from './arrays.types';
 export * from './common.types';
-export * from './domain.types';
 export * from './nullish.types';
 export * from './numbers.types';
 export * from './objects.types';

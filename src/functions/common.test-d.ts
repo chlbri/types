@@ -1,116 +1,93 @@
 import type { TimeLike } from 'fs';
-import type { DeepReadonly } from '../types';
-import { t, typings } from './common';
+import { commons } from './common';
 
-expectTypeOf(t.identity(1)).toEqualTypeOf<number>();
-expectTypeOf(t.identity(1)).toMatchTypeOf(34);
-expectTypeOf(t.identity('str')).not.toMatchTypeOf<number>();
+expectTypeOf(commons.identity(1)).toEqualTypeOf<number>();
+expectTypeOf(commons.identity(1)).toMatchTypeOf(34);
+expectTypeOf(commons.identity('str')).not.toMatchTypeOf<number>();
 
 // #region Unknown match any and unknown only
-expectTypeOf(typings.unknown(1)).toEqualTypeOf<unknown>();
-expectTypeOf(typings.unknown(1)).not.toEqualTypeOf<any>();
-expectTypeOf(typings.unknown(1)).toMatchTypeOf<any>();
-expectTypeOf(typings.unknown(1)).not.toMatchTypeOf<number>();
+expectTypeOf(commons.unknown(1)).toEqualTypeOf<unknown>();
+expectTypeOf(commons.unknown(1)).not.toEqualTypeOf<any>();
+expectTypeOf(commons.unknown(1)).toMatchTypeOf<any>();
+expectTypeOf(commons.unknown(1)).not.toMatchTypeOf<number>();
 // #endregion
 
 // #region any match any and unknown only
-expectTypeOf(typings.any(1)).toMatchTypeOf<any>();
-expectTypeOf(typings.any(true)).toEqualTypeOf<any>();
-expectTypeOf(typings.any('bri')).toMatchTypeOf<unknown>();
-expectTypeOf(typings.any(Date.now)).not.toEqualTypeOf<unknown>();
-expectTypeOf(typings.any(15)).toMatchTypeOf<string>();
-expectTypeOf(typings.any(new Date())).not.toEqualTypeOf<string>();
-expectTypeOf(typings.any(new Set())).toMatchTypeOf<number>();
-expectTypeOf(typings.any(new Map())).not.toEqualTypeOf<number>();
-expectTypeOf(typings.any(new WeakMap())).toMatchTypeOf<boolean>();
-expectTypeOf(typings.any(Symbol)).not.toEqualTypeOf<boolean>();
-expectTypeOf(typings.any(1)).toMatchTypeOf<Date>();
-expectTypeOf(typings.any(1)).not.toEqualTypeOf<Date>();
-expectTypeOf(typings.any(1)).toMatchTypeOf<TimeLike>();
-expectTypeOf(typings.any(1)).not.toEqualTypeOf<TimeLike>();
+expectTypeOf(commons.any(1)).toMatchTypeOf<any>();
+expectTypeOf(commons.any(true)).toEqualTypeOf<any>();
+expectTypeOf(commons.any('bri')).toMatchTypeOf<unknown>();
+expectTypeOf(commons.any(Date.now)).not.toEqualTypeOf<unknown>();
+expectTypeOf(commons.any(15)).toMatchTypeOf<string>();
+expectTypeOf(commons.any(new Date())).not.toEqualTypeOf<string>();
+expectTypeOf(commons.any(new Set())).toExtend<number>();
+expectTypeOf(commons.any(new Map())).not.toEqualTypeOf<number>();
+expectTypeOf(commons.any(new WeakMap())).toExtend<boolean>();
+expectTypeOf(commons.any(Symbol)).not.toEqualTypeOf<boolean>();
+expectTypeOf(commons.any(1)).toExtend<Date>();
+expectTypeOf(commons.any(1)).not.toEqualTypeOf<Date>();
+expectTypeOf(commons.any(1)).toExtend<TimeLike>();
+expectTypeOf(commons.any(1)).not.toEqualTypeOf<TimeLike>();
 // #endregion
 
-expectTypeOf<{ a: 43; b: 32 }>(t.unknown<{ a: 43; b: 32 }>());
-expectTypeOf(t.undefined).toEqualTypeOf(undefined);
-expectTypeOf<string>(t.string).toEqualTypeOf<string>();
-expectTypeOf<number>(t.number).toEqualTypeOf<number>();
-expectTypeOf<Date>(t.date).toEqualTypeOf<Date>();
-expectTypeOf(t.boolean).toEqualTypeOf<boolean>();
-expectTypeOf(t.null).toEqualTypeOf<null>();
-expectTypeOf(t.symbol).toEqualTypeOf<symbol>();
-expectTypeOf(t.bigint).toEqualTypeOf<bigint>();
-expectTypeOf(t.function).toEqualTypeOf<(...args: any) => any>();
-expectTypeOf(t.array(1, 2, 3)).toEqualTypeOf<number[]>();
-
-const readonlyArray1 = t.readonlyArray(1, 2, 3);
-expectTypeOf(readonlyArray1).toEqualTypeOf<readonly (1 | 2 | 3)[]>();
-expectTypeOf(readonlyArray1).not.toMatchTypeOf<(1 | 2 | 3)[]>();
-expectTypeOf(readonlyArray1).not.toMatchTypeOf<[1, 2, 3]>();
-expectTypeOf(readonlyArray1).toMatchTypeOf<
-  readonly (number | number | number)[]
->();
-
-const tuple1 = t.tuple(1, 2, 3);
-expectTypeOf(tuple1).toMatchTypeOf<number[]>();
-expectTypeOf(tuple1).toMatchTypeOf<[number, number, number]>();
-expectTypeOf(tuple1).not.toEqualTypeOf<[number, number, number]>();
-expectTypeOf(tuple1).toEqualTypeOf<[1, 2, 3]>();
-
-expectTypeOf<1 | 2 | 3>(t.union(1, 2, 3));
-expectTypeOf<{ readonly a: 43; readonly b: 32 }>(
-  t.readonly({ a: 43, b: 32 }),
-);
-expectTypeOf<{ a: 43; b: 32 }>(t.buildObject({ a: 43, b: 32 }));
+expectTypeOf<{ a: 43; b: 32 }>(commons.unknown<{ a: 43; b: 32 }>({}));
+expectTypeOf(commons.undefined).toEqualTypeOf(undefined);
+expectTypeOf(commons.null).toEqualTypeOf<null>();
 
 const notUn1: number | undefined = 45;
-expectTypeOf<number>(t.notUndefined(notUn1));
+expectTypeOf<number>(commons.required(notUn1));
 
 const notUn2: string | undefined = 'hello';
-expectTypeOf<string>(t.notUndefined(notUn2));
+expectTypeOf<string>(commons.required(notUn2));
 
-const notUnd3 = t.notUndefined(undefined);
+const notUnd3 = commons.required(undefined);
 expectTypeOf<never>(notUnd3);
 
-const deepReadonly1 = t.readonly({
+const deepReadonly1 = commons.readonly.deep({
   a: 1,
   b: {
     c: 2,
   },
 });
 
-expectTypeOf(deepReadonly1).toMatchTypeOf<{
+const deepReadonly2 = commons.readonly.deep.const({
+  a: 1,
+  b: {
+    c: 2,
+  },
+});
+
+expectTypeOf(deepReadonly1).toEqualTypeOf<{
   readonly a: number;
   readonly b: {
     readonly c: number;
   };
 }>();
-expectTypeOf(deepReadonly1).toMatchTypeOf<{
+expectTypeOf(deepReadonly1).toExtend<{
   readonly a: number;
   readonly b: NonNullable<unknown>;
 }>();
-expectTypeOf(deepReadonly1).toEqualTypeOf<{
+expectTypeOf(deepReadonly2).toEqualTypeOf<{
   readonly a: 1;
   readonly b: {
     readonly c: 2;
   };
 }>();
-expectTypeOf(deepReadonly1).toEqualTypeOf<
-  DeepReadonly<{
-    a: 1;
-    b: {
-      c: 2;
-    };
-  }>
->();
 
-expectTypeOf(t.notReadOnly(deepReadonly1)).toEqualTypeOf<{
-  a: 1;
+expectTypeOf(commons.readonly.not(deepReadonly1)).toEqualTypeOf<{
+  a: number;
   b: {
-    readonly c: 2;
+    readonly c: number;
   };
 }>();
 
-const readonly1 = t.readonly({
+const readonly1 = commons.readonly({
+  a: 1,
+  b: {
+    c: 2,
+  },
+});
+
+const readonly2 = commons.readonly.const({
   a: 1,
   b: {
     c: 2,
@@ -124,23 +101,16 @@ expectTypeOf(readonly1).not.toEqualTypeOf<{
   };
 }>();
 
-expectTypeOf(readonly1).toEqualTypeOf<{
+expectTypeOf(readonly2).toEqualTypeOf<{
   readonly a: 1;
   readonly b: {
     readonly c: 2;
   };
 }>();
 
-expectTypeOf(readonly1).toMatchTypeOf<{
+expectTypeOf(readonly1).toExtend<{
   a: number;
   b: {
     c: number;
-  };
-}>();
-
-expectTypeOf(readonly1).toMatchTypeOf<{
-  a: 1;
-  b: {
-    c: 2;
   };
 }>();

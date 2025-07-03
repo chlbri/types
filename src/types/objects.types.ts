@@ -11,7 +11,7 @@ export type DeepOmit<T, K extends Keys> = {
       : T[P];
 };
 
-export type ReverseMap<T extends Record<string, string>> = {
+export type ReverseMap<T extends Record<Keys, Keys>> = {
   [K in keyof T as T[K]]: K;
 };
 
@@ -35,11 +35,11 @@ export type DeepPartial<T> = T extends Primitive
           : T[P];
     };
 
-export type DeepNotUndefined<T extends object | undefined> = NotUndefined<{
+export type DeepRequired<T extends object | undefined> = NotUndefined<{
   [P in keyof T]-?: T[P] extends Fn
     ? T[P]
     : T[P] extends object
-      ? DeepNotUndefined<T[P]>
+      ? DeepRequired<T[P]>
       : T[P];
 }>;
 
@@ -223,18 +223,10 @@ export type DeepNever = never | _Never;
 
 export type Dn = DeepNever;
 
-export type Neverify<T extends object> = T extends DeepNever ? never : T;
+export type Neverify<T> = T extends DeepNever ? never : T;
 
 export type Ru = Record<Keys, unknown>;
 
 export type Rn = Record<Keys, never>;
 
 export type Ra = Record<Keys, any>;
-
-export type TrueObject = object & {
-  [Symbol.iterator]?: never;
-  //@ts-expect-error - 'SymbolConstructor' does not exist on type 'object'
-  [SymbolConstructor]?: never;
-};
-
-export type TrueO = TrueObject;

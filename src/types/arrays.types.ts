@@ -73,3 +73,18 @@ export type ExcludeArray<T extends any[], U> = T extends [
     ? ExcludeArray<B, U>
     : [A, ...ExcludeArray<B, U>]
   : [];
+
+export type ReduceArray<T> = T extends readonly unknown[] ? T[0] : T;
+
+export type ReduceDeepArray<T> =
+  ReduceArray<T> extends readonly unknown[]
+    ? ReduceDeepArray<ReduceArray<T>>
+    : ReduceArray<T>;
+
+export type RecursiveArrayOf<T> =
+  | Array<SingleOrRecursiveArrayOf<T>>
+  | ReadonlyArray<SingleOrRecursiveArrayOf<T>>;
+
+export type SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
+
+export type SoR<T> = SingleOrRecursiveArrayOf<T>;
