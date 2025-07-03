@@ -11,7 +11,6 @@ export default defineConfig({
         './src/cli/**/*',
         '**/index.ts',
         '**/*.types.ts',
-        '**/*.types.ts',
       ],
       ignoreTestFiles: [],
     }),
