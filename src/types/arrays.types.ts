@@ -82,9 +82,9 @@ export type ReduceDeepArray<T> =
     : ReduceArray<T>;
 
 export type RecursiveArrayOf<T> =
-  | Array<SingleOrRecursiveArrayOf<T>>
-  | ReadonlyArray<SingleOrRecursiveArrayOf<T>>;
+  | Array<_SingleOrRecursiveArrayOf<T>>
+  | ReadonlyArray<_SingleOrRecursiveArrayOf<T>>;
 
-export type SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
+type _SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
 
-export type SoR<T> = SingleOrRecursiveArrayOf<T>;
+export type SoR<T> = _SingleOrRecursiveArrayOf<T>;

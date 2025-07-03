@@ -6,49 +6,57 @@ import type {
   TupleOf,
 } from '../types/arrays.types';
 import type { UnionToTuple } from '../types/unions.types';
+import { _unknown } from './common';
 
-type Ua = unknown[];
 type RuA = ReadonlyArray<unknown>;
 
-export const indexesOfArray = <const T extends RuA>(...array: T) => {
+export const arrays = <T>(...values: T[]) => values;
+
+arrays.low = <T extends any[]>(...values: T) =>
+  _unknown<T[number][]>(values);
+
+arrays.indexes = <const T extends RuA>(...array: T) => {
   return array.map((_, index) => index) as UnionToTuple<IndexesOfArray<T>>;
 };
-
-export const lengthOf = <T extends RuA>(...array: T) => {
+arrays.lengthOf = <T extends RuA>(...array: T) => {
   return array.length as T['length'];
 };
 
-export const tupleNOf = <const T, N extends number>(data: T, times: N) => {
+const tupleOf = <const T extends RuA>(...args: T): T => args;
+
+tupleOf.number = <const T, N extends number>(data: T, times: N) => {
   return Array.from({ length: times }, () => data) as TupleOf<T, N>;
 };
 
-export const arrayOf = <T extends Ua>(...args: T) => {
-  return args;
-};
+arrays.tupleOf = tupleOf;
 
-export const tupleOf = <const T extends RuA>(...args: T): T =>
-  arrayOf(...args);
-
-export const reduceArray = <T>(value: T | readonly T[] | T[]) => {
+const reduce = <T>(value: T | readonly T[] | T[]) => {
   return Array.isArray(value) ? value[0] : (value as T);
 };
 
-export const reverseArray = <T extends RuA>(...args: T) => {
+reduce.const = <const T>(value: T | readonly T[] | T[]) => {
+  return reduce<T>(value);
+};
+
+arrays.reduce = reduce;
+
+export const reverse = <T extends RuA>(...args: T) => {
   return args.slice().reverse() as ReverseArray<T>;
 };
-
-export const reverseTuple = <const T extends any[]>(...args: T) => {
-  return reverseArray<T>(...args);
+reverse.tuple = <const T extends any[]>(...args: T) => {
+  return reverse<T>(...args);
 };
 
-export const freezeTuple = <const T extends any[]>(...args: T) => {
-  return Object.freeze(reverseArray<T>(...args));
+reverse.freeze = <const T extends any[]>(...args: T) => {
+  return Object.freeze(reverse<T>(...args));
 };
 
-export const extractArray = <
-  const T extends any[],
-  const Ex extends T[number][],
->(
+arrays.reverse = reverse;
+
+arrays.freeze = <const T extends any[]>(...args: T) =>
+  Object.freeze(arrays.tupleOf(...args));
+
+arrays.extract = <const T extends any[], const Ex extends T[number][]>(
   array: T,
   ...extractors: Ex
 ) => {
@@ -58,10 +66,7 @@ export const extractArray = <
   >;
 };
 
-export const excludeTuple = <
-  const T extends any[],
-  const Ex extends T[number][],
->(
+arrays.exclude = <const T extends any[], const Ex extends T[number][]>(
   array: T,
   ...excludes: Ex
 ) => {
@@ -70,6 +75,3 @@ export const excludeTuple = <
     Ex[number]
   >;
 };
-
-// const dd = extractArray([1, 2, 3, 4, 2, 3, 1, 2, 7, 1, 3], 1, 3);
-// const dd2 = excludeTuple([1, 2, 3, 4, 2, 3, 1, 2, 7, 1, 3], 1, 3);

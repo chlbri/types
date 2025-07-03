@@ -1,4 +1,8 @@
-import type { SoR } from './arrays.types';
+import type { RecursiveArrayOf } from './arrays.types';
+
+export type SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
+
+export type SoR<T> = SingleOrRecursiveArrayOf<T>;
 
 export type Primitive = string | number | boolean | undefined | null;
 
