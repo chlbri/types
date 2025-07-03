@@ -11,9 +11,7 @@ type Ua = unknown[];
 type RuA = ReadonlyArray<unknown>;
 
 export const indexesOfArray = <const T extends RuA>(...array: T) => {
-  return array.map((_, index) => index) as UnionToTuple<
-    IndexesOfArray<T, []>
-  >;
+  return array.map((_, index) => index) as UnionToTuple<IndexesOfArray<T>>;
 };
 
 export const lengthOf = <T extends RuA>(...array: T) => {
