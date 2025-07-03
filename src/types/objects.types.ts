@@ -1,6 +1,5 @@
 import type { Fn, Keys, NotUndefined, Primitive } from './common.types';
-import { AddString, type StringEndWith } from './strings.types';
-import type { UnionToIntersection } from './unions.types';
+import { AddString } from './strings.types';
 
 export type NOmit<T, K extends keyof T> = Omit<T, K>;
 
@@ -45,8 +44,38 @@ export type DeepNotUndefined<T extends object | undefined> = NotUndefined<{
 }>;
 
 export type NotReadonly<T extends object> = {
-  -readonly [P in keyof T]-?: T[P];
+  -readonly [P in keyof T]: T[P];
 };
+
+export type DeepNotReadonly<T extends object> = {
+  -readonly [P in keyof T]: T[P] extends Fn
+    ? T[P]
+    : T[P] extends object
+      ? DeepNotReadonly<T[P]>
+      : T[P];
+};
+
+// type TT = {
+//   readonly a: string;
+//   readonly b: {
+//     readonly c: number;
+//     readonly d: {
+//       readonly e: boolean;
+//       readonly f: {
+//         readonly g: string[];
+//       };
+//     };
+//   };
+//   readonly h: () => void;
+//   readonly i: {
+//     readonly j: {
+//       readonly k: string;
+//       readonly l: {
+//         readonly m: number;
+//       };
+//     };
+//   };
+// };
 
 export type ValuesOf<T, U = any> = Extract<T[keyof T], U>;
 export type ObjectValuesOf<T> = Exclude<
@@ -103,72 +132,6 @@ export type Unionize<T extends Record<string, any>> = {
   [P in keyof T]: { [Q in P]: T[P] };
 }[keyof T];
 
-// #region FlatMapAll
-type ToPaths<
-  T,
-  P extends string = '',
-  Delimiter extends string = '.',
-> = T extends object
-  ?
-      | {
-          [K in keyof T]: ToPaths<
-            T[K],
-            `${P}${K & string}${Delimiter}`,
-            Delimiter
-          >;
-        }[keyof T]
-      | {
-          path: P;
-          type: T;
-        }
-  : {
-      path: P extends `${infer D}${Delimiter}` ? D : never;
-      type: T;
-    };
-type FromPaths<
-  T extends {
-    path: string;
-    type: unknown;
-  },
-> = {
-  [P in T['path']]: Extract<
-    T,
-    {
-      path: P;
-    }
-  >['type'];
-};
-
-type TransformFlatKeys<
-  S extends Keys,
-  Delimiter extends string,
-> = S extends ''
-  ? Delimiter
-  : S extends string
-    ? StringEndWith<S, Delimiter>['prev']
-    : never;
-
-/**
- * From "Acid Coder"
- */
-export type _FlatMapAll<
-  T extends object,
-  Delimiter extends string = '.',
-> = FromPaths<ToPaths<T, '', Delimiter>>;
-
-export type FlatMapAll<T extends object, Delimiter extends string = '.'> =
-  _FlatMapAll<T, Delimiter> extends infer U
-    ? {
-        [P in keyof U as TransformFlatKeys<P, Delimiter>]: U[P];
-      }
-    : never;
-// #endregion
-
-export type StringKeys<
-  T extends object,
-  Delimiter extends string = '.',
-> = keyof FlatMapAll<T, Delimiter>;
-
 type WithChildren<
   T,
   _omit extends string,
@@ -220,29 +183,6 @@ export type _FlatMapByKey<
         _withChildren
       >;
     };
-
-type FlatMapByKeyOptions = {
-  with?: boolean;
-  delimiter?: string;
-};
-
-// #region type FlatMapByKeys
-export type FlatMapByKeys<
-  T extends TrueO,
-  _omit extends PickKeysBy<T, object>,
-  options extends FlatMapByKeyOptions = {
-    with: false;
-    delimiter: '.';
-  },
-> = UnionToIntersection<
-  _FlatMapByKey<
-    T,
-    _omit,
-    options['with'] extends true ? true : false,
-    options['delimiter'] extends infer D extends string ? D : '.'
-  >
->;
-// #endregion
 
 // #region SubTypes
 type FilterFlags<Base, Condition> = {
