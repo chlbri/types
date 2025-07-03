@@ -6,7 +6,7 @@ import type {
   TupleOf,
 } from '../types/arrays.types';
 import type { UnionToTuple } from '../types/unions.types';
-import { _unknown } from './common';
+import { _unknown } from './commons';
 
 type RuA = ReadonlyArray<unknown>;
 
@@ -15,9 +15,12 @@ export const arrays = <T>(...values: T[]) => values;
 arrays.low = <T extends any[]>(...values: T) =>
   _unknown<T[number][]>(values);
 
-arrays.indexes = <const T extends RuA>(...array: T) => {
-  return array.map((_, index) => index) as UnionToTuple<IndexesOfArray<T>>;
+arrays.indexes = <const T extends RuA>(
+  ...array: T
+): UnionToTuple<IndexesOfArray<T>> => {
+  return array.map((_, index) => index) as any;
 };
+
 arrays.lengthOf = <T extends RuA>(...array: T) => {
   return array.length as T['length'];
 };

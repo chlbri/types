@@ -86,5 +86,3 @@ export type RecursiveArrayOf<T> =
   | ReadonlyArray<_SingleOrRecursiveArrayOf<T>>;
 
 type _SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
-
-export type SoR<T> = _SingleOrRecursiveArrayOf<T>;

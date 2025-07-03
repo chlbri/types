@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { _unknown } from 'functions/common';
+import { _unknown } from 'functions/commons';
 import { typeFn } from './common';
 import {
   Email,

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { _unknown } from 'functions/common';
+import { _unknown } from 'functions/commons';
 
 export const t_array = <T extends unknown[]>(..._: T) => _unknown<T>();
 t_array.readonly = <const T extends readonly unknown[]>(..._: T) =>

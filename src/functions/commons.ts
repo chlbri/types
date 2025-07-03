@@ -94,7 +94,11 @@ commons.primitive = castFn<Primitive>({
 });
 commons.undefined = identity(undefined);
 commons.null = identity(null);
-commons.symbol = castFn<symbol>();
+commons.symbol = castFn<symbol>({
+  is: (value: unknown): value is symbol => {
+    return typeof value === 'symbol';
+  },
+});
 commons.date = castFn<Date>({
   is: (value: unknown): value is Date => {
     return value instanceof Date;

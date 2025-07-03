@@ -1,5 +1,5 @@
 import type { TimeLike } from 'fs';
-import { commons } from './common';
+import { commons } from './commons';
 
 expectTypeOf(commons.identity(1)).toEqualTypeOf<number>();
 expectTypeOf(commons.identity(1)).toMatchTypeOf(34);
