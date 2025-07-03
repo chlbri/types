@@ -12,7 +12,7 @@ import {
   tupleOf,
 } from './arrays';
 
-// Test indexesOfArray with const assertions
+// #region Test indexesOfArray with const assertions
 const indexes1 = indexesOfArray('a', 'b', 'c');
 expectTypeOf(indexes1).toEqualTypeOf<[0, 1, 2]>();
 
@@ -27,13 +27,15 @@ expectTypeOf(indexes4).toEqualTypeOf<[0, 1, 2]>();
 
 const indexes5 = indexesOfArray('a', 'b', 'c', 'd', 'e');
 expectTypeOf(indexes5).toEqualTypeOf<[0, 1, 2, 3, 4]>();
+// #endregion
 
-// Test with readonly arrays (spread)
+// #region Test with readonly arrays (spread)
 const readonlyArray = ['x', 'y'] as const;
 const indexes6 = indexesOfArray(...readonlyArray);
 expectTypeOf(indexes6).toEqualTypeOf<[0, 1]>();
+// #endregion
 
-// Test lengthOf with const assertions
+// #region Test lengthOf with const assertions
 const length1 = lengthOf('a', 'b', 'c');
 expectTypeOf(length1).toEqualTypeOf<3>();
 
@@ -52,15 +54,17 @@ expectTypeOf(length5).toEqualTypeOf<5>();
 // Test with readonly arrays (spread)
 const length6 = lengthOf(...readonlyArray);
 expectTypeOf(length6).toEqualTypeOf<2>();
+// #endregion
 
-// Test that types are preserved with const assertions
+// #region Test that types are preserved with const assertions
 const constArray = [1, 2, 3] as const;
 const constIndexes = indexesOfArray(...constArray);
 const constLength = lengthOf(...constArray);
 expectTypeOf(constIndexes).toEqualTypeOf<[0, 1, 2]>();
 expectTypeOf(constLength).toEqualTypeOf<3>();
+// #endregion
 
-// Test with longer arrays to ensure type inference works
+// #region Test with longer arrays to ensure type inference works
 const longArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const;
 const longIndexes = indexesOfArray(...longArray);
 const longLength = lengthOf(...longArray);
@@ -68,15 +72,17 @@ expectTypeOf(longIndexes).toMatchTypeOf<number[]>();
 expectTypeOf(longIndexes).toHaveProperty(0);
 expectTypeOf(longIndexes).toHaveProperty(7);
 expectTypeOf(longLength).toEqualTypeOf<8>();
+// #endregion
 
-// Test with mixed types
+// #region Test with mixed types
 const mixedArray = [42, 'hello', true, { key: 'value' }, null] as const;
 const mixedIndexes = indexesOfArray(...mixedArray);
 const mixedLength = lengthOf(...mixedArray);
 expectTypeOf(mixedIndexes).toEqualTypeOf<[0, 1, 2, 3, 4]>();
 expectTypeOf(mixedLength).toEqualTypeOf<5>();
+// #endregion
 
-// Test edge cases - single element with different types
+// #region Test edge cases - single element with different types
 const singleString = ['test'] as const;
 const singleNumber = [42] as const;
 const singleBoolean = [true] as const;
@@ -88,8 +94,9 @@ expectTypeOf(indexesOfArray(...singleBoolean)).toEqualTypeOf<[0]>();
 expectTypeOf(lengthOf(...singleString)).toEqualTypeOf<1>();
 expectTypeOf(lengthOf(...singleNumber)).toEqualTypeOf<1>();
 expectTypeOf(lengthOf(...singleBoolean)).toEqualTypeOf<1>();
+// #endregion
 
-// Test tupleOf with different types and lengths
+// #region Test tupleNOf with different types and lengths
 const tuple1 = tupleNOf('hello', 3);
 expectTypeOf(tuple1).toEqualTypeOf<['hello', 'hello', 'hello']>();
 
@@ -138,8 +145,9 @@ expectTypeOf(tuple10).toEqualTypeOf<
 const fn = (x: number) => x * 2;
 const tuple11 = tupleNOf(fn, 2);
 expectTypeOf(tuple11).toEqualTypeOf<[typeof fn, typeof fn]>();
+// #endregion
 
-// Test arrayOf function
+// #region Test arrayOf function
 const array1 = arrayOf(1, 2, 3);
 expectTypeOf(array1).toMatchTypeOf<number[]>();
 expectTypeOf(array1).toHaveProperty(0);
@@ -153,8 +161,9 @@ expectTypeOf(array3).toEqualTypeOf<[]>();
 
 const array4 = arrayOf(1, 'hello', true);
 expectTypeOf(array4).toMatchTypeOf<(number | string | boolean)[]>();
+// #endregion
 
-// Test tupleOf function
+// #region Test tupleOf function
 const tuple12 = tupleOf(1, 2, 3);
 expectTypeOf(tuple12).toMatchTypeOf<readonly number[]>();
 
@@ -168,8 +177,9 @@ const tuple15 = tupleOf(1, 'hello', true);
 expectTypeOf(tuple15).toMatchTypeOf<
   readonly (number | string | boolean)[]
 >();
+// #endregion
 
-// Test reduceArray function
+// #region Test reduceArray function
 const reduced1 = reduceArray([1, 2, 3]);
 expectTypeOf(reduced1).toMatchTypeOf<number>();
 
@@ -181,8 +191,9 @@ expectTypeOf(reduced3).toMatchTypeOf<string>();
 
 const reduced4 = reduceArray([true, false]);
 expectTypeOf(reduced4).toMatchTypeOf<boolean>();
+// #endregion
 
-// Test reverseArray function
+// #region Test reverseArray function
 const reversed1 = reverseArray(1, 2, 3);
 expectTypeOf(reversed1).toMatchTypeOf<number[]>();
 
@@ -197,8 +208,9 @@ expectTypeOf(reversed4).toMatchTypeOf<boolean[]>();
 
 const reversed5 = reverseArray(1, 'hello', true);
 expectTypeOf(reversed5).toMatchTypeOf<(number | string | boolean)[]>();
+// #endregion
 
-// Test reverseTuple function
+// #region Test reverseTuple function
 const reversedTuple1 = reverseTuple(1, 2, 3);
 expectTypeOf(reversedTuple1).toMatchTypeOf<number[]>();
 
@@ -207,8 +219,9 @@ expectTypeOf(reversedTuple2).toMatchTypeOf<string[]>();
 
 const reversedTuple3 = reverseTuple();
 expectTypeOf(reversedTuple3).toEqualTypeOf<[]>();
+// #endregion
 
-// Test freezeTuple function
+// #region Test freezeTuple function
 const frozenTuple1 = freezeTuple(1, 2, 3);
 expectTypeOf(frozenTuple1).toMatchTypeOf<readonly number[]>();
 
@@ -225,9 +238,17 @@ expectTypeOf(frozenTuple4).toMatchTypeOf<
 
 const frozenTuple5 = freezeTuple(true);
 expectTypeOf(frozenTuple5).toMatchTypeOf<readonly boolean[]>();
+// #endregion
 
-// Test extractArray function - using mutable arrays
+// #region Exclude/Extract
+
 const testArray = [1, 2, 3, 4, 2, 3, 1, 2, 7, 1, 3];
+const emptyArray: any[] = [];
+
+// #region Test extractArray function - using mutable arrays
+const extractedEmpty = extractArray(emptyArray);
+expectTypeOf(extractedEmpty).toMatchTypeOf<any[]>();
+
 const extracted1 = extractArray(testArray, 1, 3);
 expectTypeOf(extracted1).toMatchTypeOf<number[]>();
 
@@ -240,8 +261,9 @@ expectTypeOf(extracted3).toMatchTypeOf<string[]>();
 
 const extracted4 = extractArray(stringArray, 'a', 'c');
 expectTypeOf(extracted4).toMatchTypeOf<string[]>();
+// #endregion
 
-// Test excludeTuple function
+// #region Test excludeTuple function
 const excluded1 = excludeTuple(testArray, 1, 3);
 expectTypeOf(excluded1).toMatchTypeOf<number[]>();
 
@@ -254,10 +276,8 @@ expectTypeOf(excluded3).toMatchTypeOf<string[]>();
 const excluded4 = excludeTuple(stringArray, 'a', 'c');
 expectTypeOf(excluded4).toMatchTypeOf<string[]>();
 
-// Test with empty arrays
-const emptyArray: any[] = [];
-const extractedEmpty = extractArray(emptyArray);
-expectTypeOf(extractedEmpty).toMatchTypeOf<any[]>();
-
 const excludedEmpty = excludeTuple(emptyArray);
 expectTypeOf(excludedEmpty).toMatchTypeOf<any[]>();
+// #endregion
+
+// #endregion
