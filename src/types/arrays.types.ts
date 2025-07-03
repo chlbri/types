@@ -1,27 +1,25 @@
 import type { UnionOmit, UnionToTuple } from './unions.types';
 
-export type IndexOfArray<
+export type IndexesOfArray<
   T extends readonly unknown[],
   S extends number[] = [],
 > = T['length'] extends S['length']
   ? S[number]
-  : IndexOfArray<T, [S['length'], ...S]>;
+  : IndexesOfArray<T, [S['length'], ...S]>;
 
-type _DivideBy<
-  N extends number,
-  T extends readonly any[],
-> = T['length'] extends N
-  ? [true]
-  : T extends readonly [...TupleOf<T[number], N>, ...infer U]
-    ? [true, ..._DivideBy<N, U>]
-    : never;
+// type _DivideBy<
+//   N extends number,
+//   T extends readonly any[],
+// > = T['length'] extends N
+//   ? [true]
+//   : T extends readonly [...TupleOf<T[number], N>, ...infer U]
+//     ? [true, ..._DivideBy<N, U>]
+//     : never;
 
-export type DivideTupleLengthBy<
-  N extends number,
-  T extends readonly any[],
-> = _DivideBy<N, T>['length'];
-
-export type LengthOf<T> = T extends readonly any[] ? T['length'] : never;
+// export type DivideTupleLengthBy<
+//   N extends number,
+//   T extends readonly any[],
+// > = _DivideBy<N, T>['length'];
 
 type _TupleOf<
   T,
@@ -35,21 +33,15 @@ export type TupleOf<T = any, N extends number = number> = N extends N
     : [..._TupleOf<T, N>]
   : never;
 
-export type GetTupleType<T> = T extends TupleOf<infer U, any> ? U : never;
+export type ReverseArray<T extends RuA> = T extends any
+  ? T extends []
+    ? T
+    : T extends [infer Head, ...infer Tail]
+      ? [...ReverseArray<Tail>, Head]
+      : T
+  : never;
 
-export type GetTupleNumber<T> =
-  T extends TupleOf<any, infer U> ? U : never;
-
-export type ReduceArray<T> = T extends any[] ? T[number] : T;
-
-export type ReduceArrayByKey<T, K extends string> =
-  ReduceArray<T> extends Record<K, infer V> ? V : never;
-
-export type ReverseArray<T> = T extends []
-  ? T
-  : T extends [infer Head, ...infer Tail]
-    ? [...ReverseArray<Tail>, Head]
-    : T;
+export type RuA = ReadonlyArray<unknown>;
 
 export type _NArrayOmit<
   T extends readonly object[],
