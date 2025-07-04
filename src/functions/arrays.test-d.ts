@@ -48,7 +48,7 @@ expectTypeOf(length6).toEqualTypeOf<2>();
 const constArray = [1, 2, 3] as const;
 const constIndexes = arrays.indexes(...constArray);
 const constLength = arrays.lengthOf(...constArray);
-expectTypeOf(constIndexes).toEqualTypeOf<[0, 1, 2]>();
+expectTypeOf(constIndexes).branded.toEqualTypeOf<[0, 1, 2]>();
 expectTypeOf(constLength).toEqualTypeOf<3>();
 // #endregion
 
@@ -58,7 +58,9 @@ const longIndexes = arrays.indexes(...longArray);
 const longLength = arrays.lengthOf(...longArray);
 expectTypeOf(longIndexes).toBeArray();
 expectTypeOf(longIndexes).items.toExtend<number>();
-expectTypeOf(longIndexes).toEqualTypeOf<[0, 1, 2, 3, 4, 5, 6, 7]>();
+expectTypeOf(longIndexes).branded.toEqualTypeOf<
+  [0, 1, 2, 3, 4, 5, 6, 7]
+>();
 expectTypeOf(longLength).toEqualTypeOf<8>();
 // #endregion
 
@@ -66,7 +68,7 @@ expectTypeOf(longLength).toEqualTypeOf<8>();
 const mixedArray = [42, 'hello', true, { key: 'value' }, null] as const;
 const mixedIndexes = arrays.indexes(...mixedArray);
 const mixedLength = arrays.lengthOf(...mixedArray);
-expectTypeOf(mixedIndexes).toEqualTypeOf<[0, 1, 2, 3, 4]>();
+expectTypeOf(mixedIndexes).branded.toEqualTypeOf<[0, 1, 2, 3, 4]>();
 expectTypeOf(mixedLength).toEqualTypeOf<5>();
 // #endregion
 

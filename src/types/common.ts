@@ -16,6 +16,7 @@ type FnReturn<T = any, Tr extends object = object> = {
   is<U>(_?: U): U extends T ? true : false;
 } & Tr;
 
+//Replace like the function one
 export const typeFn = <T = any, Tr extends object = object>(
   extensions?: Tr,
 ): FnReturn<T, Tr> => {

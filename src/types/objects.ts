@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { _unknown } from 'functions/commons';
 import { typeFn } from './common';
-import type { Keys, PrimitiveObject } from './common.types';
+import type {
+  Keys,
+  PrimitiveObject,
+  PrimitiveObjectMap,
+} from './common.types';
 import type {
   AllowedNames,
   DeepNotReadonly,
@@ -24,7 +28,7 @@ objects.forceCast = <T extends object>(_?: unknown) => _unknown<T>();
 objects.is = <T>(_?: T) => _unknown<T extends object ? true : false>();
 
 objects.type = _unknown<object>();
-objects.keys = <T extends object>(_?: T) => _unknown<(keyof T)[]>();
+objects.keysOf = <T extends object>(_?: T) => _unknown<(keyof T)[]>();
 objects.values = <T extends object>(_?: T) => _unknown<T[keyof T][]>();
 objects.entries = <T extends object>(_?: T) =>
   _unknown<[keyof T, T[keyof T]][]>();
@@ -32,15 +36,25 @@ objects.byKey = <T extends object, K extends keyof T>(_?: T, __?: K) =>
   _unknown<T[K]>();
 objects.hasKeys = <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
   _unknown<K[number] extends keyof T ? true : false>();
+objects.hasAllKeys = <T extends object, K extends Keys[]>(
+  _?: T,
+  ...__: K
+) => _unknown<keyof T extends K[number] ? true : false>();
 
-const omit = <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
-  _unknown<Omit<T, K[number]>>();
+const omit = <T extends PrimitiveObjectMap, K extends Keys[]>(
+  _?: T,
+  ...__: K
+) => _unknown<Omit<T, K[number]>>();
 
-omit.strict = <T extends object, K extends (keyof T)[]>(_?: T, ...__: K) =>
-  _unknown<Omit<T, K[number]>>();
+omit.strict = <T extends PrimitiveObjectMap, K extends (keyof T)[]>(
+  _?: T,
+  ...__: K
+) => _unknown<Omit<T, K[number]>>();
 
-omit.deep = <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
-  _unknown<DeepOmit<T, K[number]>>();
+omit.deep = <T extends PrimitiveObjectMap, K extends Keys[]>(
+  _?: T,
+  ...__: K
+) => _unknown<DeepOmit<T, K[number]>>();
 
 objects.omit = omit;
 objects.reverse = <T extends Record<Keys, Keys>>(_?: T) =>

@@ -193,6 +193,14 @@ type NotFilterFlags<Base, Condition> = {
   [Key in keyof Base]: Base[Key] extends Condition ? never : Key;
 };
 
+type FilterFlagsLow<Base, Condition> = {
+  [Key in keyof Base]: Condition extends Base[Key] ? Key : never;
+};
+
+type NotFilterFlagsLow<Base, Condition> = {
+  [Key in keyof Base]: Condition extends Base[Key] ? never : Key;
+};
+
 export type AllowedNames<Base, Condition> = FilterFlags<
   Base,
   Condition
@@ -203,14 +211,50 @@ export type NotAllowedNames<Base, Condition> = NotFilterFlags<
   Condition
 >[keyof Base];
 
+export type AllowedNamesLow<Base, Condition> = FilterFlagsLow<
+  Base,
+  Condition
+>[keyof Base];
+
+export type NotAllowedNamesLow<Base, Condition> = NotFilterFlagsLow<
+  Base,
+  Condition
+>[keyof Base];
+
 export type SubType<Base extends object, Condition> = Pick<
   Base,
   AllowedNames<Base, Condition>
 >;
 
+export type DeepSubType<Base extends object, Condition> = {
+  [K in keyof Base as K extends AllowedNames<Base, Condition>
+    ? K
+    : never]: Base[K] extends object
+    ? DeepSubType<Base[K], Condition>
+    : Base[K];
+};
+
 export type NotSubType<Base extends object, Condition> = Pick<
   Base,
   NotAllowedNames<Base, Condition>
+>;
+
+export type DeepNotSubType<Base extends object, Condition> = {
+  [K in keyof Base as K extends NotAllowedNames<Base, Condition>
+    ? K
+    : never]: Base[K] extends object
+    ? DeepNotSubType<Base[K], Condition>
+    : Base[K];
+};
+
+export type SubTypeLow<Base extends object, Condition> = Pick<
+  Base,
+  AllowedNamesLow<Base, Condition>
+>;
+
+export type NotSubTypeLow<Base extends object, Condition> = Pick<
+  Base,
+  NotAllowedNamesLow<Base, Condition>
 >;
 
 // #endregion

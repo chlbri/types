@@ -4,7 +4,8 @@ export type SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
 
 export type SoR<T> = SingleOrRecursiveArrayOf<T>;
 
-export type Primitive = string | number | boolean | undefined | null;
+export type Primitive2 = string | number | boolean;
+export type Primitive = Primitive2 | undefined | null;
 
 export type SingleOrArray<T> = T | T[] | ReadonlyArray<T>;
 

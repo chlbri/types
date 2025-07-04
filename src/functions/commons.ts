@@ -3,32 +3,53 @@ import type {
   DeepPartial,
   DeepReadonly,
   DeepRequired,
+  Fn,
   Neverify,
   NotReadonly,
   NotUndefined,
   Primitive,
 } from '../types';
 
-type FnReturn<T = any, Tr extends object = object> = {
+type FnReturnBasic<Main extends Fn, Tr extends object> = Tr & Main;
+
+type FnReturn<T, Tr extends object> = Tr & {
   (arg: T): T;
   forceCast(arg: unknown): T;
   dynamic<U extends T>(arg: U): U;
-} & Tr;
+};
 
-export const castFn = <T = any, Tr extends object = object>(
+export const castFnbasic = <
+  Main extends Fn,
+  const Tr extends object = object,
+>(
+  main: Main,
   extensions?: Tr,
-): FnReturn<T, Tr> => {
-  const out: any = (arg: T) => arg as T;
-
-  out.forceCast = (arg: unknown) => arg as T;
-
-  out.dynamic = <U extends T>(arg: U) => arg;
+): FnReturnBasic<Main, Tr> => {
+  const out: any = main;
 
   if (extensions) {
     Object.assign(out, extensions);
   }
 
   return out;
+};
+
+export const castFn = <T = any>() => {
+  const _out = <const Tr extends object = object>(
+    extensions?: Tr,
+  ): FnReturn<T, Tr> => {
+    const out: any = castFnbasic((arg: T) => arg as T, {
+      ...extensions,
+      forceCast: (arg: unknown) => {
+        return arg as T;
+      },
+      dynamic: <U extends T>(arg: U) => {
+        return arg;
+      },
+    });
+    return out;
+  };
+  return _out;
 };
 
 export const _unknown = <T>(value?: unknown) => value as T;
@@ -64,24 +85,32 @@ const readonlyNot = <T extends object>(value: T) =>
 
 readonlyNot.const = <const T extends object>(value: T) =>
   readonlyNot(value);
-readonlyNot.notDeep = <const T extends object>(value: T) =>
+readonlyNot.deep = <const T extends object>(value: T) =>
   _unknown<DeepNotReadonly<T>>(value);
 
 _readonly.not = readonlyNot;
 
-const neverify = <T>(value: T) => {
-  return _unknown<Neverify<T>>(value);
-};
-
 export const commons = <T>(value: unknown) => value as T;
 commons.partial = partial;
 commons.identity = identity;
+commons.isDefined = <T>(value: T): value is NonNullable<T> => {
+  return value !== undefined && value !== null;
+};
+commons.isUndefined = (value: unknown): value is undefined => {
+  return value === undefined;
+};
+
+commons.isNull = (value: unknown): value is null => {
+  return value === null;
+};
 commons.unknown = <T>(value: unknown) => value as T;
-commons.any = castFn();
-commons.neverify = neverify;
+commons.any = castFn()();
+commons.neverify = <T>(value: T) => {
+  return _unknown<Neverify<T>>(value);
+};
 commons.required = required;
 commons.readonly = _readonly;
-commons.primitive = castFn<Primitive>({
+commons.primitive = castFn<Primitive>()({
   is: (value: unknown): value is Primitive => {
     return (
       typeof value === 'string' ||
@@ -94,15 +123,13 @@ commons.primitive = castFn<Primitive>({
 });
 commons.undefined = identity(undefined);
 commons.null = identity(null);
-commons.symbol = castFn<symbol>({
-  is: (value: unknown): value is symbol => {
-    return typeof value === 'symbol';
-  },
+commons.symbol = castFn<symbol>()({
+  is: (value: unknown): value is symbol => typeof value === 'symbol',
 });
-commons.date = castFn<Date>({
+commons.date = castFn<Date>()({
   is: (value: unknown): value is Date => {
     return value instanceof Date;
   },
-});
+} as const);
 
 commons.undefiny = <T>(value?: T) => value;

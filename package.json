@@ -42,6 +42,7 @@
     "upgrade": "pnpm upgrade --latest"
   },
   "devDependencies": {
+    "@bemedev/decompose": "^0.8.1",
     "@bemedev/fsf": "^0.8.0",
     "@bemedev/rollup-config": "^0.1.1",
     "@bemedev/types": "link:",
