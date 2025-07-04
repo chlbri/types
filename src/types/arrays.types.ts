@@ -1,4 +1,4 @@
-import type { UnionOmit, UnionToTuple } from './unions.types';
+import type { UnionOmit, UnionToTuple } from './common.types';
 
 export type IndexesOfArray<
   T extends readonly unknown[],

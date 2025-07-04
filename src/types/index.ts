@@ -5,5 +5,3 @@ export * from './numbers.types';
 export * from './objects.types';
 export * from './promises.types';
 export * from './strings.types';
-export * from './unions.types';
-export * from './usecases.types';

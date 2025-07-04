@@ -4,8 +4,9 @@ import type {
   IndexesOfArray,
   ReverseArray,
   TupleOf,
-} from '../types/arrays.types';
-import type { UnionToTuple } from '../types/unions.types';
+  UnionToTuple,
+} from '../types';
+
 import { _unknown } from './commons';
 
 type RuA = ReadonlyArray<unknown>;

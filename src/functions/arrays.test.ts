@@ -304,20 +304,110 @@ describe('#08 =>  arrays.reverse.tuple', () => {
   });
 });
 
-describe('#09 => arrays.freeze', () => {
-  it('#09.02 => should freeze empty tuple', () => {
+describe('#09 => arrays.reverse.freeze', () => {
+  it('#09.01 => should reverse and freeze array with multiple elements', () => {
+    const result = arrays.reverse.freeze(1, 2, 3, 4);
+    expect(result).toEqual([4, 3, 2, 1]);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.02 => should handle empty array and freeze it', () => {
+    const result = arrays.reverse.freeze();
+    expect(result).toEqual([]);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.03 => should handle single element and freeze it', () => {
+    const result = arrays.reverse.freeze('single');
+    expect(result).toEqual(['single']);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.04 => should reverse and freeze array with mixed types', () => {
+    const result = arrays.reverse.freeze(1, 'hello', true, {
+      key: 'value',
+    });
+    expect(result).toEqual([{ key: 'value' }, true, 'hello', 1]);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.05 => should preserve object references in frozen reversed array', () => {
+    const obj = { test: 'value' };
+    const result = arrays.reverse.freeze(obj, 'test', 42);
+    expect(result).toEqual([42, 'test', obj]);
+    expect(result[2]).toBe(obj);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.06 => should prevent modification of frozen reversed array', () => {
+    const result = arrays.reverse.freeze(1, 2, 3);
+    expect(() => {
+      (result as any)[0] = 999;
+    }).toThrow();
+    expect(result[0]).toBe(3); // Should still be 3 (reversed from [1,2,3] -> [3,2,1])
+  });
+
+  it('#09.07 => should handle duplicate elements in frozen reversed array', () => {
+    const result = arrays.reverse.freeze('a', 'b', 'a', 'c', 'a');
+    expect(result).toEqual(['a', 'c', 'a', 'b', 'a']);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.08 => should create immutable frozen reversed array', () => {
+    const result = arrays.reverse.freeze(1, 2, 3);
+
+    // Try to modify - should not work
+    expect(() => {
+      (result as any).push(4);
+    }).toThrow();
+
+    expect(() => {
+      (result as any).pop();
+    }).toThrow();
+
+    expect(result).toEqual([3, 2, 1]); // Reversed order
+    expect(result.length).toBe(3);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.09 => should handle complex objects in frozen reversed array', () => {
+    const obj1 = { id: 1, name: 'first' };
+    const obj2 = { id: 2, name: 'second' };
+    const result = arrays.reverse.freeze(obj1, obj2, 'string');
+
+    expect(result).toEqual(['string', obj2, obj1]);
+    expect(result[1]).toBe(obj2);
+    expect(result[2]).toBe(obj1);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#09.10 => should handle null and undefined in frozen reversed array', () => {
+    const result = arrays.reverse.freeze(null, undefined, 'test');
+    expect(result).toEqual(['test', undefined, null]);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+});
+
+describe('#10 => arrays.freeze', () => {
+  it('#10.01 => should freeze tuple with multiple elements', () => {
+    const result = arrays.freeze(1, 2, 3);
+    expect(result).toEqual([1, 2, 3]);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
+
+  it('#10.02 => should freeze empty tuple', () => {
     const result = arrays.freeze();
     expect(result).toEqual([]);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#09.03 => should freeze single element tuple', () => {
+  it('#10.03 => should freeze single element tuple', () => {
     const result = arrays.freeze('single');
     expect(result).toEqual(['single']);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#09.06 => should prevent modification of frozen tuple', () => {
+  it('#10.04 => should prevent modification of frozen tuple', () => {
     const result = arrays.freeze(1, 2, 3);
     expect(() => {
       (result as any)[0] = 999;
@@ -325,13 +415,13 @@ describe('#09 => arrays.freeze', () => {
     expect(result[0]).toBe(1); // Should still be 1, not 999
   });
 
-  it('#09.07 => should handle duplicate elements in frozen tuple', () => {
+  it('#10.05 => should handle duplicate elements in frozen tuple', () => {
     const result = arrays.freeze('a', 'b', 'a', 'c', 'a');
     expect(result).toEqual(['a', 'b', 'a', 'c', 'a']);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#09.08 => should create immutable frozen tuple', () => {
+  it('#10.06 => should create immutable frozen tuple', () => {
     const result = arrays.freeze(1, 2, 3);
 
     // Try to modify - should not work
@@ -346,46 +436,53 @@ describe('#09 => arrays.freeze', () => {
     expect(result).toEqual([1, 2, 3]);
     expect(result.length).toBe(3);
   });
+
+  it('#10.07 => should preserve object references in frozen tuple', () => {
+    const obj = { test: 'value' };
+    const result = arrays.freeze(obj, 'test');
+    expect(result[0]).toBe(obj);
+    expect(Object.isFrozen(result)).toBe(true);
+  });
 });
 
-describe('#10 => extract', () => {
-  it('#10.01 => should extract matching elements', () => {
+describe('#11 => arrays.extract', () => {
+  it('#11.01 => should extract matching elements', () => {
     const array = [1, 2, 3, 4, 2, 3, 1];
     const result = arrays.extract(array, 1, 3);
     expect(result).toEqual([1, 3, 3, 1]);
   });
 
-  it('#10.02 => should extract single matching element', () => {
+  it('#11.02 => should extract single matching element', () => {
     const array = [1, 2, 3, 4, 2, 3, 1];
     const result = arrays.extract(array, 2);
     expect(result).toEqual([2, 2]);
   });
 
-  it('#10.03 => should return empty array when no matches', () => {
+  it('#11.03 => should return empty array when no matches', () => {
     const array = [1, 2, 3];
     const result = arrays.extract(array, 5);
     expect(result).toEqual([]);
   });
 
-  it('#10.04 => should handle empty array', () => {
+  it('#11.04 => should handle empty array', () => {
     const array: number[] = [];
     const result = arrays.extract(array, 1);
     expect(result).toEqual([]);
   });
 
-  it('#10.05 => should extract string elements', () => {
+  it('#11.05 => should extract string elements', () => {
     const array = ['a', 'b', 'c', 'b', 'a'];
     const result = arrays.extract(array, 'a', 'c');
     expect(result).toEqual(['a', 'c', 'a']);
   });
 
-  it('#10.06 => should handle mixed types', () => {
+  it('#11.06 => should handle mixed types', () => {
     const array = [1, 'hello', true, 2, 'hello', false];
     const result = arrays.extract(array, 'hello', true);
     expect(result).toEqual(['hello', true, 'hello']);
   });
 
-  it('#10.07 => should preserve object references', () => {
+  it('#11.07 => should preserve object references', () => {
     const obj1 = { id: 1 };
     const obj2 = { id: 2 };
     const array = [obj1, obj2, obj1];
@@ -397,50 +494,50 @@ describe('#10 => extract', () => {
   });
 });
 
-describe('#11 => arrays.exclude', () => {
-  it('#11.01 => should exclude matching elements', () => {
+describe('#12 => arrays.exclude', () => {
+  it('#12.01 => should exclude matching elements', () => {
     const array = [1, 2, 3, 4, 2, 3, 1];
     const result = arrays.exclude(array, 1, 3);
     expect(result).toEqual([2, 4, 2]);
   });
 
-  it('#11.02 => should exclude single matching element', () => {
+  it('#12.02 => should exclude single matching element', () => {
     const array = [1, 2, 3, 4, 2, 3, 1];
     const result = arrays.exclude(array, 2);
     expect(result).toEqual([1, 3, 4, 3, 1]);
   });
 
-  it('#11.03 => should return original array when no matches to exclude', () => {
+  it('#12.03 => should return original array when no matches to exclude', () => {
     const array = [1, 2, 3];
     const result = arrays.exclude(array, 5);
     expect(result).toEqual([1, 2, 3]);
   });
 
-  it('#11.04 => should handle empty array', () => {
+  it('#12.04 => should handle empty array', () => {
     const array: number[] = [];
     const result = arrays.exclude(array, 1);
     expect(result).toEqual([]);
   });
 
-  it('#11.05 => should exclude string elements', () => {
+  it('#12.05 => should exclude string elements', () => {
     const array = ['a', 'b', 'c', 'b', 'a'];
     const result = arrays.exclude(array, 'a', 'c');
     expect(result).toEqual(['b', 'b']);
   });
 
-  it('#11.06 => should handle mixed types', () => {
+  it('#12.06 => should handle mixed types', () => {
     const array = [1, 'hello', true, 2, 'hello', false];
     const result = arrays.exclude(array, 'hello', true);
     expect(result).toEqual([1, 2, false]);
   });
 
-  it('#11.07 => should exclude all elements when all match', () => {
+  it('#12.07 => should exclude all elements when all match', () => {
     const array = [1, 1, 1];
     const result = arrays.exclude(array, 1);
     expect(result).toEqual([]);
   });
 
-  it('#11.08 => should preserve object references', () => {
+  it('#12.08 => should preserve object references', () => {
     const obj1 = { id: 1 };
     const obj2 = { id: 2 };
     const obj3 = { id: 3 };

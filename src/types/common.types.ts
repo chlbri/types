@@ -46,3 +46,37 @@ export type Defaulted<T, U extends NonNullable<T>> = T extends
   | null
   ? U
   : T;
+
+export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
+
+export type UnionToIntersection<U extends object> = {
+  [K in UnionKeys<U>]: U extends Record<K, infer T> ? T : never;
+};
+
+export type UnionToIntersection2<U> = (
+  U extends any ? (k: U) => void : never
+) extends (k: infer I) => void
+  ? I
+  : never;
+
+export type UnionOmit<T, K extends Keys> = T extends any
+  ? Omit<T, K>
+  : never;
+
+export type UnionNOmit<T, K extends keyof T> = UnionOmit<T, K>;
+
+export type LastOfUnion<T> = (
+  (T extends any ? (x: () => T) => void : never) extends (
+    x: infer I,
+  ) => void
+    ? I
+    : never
+) extends () => infer U
+  ? U
+  : never;
+
+export type UnionToTuple<T, A extends any[] = []> = [T] extends [never]
+  ? A
+  : UnionToTuple<Exclude<T, LastOfUnion<T>>, [LastOfUnion<T>, ...A]>;
+
+// #endregion
