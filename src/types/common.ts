@@ -1,6 +1,6 @@
 import { Neverify } from './objects.types';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { _unknown } from 'functions/commons';
+import { _unknown } from '../functions/commons';
 import type { Defaulted, Keys, Primitive } from './common.types';
 import type {
   DeepPartial,
@@ -16,7 +16,7 @@ type FnReturn<T = any, Tr extends object = object> = {
   is<U>(_?: U): U extends T ? true : false;
 } & Tr;
 
-//Replace like the function one
+//TODO: Replace like the function one
 export const typeFn = <T = any, Tr extends object = object>(
   extensions?: Tr,
 ): FnReturn<T, Tr> => {
@@ -77,6 +77,7 @@ commons.extract = extract;
 commons.exclude = exclude;
 commons.required = required;
 commons.partial = partial;
+commons.readonly = _readonly;
 
 commons.union = <const T extends any[]>(..._: T) => _unknown<T[number]>();
 
@@ -104,7 +105,7 @@ commons.keys = typeFn<Keys>();
 
 commons.keysOf = <T extends object>(_?: T) => _unknown<keyof T>();
 
-commons.default = <const T, U extends NonNullable<T>>(_: T, __: U) =>
+commons.default = <T, U extends NonNullable<T>>(_: T, __: U) =>
   _unknown<Defaulted<T, U>>();
 
 commons.neverify = <T>(_?: T) => _unknown<Neverify<T>>();

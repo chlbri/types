@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { _unknown } from 'functions/commons';
+import { _unknown } from '../functions/commons';
 import { typeFn } from './common';
 
 export const t_boolean = <T extends boolean>(_: T) => _unknown<T>();

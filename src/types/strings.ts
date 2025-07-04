@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { _unknown } from 'functions/commons';
+import { _unknown } from '../functions/commons';
 import { typeFn } from './common';
 import {
   Email,
@@ -16,7 +16,7 @@ export const strings = <T extends string>(_?: T) => _unknown<T>();
 strings.forceCast = <T extends string>(_?: unknown) => _unknown<T>();
 strings.is = <T>(_?: T) => _unknown<T extends string ? true : false>();
 strings.type = _unknown<string>();
-strings.length = <const T extends string>(_?: T) =>
+strings.getLength = <const T extends string>(_?: T) =>
   _unknown<T['length']>();
 strings.startsWith = <const T extends string, U extends string>(
   _?: T,
