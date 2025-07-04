@@ -253,7 +253,7 @@ export const objects = castFn<object>()({
     return Object.keys(object) as any;
   },
 
-  keysof: <T extends object>(object: T): (keyof T)[] => {
+  keysOf: <T extends object>(object: T): (keyof T)[] => {
     return Object.keys(object) as any;
   },
 
