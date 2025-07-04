@@ -1,9 +1,9 @@
-import { isPrimitiveObject } from './objects';
+import { objects } from './objects';
 
-describe('isPrimitiveObjectMap', () => {
+describe('objects.primitive.is', () => {
   describe('should return true for valid primitive object maps', () => {
     it('should return true for empty object', () => {
-      expect(isPrimitiveObject({})).toBe(true);
+      expect(objects.primitive.is({})).toBe(true);
     });
 
     it('should return true for object with only primitive values', () => {
@@ -14,7 +14,7 @@ describe('isPrimitiveObjectMap', () => {
         null: null,
         undefined: undefined,
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
 
     it('should return true for object with arrays of primitives', () => {
@@ -24,7 +24,7 @@ describe('isPrimitiveObjectMap', () => {
         booleans: [true, false],
         mixed: ['hello', 42, true, null, undefined],
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
 
     it('should return true for nested object with primitives', () => {
@@ -40,7 +40,7 @@ describe('isPrimitiveObjectMap', () => {
           },
         },
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
 
     it('should return true for object with arrays containing nested primitive objects', () => {
@@ -50,7 +50,7 @@ describe('isPrimitiveObjectMap', () => {
           { name: 'item2', value: 2 },
         ],
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
   });
 
@@ -59,35 +59,35 @@ describe('isPrimitiveObjectMap', () => {
       const obj = {
         fn: () => {},
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for object with Date', () => {
       const obj = {
         date: new Date(),
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for object with RegExp', () => {
       const obj = {
         regex: /test/,
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for object with Map', () => {
       const obj = {
         map: new Map(),
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for object with Set', () => {
       const obj = {
         set: new Set(),
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for object with class instance', () => {
@@ -97,14 +97,14 @@ describe('isPrimitiveObjectMap', () => {
       const obj = {
         instance: new TestClass('test'),
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for object with Symbol', () => {
       const obj = {
         symbol: Symbol('test'),
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for nested object with non-primitive', () => {
@@ -115,7 +115,7 @@ describe('isPrimitiveObjectMap', () => {
           fn: () => {},
         },
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for array containing non-primitive objects', () => {
@@ -125,14 +125,14 @@ describe('isPrimitiveObjectMap', () => {
           { name: 'item2', date: new Date() },
         ],
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for array containing non-primitive values', () => {
       const obj = {
         items: ['string', 42, () => {}],
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
   });
 
@@ -142,7 +142,7 @@ describe('isPrimitiveObjectMap', () => {
         value: 'deep',
         number: 42,
       };
-      expect(isPrimitiveObject(child)).toBe(true);
+      expect(objects.primitive.is(child)).toBe(true);
 
       const obj = {
         level1: {
@@ -156,7 +156,7 @@ describe('isPrimitiveObjectMap', () => {
           },
         },
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
 
     it('should handle empty arrays', () => {
@@ -164,7 +164,7 @@ describe('isPrimitiveObjectMap', () => {
         emptyArray: [],
         value: 'test',
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
 
     it('should handle mixed arrays with nested objects', () => {
@@ -177,25 +177,25 @@ describe('isPrimitiveObjectMap', () => {
           { deep: { nested: 'value' } },
         ],
       };
-      expect(isPrimitiveObject(obj)).toBe(true);
+      expect(objects.primitive.is(obj)).toBe(true);
     });
 
     it('should return false for arrays with functions', () => {
       const obj = {
         mixed: ['string', 42, () => {}],
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
 
     it('should return false for arrays with complex objects', () => {
       const obj = {
         mixed: ['string', 42, { nested: new Date() }],
       };
-      expect(isPrimitiveObject(obj)).toBe(false);
+      expect(objects.primitive.is(obj)).toBe(false);
     });
   });
 });
 
-it('my ', () => {
+it.skip('my ', () => {
   console.log(Object.assign({ a: 1 }, { b: 2 }, {}));
 });

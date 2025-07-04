@@ -18,7 +18,7 @@ type FnReturn<T, Tr extends object> = Tr & {
   dynamic<U extends T>(arg: U): U;
 };
 
-export const castFnbasic = <
+export const castFnBasic = <
   Main extends Fn,
   const Tr extends object = object,
 >(
@@ -38,7 +38,7 @@ export const castFn = <T = any>() => {
   const _out = <const Tr extends object = object>(
     extensions?: Tr,
   ): FnReturn<T, Tr> => {
-    const out: any = castFnbasic((arg: T) => arg as T, {
+    const out: any = castFnBasic((arg: T) => arg as T, {
       ...extensions,
       forceCast: (arg: unknown) => {
         return arg as T;

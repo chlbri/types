@@ -13,16 +13,16 @@ declare const arrayOmit: NArrayOmit<
   'value'
 >;
 
-expectTypeOf<0 | 1 | 2>(indexOfArray1);
-expectTypeOf<0 | 1>(indexOfArray2);
+expectTypeOf(indexOfArray1).toEqualTypeOf<0 | 1 | 2>();
+expectTypeOf<0 | 1>(indexOfArray2).toEqualTypeOf<0 | 1>();
 
-expectTypeOf<[3, 'index2', 'index1']>(arrayReverse1);
-expectTypeOf<['retr', 'index1']>(arrayReverse2);
+expectTypeOf(arrayReverse1).toEqualTypeOf<[3, 'index2', 'index1']>();
+expectTypeOf(arrayReverse2).toEqualTypeOf<['retr', 'index1']>();
 
-expectTypeOf<
+expectTypeOf(arrayOmit).toEqualTypeOf<
   [
     { name: '3'; data: true },
     { name: '5'; data: false },
     { name: '7'; data: true },
   ]
->(arrayOmit);
+>();
