@@ -8,7 +8,9 @@ import type {
   NotReadonly,
   NotUndefined,
   Primitive,
+  PrimitiveObject,
 } from '../types';
+import { isPlainObject } from '../utils';
 
 type FnReturnBasic<Main extends Fn, Tr extends object> = Tr & Main;
 
@@ -32,6 +34,31 @@ export const castFnBasic = <
   }
 
   return out;
+};
+
+const _isPrimitiveObject = (object: any): object is PrimitiveObject => {
+  const isObject = isPlainObject(object);
+  if (isObject) {
+    for (const key in object) {
+      if (Object.prototype.hasOwnProperty.call(object, key)) {
+        const element = (object as any)[key];
+        const isPrimitiveMap = _isPrimitiveObject(element);
+        if (!isPrimitiveMap) return false;
+      }
+    }
+    return true;
+  }
+
+  const isArray = Array.isArray(object);
+  if (isArray) {
+    for (const item of object) {
+      const isPrimitiveMap = _isPrimitiveObject(item);
+      if (!isPrimitiveMap) return false;
+    }
+    return true;
+  }
+
+  return commons.primitive.is(object);
 };
 
 export const castFn = <T = any>() => {
@@ -120,6 +147,9 @@ commons.primitive = castFn<Primitive>()({
       value === undefined
     );
   },
+});
+commons.primitiveObject = castFn<PrimitiveObject>()({
+  is: _isPrimitiveObject,
 });
 commons.undefined = identity(undefined);
 commons.null = identity(null);
