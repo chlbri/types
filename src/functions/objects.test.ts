@@ -122,27 +122,6 @@ describe('objects', () => {
     });
   });
 
-  describe('#04 objects.keys', () => {
-    it('#04.01 should return keys of object', () => {
-      const obj = { a: 1, b: 2, c: 3 };
-      expect(objects.keys(obj)).toEqual(['a', 'b', 'c']);
-    });
-
-    it('#04.02 should return empty array for empty object', () => {
-      expect(objects.keys({})).toEqual([]);
-    });
-
-    it('#04.03 should work with nested objects', () => {
-      const obj = { nested: { value: 'test' }, simple: 'value' };
-      expect(objects.keys(obj)).toEqual(['nested', 'simple']);
-    });
-
-    it('#04.03 should work with nested objects', () => {
-      const obj = { nested: { value: 'test' }, simple: 'value' };
-      expect(objects.keys(obj)).toEqual(['nested', 'simple']);
-    });
-  });
-
   describe('#05 objects.keysOf', () => {
     it('#05.01 should return keys of object (same as keys)', () => {
       const obj = { a: 1, b: 2, c: 3 };
