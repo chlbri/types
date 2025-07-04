@@ -5,22 +5,28 @@ import type { Fn } from '../types';
 type Args = {
   fn: Fn;
   array: readonly any[] | any[];
-  notIn: any;
+  notIn: any[];
 };
 
-export const buildTests = ({ fn, array, notIn }: Args) => {
+const invite = (index: number) => {
+  const log = Math.log10(index);
+  if (log > 1) return `${index}`;
+  return `0${index}`;
+};
+
+export const buildBooleanTests = ({ fn, array, notIn }: Args) => {
   const { success } = createTests(fn);
   const tests = [
-    ...array.map((color: any) => ({
-      invite: `color ${color}`,
-      parameters: color,
+    ...array.map((parameters, index) => ({
+      invite: `${invite(index)} => value ${parameters} -> true`,
+      parameters,
       expected: true,
     })),
-    {
-      invite: 'not in',
-      parameters: notIn,
+    ...notIn.map((parameters, index) => ({
+      invite: `${invite(index)} => value ${parameters} -> false`,
+      parameters,
       expected: false,
-    },
+    })),
   ] as TestArgs<Fn>;
 
   success(...tests)();

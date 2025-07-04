@@ -1,11 +1,11 @@
 import { ENGLISH_LETTERS } from '../constants/strings';
-import { buildTests } from './fixtures';
+import { buildBooleanTests } from './fixtures';
 import { isEnglishLetters } from './strings';
 
 describe('#1 => isEnglishLetters', () => {
-  buildTests({
+  buildBooleanTests({
     fn: isEnglishLetters,
     array: ENGLISH_LETTERS,
-    notIn: 'é',
+    notIn: ['é'],
   });
 });
