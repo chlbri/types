@@ -1,5 +1,5 @@
 import { expectTypeOf } from 'vitest';
-import deepClone, { type FormatKey } from './deepclone';
+import deepClone from './deepclone';
 
 // #region Test simple object cloning
 const simpleObject = { a: 1, b: 'hello', c: true } as const;
@@ -41,27 +41,8 @@ const objectWithArrays = {
   },
 } as const;
 const clonedObjectWithArrays = deepClone(objectWithArrays);
-expectTypeOf(clonedObjectWithArrays).toMatchTypeOf<
+expectTypeOf(clonedObjectWithArrays).toEqualTypeOf<
   typeof objectWithArrays
->();
-// #endregion
-
-// #region Test with formatKey function
-const originalWithFormat = { firstName: 'John', lastName: 'Doe' } as const;
-const formatKey = (key: string) => key.toUpperCase();
-const clonedWithFormat = deepClone(originalWithFormat, formatKey);
-expectTypeOf(clonedWithFormat).toMatchTypeOf<any>();
-
-// Test that formatKey parameter is optional
-const clonedWithoutFormat = deepClone(originalWithFormat);
-expectTypeOf(clonedWithoutFormat).toMatchTypeOf<
-  typeof originalWithFormat
->();
-
-// Test that formatKey can be undefined
-const clonedWithUndefinedFormat = deepClone(originalWithFormat, undefined);
-expectTypeOf(clonedWithUndefinedFormat).toMatchTypeOf<
-  typeof originalWithFormat
 >();
 // #endregion
 
@@ -114,10 +95,8 @@ expectTypeOf(clonedPrimitiveUndefined).toMatchTypeOf<any>();
 
 // #region Test function type signatures
 expectTypeOf(deepClone).toBeFunction();
-expectTypeOf(deepClone.formatKeys).toBeFunction();
-expectTypeOf(deepClone.formatKeys).parameter(0).toExtend<FormatKey>();
 
 // Test that deepClone function has the expected signature
-expectTypeOf(deepClone).parameter(1).toExtend<FormatKey | undefined>();
+
 expectTypeOf(deepClone).parameter(2).toExtend<Map<any, any> | undefined>();
 // #endregion

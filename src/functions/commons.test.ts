@@ -385,5 +385,284 @@ describe('Castings common', () => {
         expect(isDate(Symbol('test'))).toBe(false);
       });
     });
+
+    describe('#05.08 => function main and subfunctions', () => {
+      const testFn = (x: number, y: number) => x + y;
+      const testAsyncFn = async (x: number) => x * 2;
+      const testVoidFn = () => {};
+
+      describe('#05.08.01 => commons.function main function', () => {
+        it('#05.08.01.01 => should return the same function', () => {
+          const result = commons.function(testFn);
+          expect(result).toBe(testFn);
+          expect(result(5, 3)).toBe(8);
+        });
+
+        it('#05.08.01.02 => should work with arrow functions', () => {
+          const arrowFn = (x: string) => x.toUpperCase();
+          const result = commons.function(arrowFn);
+          expect(result).toBe(arrowFn);
+          expect(result('hello')).toBe('HELLO');
+        });
+
+        it('#05.08.01.03 => should work with async functions', async () => {
+          const result = commons.function(testAsyncFn);
+          expect(result).toBe(testAsyncFn);
+          await expect(result(5)).resolves.toBe(10);
+        });
+
+        it('#05.08.01.04 => should work with void functions', () => {
+          const result = commons.function(testVoidFn);
+          expect(result).toBe(testVoidFn);
+          expect(result()).toBeUndefined();
+        });
+
+        it('#05.08.01.05 => should work with constructor functions', () => {
+          function TestConstructor(this: any, value: number) {
+            this.value = value;
+          }
+          const result = commons.function(TestConstructor);
+          expect(result).toBe(TestConstructor);
+        });
+      });
+
+      describe('#05.08.02 => commons.function.is', () => {
+        it('#05.08.02.01 => should return true for regular functions', () => {
+          expect(commons.function.is(testFn)).toBe(true);
+        });
+
+        it('#05.08.02.02 => should return true for arrow functions', () => {
+          const arrowFn = () => {};
+          expect(commons.function.is(arrowFn)).toBe(true);
+        });
+
+        it('#05.08.02.03 => should return true for async functions', () => {
+          expect(commons.function.is(testAsyncFn)).toBe(true);
+        });
+
+        it('#05.08.02.04 => should return true for constructor functions', () => {
+          function TestConstructor() {}
+          expect(commons.function.is(TestConstructor)).toBe(true);
+        });
+
+        it('#05.08.02.05 => should return true for built-in functions', () => {
+          expect(commons.function.is(Math.max)).toBe(true);
+          expect(commons.function.is(console.log)).toBe(true);
+          expect(commons.function.is(Array.isArray)).toBe(true);
+        });
+
+        it('#05.08.02.06 => should return false for non-function values', () => {
+          expect(commons.function.is('string')).toBe(false);
+          expect(commons.function.is(123)).toBe(false);
+          expect(commons.function.is(true)).toBe(false);
+          expect(commons.function.is(null)).toBe(false);
+          expect(commons.function.is(undefined)).toBe(false);
+          expect(commons.function.is({})).toBe(false);
+          expect(commons.function.is([])).toBe(false);
+          expect(commons.function.is(new Date())).toBe(false);
+          expect(commons.function.is(Symbol('test'))).toBe(false);
+        });
+      });
+
+      describe('#05.08.03 => commons.function.is.strict', () => {
+        it('#05.08.03.01 => should work with type guard functions', () => {
+          const isString = (value: unknown): value is string =>
+            typeof value === 'string';
+          const validator = commons.function.is.strict(isString);
+
+          // Since isString function validates strings, not functions, it should return false for functions
+          expect(validator(isString)).toBe(false);
+          expect(validator(testFn)).toBe(false);
+
+          // But it should work correctly for functions that pass the validation
+          const alwaysTrue = () => true;
+          const validator2 = commons.function.is.strict(alwaysTrue);
+          expect(validator2(testFn)).toBe(true);
+        });
+
+        it('#05.08.03.02 => should work with simple boolean functions', () => {
+          const isNumberFunction = (fn: unknown) =>
+            typeof fn === 'function' && fn.length === 1;
+          const validator = commons.function.is.strict(isNumberFunction);
+
+          const singleParamFn = (x: number) => x;
+          const multiParamFn = (x: number, y: number) => x + y;
+
+          expect(validator(singleParamFn)).toBe(true);
+          expect(validator(multiParamFn)).toBe(false);
+        });
+
+        it('#05.08.03.03 => should work with complex validation functions', () => {
+          const isAddFunction = (fn: unknown) =>
+            typeof fn === 'function' &&
+            fn.length === 2 &&
+            fn.name === 'add';
+
+          const validator = commons.function.is.strict(isAddFunction);
+
+          function add(x: number, y: number) {
+            return x + y;
+          }
+          function multiply(x: number, y: number) {
+            return x * y;
+          }
+
+          expect(validator(add)).toBe(true);
+          expect(validator(multiply)).toBe(false);
+        });
+
+        it('#05.08.03.04 => should reject non-functions', () => {
+          const isAnyFunction = () => true;
+          const validator = commons.function.is.strict(isAnyFunction);
+
+          expect(validator('string')).toBe(false);
+          expect(validator(123)).toBe(false);
+          expect(validator({})).toBe(false);
+          expect(validator([])).toBe(false);
+          expect(validator(null)).toBe(false);
+          expect(validator(undefined)).toBe(false);
+        });
+
+        it('#05.08.03.05 => should work with async function validation', () => {
+          const isAsyncFunction = (fn: unknown) =>
+            typeof fn === 'function' &&
+            fn.constructor.name === 'AsyncFunction';
+
+          const validator = commons.function.is.strict(isAsyncFunction);
+
+          expect(validator(testAsyncFn)).toBe(true);
+          expect(validator(testFn)).toBe(false);
+        });
+      });
+
+      describe('#05.08.04 => commons.function.forceCast', () => {
+        it('#05.08.04.01 => should force cast any value to function type', () => {
+          const notAFunction = 'not a function';
+          const result = commons.function.forceCast(notAFunction);
+
+          // Type assertion, but the value is still the original
+          expect(result).toBe(notAFunction);
+        });
+
+        it('#05.08.04.02 => should work with actual functions', () => {
+          const actualFunction = (x: number) => x * 2;
+          const result = commons.function.forceCast(actualFunction);
+
+          expect(result).toBe(actualFunction);
+          expect(result(5)).toBe(10);
+        });
+
+        it('#05.08.04.03 => should work with null and undefined', () => {
+          const nullResult = commons.function.forceCast(null);
+          const undefinedResult = commons.function.forceCast(undefined);
+
+          expect(nullResult).toBeNull();
+          expect(undefinedResult).toBeUndefined();
+        });
+      });
+
+      describe('#05.08.05 => commons.function.dynamic', () => {
+        it('#05.08.05.01 => should return the same function with preserved type', () => {
+          const specificFn = (x: number, y: string) => `${x}-${y}`;
+          const result = commons.function.dynamic(specificFn);
+
+          expect(result).toBe(specificFn);
+          expect(result(42, 'test')).toBe('42-test');
+        });
+
+        it('#05.08.05.02 => should work with arrow functions', () => {
+          const arrowFn = (x: string) => x.split('').reverse().join('');
+          const result = commons.function.dynamic(arrowFn);
+
+          expect(result).toBe(arrowFn);
+          expect(result('hello')).toBe('olleh');
+        });
+
+        it('#05.08.05.03 => should work with async functions', async () => {
+          const asyncFn = async (x: number) => {
+            await new Promise(resolve => setTimeout(resolve, 1));
+            return x * 3;
+          };
+          const result = commons.function.dynamic(asyncFn);
+
+          expect(result).toBe(asyncFn);
+          await expect(result(5)).resolves.toBe(15);
+        });
+
+        it('#05.08.05.04 => should work with void functions', () => {
+          let sideEffect = 0;
+          const voidFn = () => {
+            sideEffect += 1;
+          };
+          const result = commons.function.dynamic(voidFn);
+
+          expect(result).toBe(voidFn);
+          result();
+          expect(sideEffect).toBe(1);
+        });
+      });
+
+      describe('#05.08.06 => commons.function.checker', () => {
+        it('#05.08.06.01 => should work as a type guard checker', () => {
+          const isString = (value: unknown): value is string =>
+            typeof value === 'string';
+          const result = commons.function.checker(isString);
+
+          expect(result).toBe(isString);
+          expect(result('test')).toBe(true);
+          expect(result(123)).toBe(false);
+        });
+
+        it('#05.08.06.02 => should work with simple boolean checkers', () => {
+          const isEven = (value: unknown) =>
+            typeof value === 'number' && value % 2 === 0;
+          const result = commons.function.checker(isEven);
+
+          expect(result).toBe(isEven);
+          expect(result(2)).toBe(true);
+          expect(result(3)).toBe(false);
+          expect(result('test')).toBe(false);
+        });
+
+        it('#05.08.06.03 => should work with complex validation checkers', () => {
+          const isPositiveNumber = (value: unknown) =>
+            typeof value === 'number' && !isNaN(value) && value > 0;
+
+          const result = commons.function.checker(isPositiveNumber);
+
+          expect(result).toBe(isPositiveNumber);
+          expect(result(5)).toBe(true);
+          expect(result(-5)).toBe(false);
+          expect(result(0)).toBe(false);
+          expect(result(NaN)).toBe(false);
+          expect(result('5')).toBe(false);
+        });
+
+        it('#05.08.06.04 => should work with object validation checkers', () => {
+          const hasIdProperty = (value: unknown) =>
+            typeof value === 'object' && value !== null && 'id' in value;
+
+          const result = commons.function.checker(hasIdProperty);
+
+          expect(result).toBe(hasIdProperty);
+          expect(result({ id: 1 })).toBe(true);
+          expect(result({ name: 'test' })).toBe(false);
+          expect(result(null)).toBe(false);
+          expect(result(undefined)).toBe(false);
+        });
+
+        it('#05.08.06.05 => should work with array validation checkers', () => {
+          const isNonEmptyArray = (value: unknown) =>
+            Array.isArray(value) && value.length > 0;
+
+          const result = commons.function.checker(isNonEmptyArray);
+
+          expect(result).toBe(isNonEmptyArray);
+          expect(result([1, 2, 3])).toBe(true);
+          expect(result([])).toBe(false);
+          expect(result('not array')).toBe(false);
+        });
+      });
+    });
   });
 });

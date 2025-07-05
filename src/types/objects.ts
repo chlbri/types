@@ -111,8 +111,8 @@ omitBy.keys = <T extends object, K>(_: T, __?: K) =>
 
 objects.omitBy = omitBy;
 
-objects.ru = typeFn<Ru>();
-objects.rn = typeFn<Rn>();
-objects.ra = typeFn<Ra>();
+objects.ru = typeFn<Ru>()();
+objects.rn = typeFn<Rn>()();
+objects.ra = typeFn<Ra>()();
 
-objects.primitive = typeFn<PrimitiveObject>();
+objects.primitive = typeFn<PrimitiveObject>()();

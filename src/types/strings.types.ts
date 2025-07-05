@@ -1,5 +1,4 @@
 import type { ENGLISH_LETTERS } from '../constants';
-import type { Digit } from './numbers.types';
 
 export type LowerLetters = (typeof ENGLISH_LETTERS)[number];
 
@@ -7,7 +6,7 @@ export type UpperLetters = Uppercase<LowerLetters>;
 
 export type Letters = UpperLetters | LowerLetters;
 
-export type StringLocalLitterals = Letters | Digit;
+// export type StringLocalLitterals = Letters | Digit;
 
 export type Email = `${string}@${string}.${string}`;
 

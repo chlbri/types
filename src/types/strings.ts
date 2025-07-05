@@ -50,7 +50,7 @@ strings.isLowerCase = <const T>(_?: T) =>
   _unknown<T extends Lowercase<string> ? true : false>();
 strings.isUpperCase = <const T>(_?: T) =>
   _unknown<T extends Uppercase<string> ? true : false>();
-strings.email = typeFn<Email>();
+strings.email = typeFn<Email>()();
 strings.add = <
   T extends string,
   Before extends string,

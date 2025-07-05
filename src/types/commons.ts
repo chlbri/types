@@ -26,33 +26,39 @@ export const typeFnBasic = <
   return out;
 };
 
-type FnReturn<T = any, Tr extends object = object> = {
-  (_?: T): T;
-  forceCast(_?: unknown): T;
-  type: T;
-  dynamic<U extends T>(_: U): U;
-  is<U>(_?: U): U extends T ? true : false;
-} & Tr;
+type FnReturn<T = any, Tr extends object = object> = FnBasic<
+  (_?: T) => T,
+  {
+    forceCast(_?: unknown): T;
+    type: T;
+    dynamic<U extends T>(_: U): U;
+    is<U>(_?: U): U extends T ? true : false;
+  } & Tr
+>;
 
 //TODO: Replace like the function one
-export const typeFn = <T = any, Tr extends object = object>(
-  extensions?: Tr,
-): FnReturn<T, Tr> => {
-  const out: any = (_?: T) => _unknown<T>();
+export const typeFn = <T = any>() => {
+  const _out = <Tr extends object = object>(
+    extensions?: Tr,
+  ): FnReturn<T, Tr> => {
+    const out: any = (_?: T) => _unknown<T>();
 
-  out.forceCast = (_?: unknown) => _unknown<T>();
+    out.forceCast = (_?: unknown) => _unknown<T>();
 
-  out.type = undefined as T;
+    out.type = undefined as T;
 
-  out.dynamic = <U extends T>(_: U) => _unknown<U>();
+    out.dynamic = <U extends T>(_: U) => _unknown<U>();
 
-  out.is = <U>(_?: U) => _unknown<U extends T ? true : false>();
+    out.is = <U>(_?: U) => _unknown<U extends T ? true : false>();
 
-  if (extensions) {
-    Object.assign(out, extensions);
-  }
+    if (extensions) {
+      Object.assign(out, extensions);
+    }
 
-  return out;
+    return out;
+  };
+
+  return _out;
 };
 
 const extract = <T, U extends any[]>(_: T, ...__: U) =>
@@ -99,10 +105,10 @@ commons.readonly = _readonly;
 
 commons.union = <const T extends any[]>(..._: T) => _unknown<T[number]>();
 
-commons.date = typeFn<Date>();
-commons.null = typeFn<null>();
-commons.symbol = typeFn<symbol>();
-commons.bigint = typeFn<bigint>();
+commons.date = typeFn<Date>()();
+commons.null = typeFn<null>()();
+commons.symbol = typeFn<symbol>()();
+commons.bigint = typeFn<bigint>()();
 commons.never = _unknown<never>();
 commons.undefined = _unknown<undefined>();
 
@@ -111,15 +117,15 @@ commons.function = <T extends any[], R = any>(..._: [...T, R]) =>
 
 commons.unknown = _unknown;
 
-commons.any = typeFn();
+commons.any = typeFn()();
 
-commons.primitive = typeFn<Primitive>();
+commons.primitive = typeFn<Primitive>()();
 
 commons.undefiny = <T>(_?: T) => _unknown<T | undefined>();
 
 commons.identity = <T>(_?: T) => _unknown<T>();
 
-commons.keys = typeFn<Keys>();
+commons.keys = typeFn<Keys>()();
 
 commons.keysOf = <T extends object>(_?: T) => _unknown<keyof T>();
 

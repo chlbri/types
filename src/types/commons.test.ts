@@ -10,37 +10,37 @@ describe('common type functions', () => {
 
   it('2. should call typeFn with extensions', () => {
     const extensions = { custom: () => 'test' };
-    const result = typeFn(extensions);
+    const result = typeFn()(extensions);
     expect(typeof result).toBe('function');
     expect(typeof result.custom).toBe('function');
   });
 
   it('3. should call typeFn result function', () => {
-    const fn = typeFn();
+    const fn = typeFn()();
     const result = fn();
     expect(result).toBeUndefined();
   });
 
   it('4. should call typeFn result forceCast', () => {
-    const fn = typeFn();
+    const fn = typeFn()();
     const result = fn.forceCast();
     expect(result).toBeUndefined();
   });
 
   it('5. should call typeFn result type', () => {
-    const fn = typeFn();
+    const fn = typeFn()();
     const result = fn.type;
     expect(result).toBeUndefined();
   });
 
   it('6. should call typeFn result dynamic', () => {
-    const fn = typeFn();
+    const fn = typeFn()();
     const result = fn.dynamic('test');
     expect(result).toBeUndefined();
   });
 
   it('7. should call typeFn result is', () => {
-    const fn = typeFn();
+    const fn = typeFn()();
     const result = fn.is();
     expect(result).toBeUndefined();
   });
@@ -374,7 +374,7 @@ describe('common type functions', () => {
     it('70. should have correct type inference for typeFn', () => {
       // These are compile-time checks to ensure type safety
       expect(typeof typeFn).toBe('function');
-      const fn = typeFn();
+      const fn = typeFn()();
       expect(typeof fn).toBe('function');
       expect(typeof fn.forceCast).toBe('function');
       expect(typeof fn.is).toBe('function');
