@@ -27,11 +27,19 @@ const isEnglishLetters = (value: string): value is Letters => {
   return true;
 };
 
-const _contains = <U extends string>(
+const _contains = <U extends string[]>(
   value: unknown,
-  segment: U,
-): value is `${string}${U}${string}` => {
-  return typeof value === 'string' && value.includes(segment);
+  ...segment: U
+): value is `${string}${U[number]}${string}` => {
+  if (typeof value !== 'string') return false;
+
+  // Check if the string contains any of the segments
+  for (const seg of segment) {
+    if (value.includes(seg)) {
+      return true;
+    }
+  }
+  return false;
 };
 
 export const strings = castFn<string>()({
@@ -68,7 +76,7 @@ export const strings = castFn<string>()({
     return typeof value === 'string' && value.endsWith(suffix);
   },
 
-  include: _contains,
+  includes: _contains,
 
   contains: _contains,
 

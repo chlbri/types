@@ -109,73 +109,73 @@ describe('strings type functions', () => {
     expect(result).toBeUndefined();
   });
 
-  it('22. should call strings.lowerLetters', () => {
-    const result = strings.lowerLetters();
+  it('22. should call strings.letters.lower', () => {
+    const result = strings.letters.lower();
     expect(result).toBeUndefined();
   });
 
-  it('23. should call strings.lowerLetters with parameter', () => {
-    const result = strings.lowerLetters('a');
+  it('23. should call strings.letters.lower with parameter', () => {
+    const result = strings.letters.lower('a');
     expect(result).toBeUndefined();
   });
 
-  it('24. should call strings.upperLetters', () => {
-    const result = strings.upperLetters();
+  it('24. should call strings.letters.upper', () => {
+    const result = strings.letters.upper();
     expect(result).toBeUndefined();
   });
 
-  it('25. should call strings.upperLetters with parameter', () => {
-    const result = strings.upperLetters('A');
+  it('25. should call strings.letters.upper with parameter', () => {
+    const result = strings.letters.upper('A');
     expect(result).toBeUndefined();
   });
 
-  it('26. should call strings.isLetters', () => {
-    const result = strings.isLetters();
+  it('26. should call strings.letters.is', () => {
+    const result = strings.letters.is();
     expect(result).toBeUndefined();
   });
 
-  it('27. should call strings.isLetters with parameter', () => {
-    const result = strings.isLetters('a');
+  it('27. should call strings.letters.is with parameter', () => {
+    const result = strings.letters.is('a');
     expect(result).toBeUndefined();
   });
 
-  it('28. should call strings.isLowerLetters', () => {
-    const result = strings.isLowerLetters();
+  it('28. should call strings.letters.lower.is', () => {
+    const result = strings.letters.lower.is();
     expect(result).toBeUndefined();
   });
 
-  it('29. should call strings.isLowerLetters with parameter', () => {
-    const result = strings.isLowerLetters('a');
+  it('29. should call strings.letters.lower.is with parameter', () => {
+    const result = strings.letters.lower.is('a');
     expect(result).toBeUndefined();
   });
 
-  it('30. should call strings.isUpperLetters', () => {
-    const result = strings.isUpperLetters();
+  it('30. should call strings.letters.upper.is', () => {
+    const result = strings.letters.upper.is();
     expect(result).toBeUndefined();
   });
 
-  it('31. should call strings.isUpperLetters with parameter', () => {
-    const result = strings.isUpperLetters('A');
+  it('31. should call strings.letters.upper.is with parameter', () => {
+    const result = strings.letters.upper.is('A');
     expect(result).toBeUndefined();
   });
 
-  it('32. should call strings.isLowerCase', () => {
-    const result = strings.isLowerCase();
+  it('32. should call strings.letters.type', () => {
+    const result = strings.letters.type;
     expect(result).toBeUndefined();
   });
 
-  it('33. should call strings.isLowerCase with parameter', () => {
-    const result = strings.isLowerCase('hello');
+  it('33. should call strings.letters.lower.type', () => {
+    const result = strings.letters.lower.type;
     expect(result).toBeUndefined();
   });
 
-  it('34. should call strings.isUpperCase', () => {
-    const result = strings.isUpperCase();
+  it('34. should call strings.letters.upper.type', () => {
+    const result = strings.letters.upper.type;
     expect(result).toBeUndefined();
   });
 
-  it('35. should call strings.isUpperCase with parameter', () => {
-    const result = strings.isUpperCase('HELLO');
+  it('35. should call strings.letters.lower.forceCast', () => {
+    const result = strings.letters.lower.forceCast('hello');
     expect(result).toBeUndefined();
   });
 

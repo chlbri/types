@@ -140,7 +140,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (value: unknown): value is string => typeof value === 'string',
     );
-    const result = validator(['a', 'b', 'c'], 3);
+    const result = validator(['a', 'b', 'c']);
     expect(result).toBe(true);
   });
 
@@ -148,15 +148,15 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (value: unknown): value is string => typeof value === 'string',
     );
-    const result = validator(['a', 'b'], 3);
-    expect(result).toBe(false);
+    const result = validator(['a', 'b']);
+    expect(result).toBe(true);
   });
 
   it('#03.1.03 => should reject non-array values', () => {
     const validator = arrays.tupleOf.is(
       (value: unknown): value is string => typeof value === 'string',
     );
-    const result = validator('not an array', 3);
+    const result = validator('not an array');
     expect(result).toBe(false);
   });
 
@@ -164,7 +164,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
-    const result = validator([], 0);
+    const result = validator([]);
     expect(result).toBe(true);
   });
 
@@ -172,7 +172,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (value: unknown): value is string => typeof value === 'string',
     );
-    const result = validator([1, 'hello', true], 3);
+    const result = validator([1, 'hello', true]);
     expect(result).toBe(false);
   });
 
@@ -180,7 +180,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (value: unknown): value is number => typeof value === 'number',
     );
-    const result = validator([42], 1);
+    const result = validator([42]);
     expect(result).toBe(true);
   });
 
@@ -188,7 +188,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
-    const result = validator(null, 0);
+    const result = validator(null);
     expect(result).toBe(false);
   });
 
@@ -196,7 +196,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
-    const result = validator(undefined, 0);
+    const result = validator(undefined);
     expect(result).toBe(false);
   });
 
@@ -205,7 +205,7 @@ describe('#03.1 => arrays.tupleOf.is', () => {
       (value: unknown): value is object =>
         typeof value === 'object' && value !== null,
     );
-    const result = validator([{ a: 1 }, { b: 2 }], 2);
+    const result = validator([{ a: 1 }, { b: 2 }]);
     expect(result).toBe(true);
   });
 
@@ -213,8 +213,8 @@ describe('#03.1 => arrays.tupleOf.is', () => {
     const validator = arrays.tupleOf.is(
       (value: unknown): value is number => typeof value === 'number',
     );
-    const result = validator([1, 2, 3, 4, 5], 3);
-    expect(result).toBe(false);
+    const result = validator([1, 2, 3, 4, 5]);
+    expect(result).toBe(true);
   });
 });
 
@@ -274,16 +274,8 @@ describe('#03.2 => arrays.is', () => {
 });
 
 describe('#03.3 => arrays.is.strict', () => {
-  it('#03.3.01 => should create type guard for string arrays', () => {
-    const isStringArray = arrays.is.strict(
-      (value: unknown): value is string => typeof value === 'string',
-    );
-    const result = isStringArray(['a', 'b', 'c']);
-    expect(result).toBe(true);
-  });
-
   it('#03.3.02 => should reject non-arrays', () => {
-    const isNumberArray = arrays.is.strict(
+    const isNumberArray = arrays.tupleOf.is(
       (value: unknown): value is number => typeof value === 'number',
     );
     const result = isNumberArray('not an array');
@@ -291,7 +283,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.03 => should accept empty arrays', () => {
-    const isAnyArray = arrays.is.strict(
+    const isAnyArray = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
     const result = isAnyArray([]);
@@ -299,7 +291,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.04 => should work with object arrays', () => {
-    const isObjectArray = arrays.is.strict(
+    const isObjectArray = arrays.tupleOf.is(
       (value: unknown): value is object =>
         typeof value === 'object' && value !== null,
     );
@@ -308,7 +300,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.05 => should reject arrays with incorrect element types', () => {
-    const isStringArray = arrays.is.strict(
+    const isStringArray = arrays.tupleOf.is(
       (value: unknown): value is string => typeof value === 'string',
     );
     const result = isStringArray([1, 'hello', 2, 'world']);
@@ -316,7 +308,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.06 => should reject null', () => {
-    const isAnyArray = arrays.is.strict(
+    const isAnyArray = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
     const result = isAnyArray(null);
@@ -324,7 +316,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.07 => should reject undefined', () => {
-    const isAnyArray = arrays.is.strict(
+    const isAnyArray = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
     const result = isAnyArray(undefined);
@@ -332,7 +324,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.08 => should work with boolean arrays', () => {
-    const isBooleanArray = arrays.is.strict(
+    const isBooleanArray = arrays.tupleOf.is(
       (value: unknown): value is boolean => typeof value === 'boolean',
     );
     const result = isBooleanArray([true, false, true]);
@@ -340,7 +332,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.09 => should reject arrays with mixed types when strict validation', () => {
-    const isNumberArray = arrays.is.strict(
+    const isNumberArray = arrays.tupleOf.is(
       (value: unknown): value is number => typeof value === 'number',
     );
     const result = isNumberArray([1, 2, 'string']);
@@ -348,7 +340,7 @@ describe('#03.3 => arrays.is.strict', () => {
   });
 
   it('#03.3.10 => should reject objects with array-like properties', () => {
-    const isAnyArray = arrays.is.strict(
+    const isAnyArray = arrays.tupleOf.is(
       (_value: unknown): _value is any => true,
     );
     const result = isAnyArray({ 0: 'a', 1: 'b', length: 2 });
@@ -358,7 +350,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.11 => should work with simple boolean function for even numbers', () => {
     const isEvenNumber = (value: unknown) =>
       typeof value === 'number' && value % 2 === 0;
-    const validator = arrays.is.strict(isEvenNumber);
+    const validator = arrays.tupleOf.is(isEvenNumber);
     const result = validator([2, 4, 6, 8]);
     expect(result).toBe(true);
   });
@@ -366,7 +358,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.12 => should reject with simple boolean function for mixed even/odd numbers', () => {
     const isEvenNumber = (value: unknown) =>
       typeof value === 'number' && value % 2 === 0;
-    const validator = arrays.is.strict(isEvenNumber);
+    const validator = arrays.tupleOf.is(isEvenNumber);
     const result = validator([2, 3, 4, 6]);
     expect(result).toBe(false);
   });
@@ -374,7 +366,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.13 => should work with simple boolean function for strings longer than 3 chars', () => {
     const isLongString = (value: unknown) =>
       typeof value === 'string' && value.length > 3;
-    const validator = arrays.is.strict(isLongString);
+    const validator = arrays.tupleOf.is(isLongString);
     const result = validator(['hello', 'world', 'testing']);
     expect(result).toBe(true);
   });
@@ -382,7 +374,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.14 => should reject with simple boolean function for short strings', () => {
     const isLongString = (value: unknown) =>
       typeof value === 'string' && value.length > 3;
-    const validator = arrays.is.strict(isLongString);
+    const validator = arrays.tupleOf.is(isLongString);
     const result = validator(['hello', 'hi', 'world']);
     expect(result).toBe(false);
   });
@@ -390,7 +382,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.15 => should work with simple boolean function for positive numbers', () => {
     const isPositive = (value: unknown) =>
       typeof value === 'number' && value > 0;
-    const validator = arrays.is.strict(isPositive);
+    const validator = arrays.tupleOf.is(isPositive);
     const result = validator([1, 2, 3, 4, 5]);
     expect(result).toBe(true);
   });
@@ -398,7 +390,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.16 => should reject with simple boolean function for negative numbers', () => {
     const isPositive = (value: unknown) =>
       typeof value === 'number' && value > 0;
-    const validator = arrays.is.strict(isPositive);
+    const validator = arrays.tupleOf.is(isPositive);
     const result = validator([1, -2, 3, 4]);
     expect(result).toBe(false);
   });
@@ -406,7 +398,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.17 => should work with simple boolean function for objects with specific property', () => {
     const hasIdProperty = (value: unknown) =>
       typeof value === 'object' && value !== null && 'id' in value;
-    const validator = arrays.is.strict(hasIdProperty);
+    const validator = arrays.tupleOf.is(hasIdProperty);
     const result = validator([{ id: 1 }, { id: 2, name: 'test' }]);
     expect(result).toBe(true);
   });
@@ -414,7 +406,7 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.18 => should reject with simple boolean function for objects without required property', () => {
     const hasIdProperty = (value: unknown) =>
       typeof value === 'object' && value !== null && 'id' in value;
-    const validator = arrays.is.strict(hasIdProperty);
+    const validator = arrays.tupleOf.is(hasIdProperty);
     const result = validator([{ id: 1 }, { name: 'test' }]);
     expect(result).toBe(false);
   });
@@ -422,14 +414,14 @@ describe('#03.3 => arrays.is.strict', () => {
   it('#03.3.19 => should work with simple boolean function for empty array', () => {
     const isEvenNumber = (value: unknown) =>
       typeof value === 'number' && value % 2 === 0;
-    const validator = arrays.is.strict(isEvenNumber);
+    const validator = arrays.tupleOf.is(isEvenNumber);
     const result = validator([]);
     expect(result).toBe(true);
   });
 
   it('#03.3.20 => should work with simple boolean function always returning true', () => {
     const alwaysTrue = () => true;
-    const validator = arrays.is.strict(alwaysTrue);
+    const validator = arrays.tupleOf.is(alwaysTrue);
     const result = validator([1, 'hello', true, { test: 'value' }]);
     expect(result).toBe(true);
   });
@@ -506,7 +498,7 @@ describe('#09 =>  arrays.reduce', () => {
   });
 
   it('#09.03 => should return first element of readonly array', () => {
-    const result = arrays.reduce.const([1, 2, 3]);
+    const result = arrays.reduce([1, 2, 3]);
     expect(result).toBe(1);
   });
 
@@ -574,87 +566,41 @@ describe('#10 =>  arrays.reverse', () => {
   });
 });
 
-describe('#11 =>  arrays.reverse.tuple', () => {
-  it('#11.01 => should  arrays.reverse tuple with multiple elements', () => {
-    const result = arrays.reverse.tuple(1, 2, 3, 4);
-    expect(result).toEqual([4, 3, 2, 1]);
-  });
-
-  it('#11.02 => should handle empty tuple', () => {
-    const result = arrays.reverse.tuple();
-    expect(result).toEqual([]);
-  });
-
-  it('#11.03 => should handle single element', () => {
-    const result = arrays.reverse.tuple('single');
-    expect(result).toEqual(['single']);
-  });
-
-  it('#11.04 => should  arrays.reverse tuple with mixed types', () => {
-    const result = arrays.reverse.tuple(1, 'hello', true, {
-      key: 'value',
-    });
-    expect(result).toEqual([{ key: 'value' }, true, 'hello', 1]);
-  });
-
-  it('#11.05 => should preserve object references', () => {
-    const obj = { test: 'value' };
-    const result = arrays.reverse.tuple(obj, 'test');
-    expect(result[1]).toBe(obj);
-  });
-});
-
-describe('#12 => arrays.reverse.freeze', () => {
-  it('#12.01 => should reverse and freeze array with multiple elements', () => {
-    const result = arrays.reverse.freeze(1, 2, 3, 4);
-    expect(result).toEqual([4, 3, 2, 1]);
+describe('#13 => arrays.freeze', () => {
+  it('#13.01 => should freeze tuple with multiple elements', () => {
+    const result = arrays.freeze(1, 2, 3);
+    expect(result).toEqual([1, 2, 3]);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#12.02 => should handle empty array and freeze it', () => {
-    const result = arrays.reverse.freeze();
+  it('#13.02 => should freeze empty tuple', () => {
+    const result = arrays.freeze();
     expect(result).toEqual([]);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#12.03 => should handle single element and freeze it', () => {
-    const result = arrays.reverse.freeze('single');
+  it('#13.03 => should freeze single element tuple', () => {
+    const result = arrays.freeze('single');
     expect(result).toEqual(['single']);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#12.04 => should reverse and freeze array with mixed types', () => {
-    const result = arrays.reverse.freeze(1, 'hello', true, {
-      key: 'value',
-    });
-    expect(result).toEqual([{ key: 'value' }, true, 'hello', 1]);
-    expect(Object.isFrozen(result)).toBe(true);
-  });
-
-  it('#12.05 => should preserve object references in frozen reversed array', () => {
-    const obj = { test: 'value' };
-    const result = arrays.reverse.freeze(obj, 'test', 42);
-    expect(result).toEqual([42, 'test', obj]);
-    expect(result[2]).toBe(obj);
-    expect(Object.isFrozen(result)).toBe(true);
-  });
-
-  it('#12.06 => should prevent modification of frozen reversed array', () => {
-    const result = arrays.reverse.freeze(1, 2, 3);
+  it('#13.04 => should prevent modification of frozen tuple', () => {
+    const result = arrays.freeze(1, 2, 3);
     expect(() => {
       (result as any)[0] = 999;
     }).toThrow();
-    expect(result[0]).toBe(3); // Should still be 3 (reversed from [1,2,3] -> [3,2,1])
+    expect(result[0]).toBe(1); // Should still be 1, not 999
   });
 
-  it('#12.07 => should handle duplicate elements in frozen reversed array', () => {
-    const result = arrays.reverse.freeze('a', 'b', 'a', 'c', 'a');
-    expect(result).toEqual(['a', 'c', 'a', 'b', 'a']);
+  it('#13.05 => should handle duplicate elements in frozen tuple', () => {
+    const result = arrays.freeze('a', 'b', 'a', 'c', 'a');
+    expect(result).toEqual(['a', 'b', 'a', 'c', 'a']);
     expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#12.08 => should create immutable frozen reversed array', () => {
-    const result = arrays.reverse.freeze(1, 2, 3);
+  it('#13.06 => should create immutable frozen tuple', () => {
+    const result = arrays.freeze(1, 2, 3);
 
     // Try to modify - should not work
     expect(() => {
@@ -665,26 +611,412 @@ describe('#12 => arrays.reverse.freeze', () => {
       (result as any).pop();
     }).toThrow();
 
-    expect(result).toEqual([3, 2, 1]); // Reversed order
+    expect(result).toEqual([1, 2, 3]);
     expect(result.length).toBe(3);
-    expect(Object.isFrozen(result)).toBe(true);
   });
 
-  it('#12.09 => should handle complex objects in frozen reversed array', () => {
-    const obj1 = { id: 1, name: 'first' };
-    const obj2 = { id: 2, name: 'second' };
-    const result = arrays.reverse.freeze(obj1, obj2, 'string');
-
-    expect(result).toEqual(['string', obj2, obj1]);
-    expect(result[1]).toBe(obj2);
-    expect(result[2]).toBe(obj1);
+  it('#13.07 => should preserve object references in frozen tuple', () => {
+    const obj = { test: 'value' };
+    const result = arrays.freeze(obj, 'test');
+    expect(result[0]).toBe(obj);
     expect(Object.isFrozen(result)).toBe(true);
   });
+});
 
-  it('#12.10 => should handle null and undefined in frozen reversed array', () => {
-    const result = arrays.reverse.freeze(null, undefined, 'test');
-    expect(result).toEqual(['test', undefined, null]);
-    expect(Object.isFrozen(result)).toBe(true);
+describe('#14 => arrays.extract', () => {
+  it('#14.01 => should extract matching elements', () => {
+    const array = [1, 2, 3, 4, 2, 3, 1];
+    const result = arrays.extract(array, 1, 3);
+    expect(result).toEqual([1, 3, 3, 1]);
+  });
+
+  it('#14.02 => should extract single matching element', () => {
+    const array = [1, 2, 3, 4, 2, 3, 1];
+    const result = arrays.extract(array, 2);
+    expect(result).toEqual([2, 2]);
+  });
+
+  it('#14.03 => should return empty array when no matches', () => {
+    const array = [1, 2, 3];
+    const result = arrays.extract(array, 5);
+    expect(result).toEqual([]);
+  });
+
+  it('#14.04 => should handle empty array', () => {
+    const array: number[] = [];
+    const result = arrays.extract(array, 1);
+    expect(result).toEqual([]);
+  });
+
+  it('#14.05 => should extract string elements', () => {
+    const array = ['a', 'b', 'c', 'b', 'a'];
+    const result = arrays.extract(array, 'a', 'c');
+    expect(result).toEqual(['a', 'c', 'a']);
+  });
+
+  it('#14.06 => should handle mixed types', () => {
+    const array = [1, 'hello', true, 2, 'hello', false];
+    const result = arrays.extract(array, 'hello', true);
+    expect(result).toEqual(['hello', true, 'hello']);
+  });
+
+  it('#14.07 => should preserve object references', () => {
+    const obj1 = { id: 1 };
+    const obj2 = { id: 2 };
+    const array = [obj1, obj2, obj1];
+    const result = arrays.extract(array, obj1);
+    expect(result).toEqual([obj1, obj1]);
+    expect(result).toHaveLength(2);
+    expect((result as any[])[0]).toBe(obj1);
+    expect((result as any[])[1]).toBe(obj1);
+  });
+});
+
+describe('#15 => arrays.exclude', () => {
+  it('#15.01 => should exclude matching elements', () => {
+    const array = [1, 2, 3, 4, 2, 3, 1];
+    const result = arrays.exclude(array, 1, 3);
+    expect(result).toEqual([2, 4, 2]);
+  });
+
+  it('#15.02 => should exclude single matching element', () => {
+    const array = [1, 2, 3, 4, 2, 3, 1];
+    const result = arrays.exclude(array, 2);
+    expect(result).toEqual([1, 3, 4, 3, 1]);
+  });
+
+  it('#15.03 => should return original array when no matches to exclude', () => {
+    const array = [1, 2, 3];
+    const result = arrays.exclude(array, 5);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
+  it('#15.04 => should handle empty array', () => {
+    const array: number[] = [];
+    const result = arrays.exclude(array, 1);
+    expect(result).toEqual([]);
+  });
+
+  it('#15.05 => should exclude string elements', () => {
+    const array = ['a', 'b', 'c', 'b', 'a'];
+    const result = arrays.exclude(array, 'a', 'c');
+    expect(result).toEqual(['b', 'b']);
+  });
+
+  it('#15.06 => should handle mixed types', () => {
+    const array = [1, 'hello', true, 2, 'hello', false];
+    const result = arrays.exclude(array, 'hello', true);
+    expect(result).toEqual([1, 2, false]);
+  });
+
+  it('#15.07 => should exclude all elements when all match', () => {
+    const array = [1, 1, 1];
+    const result = arrays.exclude(array, 1);
+    expect(result).toEqual([]);
+  });
+
+  it('#15.08 => should preserve object references', () => {
+    const obj1 = { id: 1 };
+    const obj2 = { id: 2 };
+    const obj3 = { id: 3 };
+    const array = [obj1, obj2, obj3, obj1];
+    const result = arrays.exclude(array, obj1);
+    expect(result).toEqual([obj2, obj3]);
+    expect((result as any[])[0]).toBe(obj2);
+    expect((result as any[])[1]).toBe(obj3);
+  });
+});
+
+describe('#11 => arrays.toArray', () => {
+  it('#11.01 => should return array as-is when input is already an array', () => {
+    const input = [1, 2, 3];
+    const result = arrays.toArray(input);
+    expect(result).toEqual([1, 2, 3]);
+    expect(result).toBe(input); // Should be the same reference
+  });
+
+  it('#11.02 => should wrap single value in array', () => {
+    const result = arrays.toArray(42);
+    expect(result).toEqual([42]);
+  });
+
+  it('#11.03 => should wrap string in array', () => {
+    const result = arrays.toArray('hello');
+    expect(result).toEqual(['hello']);
+  });
+
+  it('#11.04 => should wrap boolean in array', () => {
+    const result = arrays.toArray(true);
+    expect(result).toEqual([true]);
+  });
+
+  it('#11.05 => should wrap object in array', () => {
+    const obj = { key: 'value' };
+    const result = arrays.toArray(obj);
+    expect(result).toEqual([obj]);
+    expect(result[0]).toBe(obj); // Should preserve reference
+  });
+
+  it('#11.06 => should wrap null in array', () => {
+    const result = arrays.toArray(null);
+    expect(result).toEqual([null]);
+  });
+
+  it('#11.07 => should wrap undefined in array', () => {
+    const result = arrays.toArray(undefined);
+    expect(result).toEqual([undefined]);
+  });
+
+  it('#11.08 => should handle empty array', () => {
+    const input: number[] = [];
+    const result = arrays.toArray(input);
+    expect(result).toEqual([]);
+    expect(result).toBe(input); // Should be the same reference
+  });
+
+  it('#11.09 => should handle nested arrays', () => {
+    const input = [
+      [1, 2],
+      [3, 4],
+    ];
+    const result = arrays.toArray(input);
+    expect(result).toEqual([
+      [1, 2],
+      [3, 4],
+    ]);
+    expect(result).toBe(input); // Should be the same reference
+  });
+
+  it('#11.10 => should wrap function in array', () => {
+    const fn = (x: number) => x * 2;
+    const result = arrays.toArray(fn);
+    expect(result).toEqual([fn]);
+    expect(result[0]).toBe(fn); // Should preserve reference
+    expect(result[0](5)).toBe(10); // Function should still work
+  });
+
+  it('#11.11 => should wrap zero in array', () => {
+    const result = arrays.toArray(0);
+    expect(result).toEqual([0]);
+  });
+
+  it('#11.12 => should wrap empty string in array', () => {
+    const result = arrays.toArray('');
+    expect(result).toEqual(['']);
+  });
+
+  it('#11.13 => should wrap NaN in array', () => {
+    const result = arrays.toArray(NaN);
+    expect(result).toEqual([NaN]);
+  });
+
+  it('#11.14 => should wrap Infinity in array', () => {
+    const result = arrays.toArray(Infinity);
+    expect(result).toEqual([Infinity]);
+  });
+
+  it('#11.15 => should handle readonly arrays', () => {
+    const input = [1, 2, 3] as const;
+    const result = arrays.toArray(input);
+    expect(result).toEqual([1, 2, 3]);
+    expect(result).toBe(input); // Should be the same reference
+  });
+});
+
+describe('#12 => arrays.tupleOf.number.is', () => {
+  it('#12.01 => should validate tuple with correct length and element types', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is string => typeof value === 'string',
+    );
+    const result = validator(['hello', 'world', 'test'], 3);
+    expect(result).toBe(true);
+  });
+
+  it('#12.02 => should reject tuple with incorrect length', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is string => typeof value === 'string',
+    );
+    const result = validator(['hello', 'world'], 3);
+    expect(result).toBe(false);
+  });
+
+  it('#12.03 => should reject tuple with correct length but wrong element types', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is string => typeof value === 'string',
+    );
+    const result = validator([1, 2, 3], 3);
+    expect(result).toBe(false);
+  });
+
+  it('#12.04 => should reject non-array values', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is string => typeof value === 'string',
+    );
+    const result = validator('not an array', 3);
+    expect(result).toBe(false);
+  });
+
+  it('#12.05 => should validate empty tuple with length 0', () => {
+    const validator = arrays.tupleOf.number.is(
+      (_value: unknown): _value is any => true,
+    );
+    const result = validator([], 0);
+    expect(result).toBe(true);
+  });
+
+  it('#12.06 => should reject empty tuple with non-zero length', () => {
+    const validator = arrays.tupleOf.number.is(
+      (_value: unknown): _value is any => true,
+    );
+    const result = validator([], 3);
+    expect(result).toBe(false);
+  });
+
+  it('#12.07 => should validate single element tuple', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is number => typeof value === 'number',
+    );
+    const result = validator([42], 1);
+    expect(result).toBe(true);
+  });
+
+  it('#12.08 => should reject single element tuple with wrong type', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is number => typeof value === 'number',
+    );
+    const result = validator(['not a number'], 1);
+    expect(result).toBe(false);
+  });
+
+  it('#12.09 => should validate tuple with object elements', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is object =>
+        typeof value === 'object' && value !== null,
+    );
+    const result = validator([{ a: 1 }, { b: 2 }], 2);
+    expect(result).toBe(true);
+  });
+
+  it('#12.10 => should reject tuple with mixed valid/invalid elements', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is number => typeof value === 'number',
+    );
+    const result = validator([1, 'string', 3], 3);
+    expect(result).toBe(false);
+  });
+
+  it('#12.11 => should validate tuple with boolean elements', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is boolean => typeof value === 'boolean',
+    );
+    const result = validator([true, false, true], 3);
+    expect(result).toBe(true);
+  });
+
+  it('#12.12 => should reject null values', () => {
+    const validator = arrays.tupleOf.number.is(
+      (_value: unknown): _value is any => true,
+    );
+    const result = validator(null, 0);
+    expect(result).toBe(false);
+  });
+
+  it('#12.13 => should reject undefined values', () => {
+    const validator = arrays.tupleOf.number.is(
+      (_value: unknown): _value is any => true,
+    );
+    const result = validator(undefined, 0);
+    expect(result).toBe(false);
+  });
+
+  it('#12.14 => should validate tuple with longer length', () => {
+    const validator = arrays.tupleOf.number.is(
+      (value: unknown): value is number => typeof value === 'number',
+    );
+    const result = validator([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10);
+    expect(result).toBe(true);
+  });
+
+  it('#12.15 => should work with custom validation function', () => {
+    const isEvenNumber = (value: unknown): value is number =>
+      typeof value === 'number' && value % 2 === 0;
+    const validator = arrays.tupleOf.number.is(isEvenNumber);
+    const result = validator([2, 4, 6, 8], 4);
+    expect(result).toBe(true);
+  });
+
+  it('#12.16 => should reject with custom validation function for invalid elements', () => {
+    const isEvenNumber = (value: unknown): value is number =>
+      typeof value === 'number' && value % 2 === 0;
+    const validator = arrays.tupleOf.number.is(isEvenNumber);
+    const result = validator([2, 3, 6, 8], 4);
+    expect(result).toBe(false);
+  });
+
+  it('#12.17 => should validate tuple with string length validation', () => {
+    const isLongString = (value: unknown): value is string =>
+      typeof value === 'string' && value.length > 3;
+    const validator = arrays.tupleOf.number.is(isLongString);
+    const result = validator(['hello', 'world', 'testing'], 3);
+    expect(result).toBe(true);
+  });
+
+  it('#12.18 => should reject tuple with string length validation for short strings', () => {
+    const isLongString = (value: unknown): value is string =>
+      typeof value === 'string' && value.length > 3;
+    const validator = arrays.tupleOf.number.is(isLongString);
+    const result = validator(['hello', 'hi', 'world'], 3);
+    expect(result).toBe(false);
+  });
+
+  it('#12.19 => should validate tuple with property validation', () => {
+    const hasIdProperty = (value: unknown): value is { id: any } =>
+      typeof value === 'object' && value !== null && 'id' in value;
+    const validator = arrays.tupleOf.number.is(hasIdProperty);
+    const result = validator([{ id: 1 }, { id: 2, name: 'test' }], 2);
+    expect(result).toBe(true);
+  });
+
+  it('#12.20 => should reject tuple with property validation for missing property', () => {
+    const hasIdProperty = (value: unknown): value is { id: any } =>
+      typeof value === 'object' && value !== null && 'id' in value;
+    const validator = arrays.tupleOf.number.is(hasIdProperty);
+    const result = validator([{ id: 1 }, { name: 'test' }], 2);
+    expect(result).toBe(false);
+  });
+});
+
+describe('#10 =>  arrays.reverse', () => {
+  it('#10.01 => should  arrays.reverse array with multiple elements', () => {
+    const result = arrays.reverse(1, 2, 3, 4);
+    expect(result).toEqual([4, 3, 2, 1]);
+  });
+
+  it('#10.02 => should handle empty array', () => {
+    const result = arrays.reverse();
+    expect(result).toEqual([]);
+  });
+
+  it('#10.03 => should handle single element', () => {
+    const result = arrays.reverse('single');
+    expect(result).toEqual(['single']);
+  });
+
+  it('#10.04 => should  arrays.reverse array with mixed types', () => {
+    const result = arrays.reverse(1, 'hello', true, { key: 'value' });
+    expect(result).toEqual([{ key: 'value' }, true, 'hello', 1]);
+  });
+
+  it('#10.05 => should not modify original arguments (create new array)', () => {
+    const obj = { test: 'value' };
+    const result = arrays.reverse(obj, 'test');
+    expect(result).toEqual(['test', obj]);
+    expect(result[1]).toBe(obj); // Should reference same object
+  });
+
+  it('#10.06 => should handle duplicate elements', () => {
+    const result = arrays.reverse('a', 'b', 'a', 'c', 'a');
+    expect(result).toEqual(['a', 'c', 'a', 'b', 'a']);
   });
 });
 

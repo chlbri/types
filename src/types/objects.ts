@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import type { Equals } from '~utils';
 import { _unknown } from '../functions/commons';
-import { typeFn } from './commons';
-import type {
-  Keys,
-  PrimitiveObject,
-  PrimitiveObjectMap,
-} from './commons.types';
+import { typeFn, typeFnBasic } from './commons';
+import type { Keys, PrimitiveObject } from './commons.types';
 import type {
   AllowedNames,
   DeepNotReadonly,
@@ -22,97 +19,125 @@ import type {
   SubType,
 } from './objects.types';
 
-export const objects = <T extends object>(_?: T) => _unknown<T>();
+const _readonly = typeFnBasic(
+  <T extends object>(_?: T) => _unknown<Readonly<T>>(),
+  {
+    forceCast: <T extends object>(_?: unknown) => _unknown<Readonly<T>>(),
 
-objects.forceCast = <T extends object>(_?: unknown) => _unknown<T>();
-objects.is = <T>(_?: T) => _unknown<T extends object ? true : false>();
+    dynamic: <T extends Readonly<T>>(_?: T) => _unknown<T>(),
 
-objects.type = _unknown<object>();
-objects.keysOf = <T extends object>(_?: T) => _unknown<(keyof T)[]>();
-objects.values = <T extends object>(_?: T) => _unknown<T[keyof T][]>();
-objects.entries = <T extends object>(_?: T) =>
-  _unknown<[keyof T, T[keyof T]][]>();
-objects.byKey = <T extends object, K extends keyof T>(_?: T, __?: K) =>
-  _unknown<T[K]>();
-objects.hasKeys = <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
-  _unknown<K[number] extends keyof T ? true : false>();
-objects.hasAllKeys = <T extends object, K extends Keys[]>(
-  _?: T,
-  ...__: K
-) => _unknown<keyof T extends K[number] ? true : false>();
+    type: _unknown<Readonly<object>>(),
 
-const omit = <T extends PrimitiveObjectMap, K extends Keys[]>(
-  _?: T,
-  ...__: K
-) => _unknown<Omit<T, K[number]>>();
+    is: <T extends object>(_?: T) =>
+      _unknown<T extends Readonly<T> ? true : false>(),
 
-omit.strict = <T extends PrimitiveObjectMap, K extends (keyof T)[]>(
-  _?: T,
-  ...__: K
-) => _unknown<Omit<T, K[number]>>();
+    const: <const T extends object>(_?: T) => _unknown<Readonly<T>>(),
 
-omit.deep = <T extends PrimitiveObjectMap, K extends Keys[]>(
-  _?: T,
-  ...__: K
-) => _unknown<DeepOmit<T, K[number]>>();
+    not: <const T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
 
-objects.omit = omit;
-objects.reverse = <T extends Record<Keys, Keys>>(_?: T) =>
-  _unknown<{
-    [K in keyof T as T[K]]: K;
-  }>();
+    deep: typeFnBasic(
+      <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
+      {
+        const: <const T extends object>(_?: T) =>
+          _unknown<DeepReadonly<T>>(),
+        not: <const T extends object>(_?: T) =>
+          _unknown<DeepNotReadonly<T>>(),
+      },
+    ),
+  },
+);
 
-const _readonly = <T extends object>(_?: T) => _unknown<Readonly<T>>();
-_readonly.const = <const T extends object>(_?: T) =>
-  _unknown<Readonly<T>>();
+export const objects = typeFn<object>()({
+  keysOf: <T extends object>(_?: T) => _unknown<(keyof T)[]>(),
 
-_readonly.not = <const T extends object>(_?: T) =>
-  _unknown<NotReadonly<T>>();
+  values: <T extends object>(_?: T) => _unknown<T[keyof T][]>(),
 
-const _readonlyDeep = <T extends object>(_?: T) =>
-  _unknown<DeepReadonly<T>>();
+  entries: <T extends object>(_?: T) =>
+    _unknown<[keyof T, T[keyof T]][]>(),
 
-_readonlyDeep.const = <const T extends object>(_?: T) =>
-  _unknown<DeepReadonly<T>>();
+  byKey: <T extends object, K extends keyof T>(_?: T, __?: K) =>
+    _unknown<T[K]>(),
 
-_readonlyDeep.not = <const T extends object>(_?: T) =>
-  _unknown<DeepNotReadonly<T>>();
+  hasKeys: <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
+    _unknown<K[number] extends keyof T ? true : false>(),
 
-_readonly.deep = _readonlyDeep;
+  hasAllKeys: <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
+    _unknown<Equals<K[number], keyof T>>(),
 
-objects.readonly = _readonly;
+  omit: typeFnBasic(
+    <T, K extends Keys[]>(_?: T, ...__: K) =>
+      _unknown<Omit<T, K[number]>>(),
+    {
+      strict: typeFnBasic(
+        <T, K extends (keyof T)[]>(_?: T, ...__: K) =>
+          _unknown<Omit<T, K[number]>>(),
+        {
+          is: <T, K extends (keyof T)[]>(_?: T, ...__: K) => {
+            const _out = <U>(_?: U) =>
+              _unknown<U extends Omit<T, K[number]> ? true : false>();
 
-const required = <T extends object>(_: T) => _unknown<Required<T>>();
-required.deep = <T extends object>(_: T) => _unknown<DeepRequired<T>>();
+            return _out;
+          },
+        },
+      ),
 
-objects.required = required;
+      is: <T, K extends Keys[]>(_?: T, ...__: K) => {
+        const _out = <U>(_?: U) =>
+          _unknown<U extends Omit<T, K[number]> ? true : false>();
 
-const partial = <T extends object>(_: T) => _unknown<Partial<T>>();
-partial.deep = <T extends object>(_: T) => _unknown<DeepPartial<T>>();
+        return _out;
+      },
 
-objects.partial = partial;
+      deep: <T, K extends Keys[]>(_?: T, ...__: K) =>
+        _unknown<DeepOmit<T, K[number]>>(),
+    },
+  ),
 
-objects.pick = <T extends object, K extends (keyof T)[]>(_: T, ...__: K) =>
-  _unknown<Pick<T, K[number]>>();
+  reverse: <T extends Record<Keys, Keys>>(_?: T) =>
+    _unknown<{
+      [K in keyof T as T[K]]: K;
+    }>(),
 
-const pickBy = <T extends object, K>(_?: T, __?: K) =>
-  _unknown<SubType<T, K>>();
+  readonly: _readonly,
 
-pickBy.keys = <T extends object, K>(_: T, __?: K) =>
-  _unknown<AllowedNames<T, K>>();
+  freeze: _readonly,
 
-objects.pickBy = pickBy;
+  required: typeFnBasic(
+    <T extends object>(_: T) => _unknown<Required<T>>(),
+    {
+      deep: <T extends object>(_: T) => _unknown<DeepRequired<T>>(),
+    },
+  ),
 
-const omitBy = <T extends object, K>(_?: T, __?: K) =>
-  _unknown<NotSubType<T, K>>();
+  partial: typeFnBasic(
+    <T extends object>(_: T) => _unknown<Partial<T>>(),
+    {
+      deep: <T extends object>(_: T) => _unknown<DeepPartial<T>>(),
+    },
+  ),
 
-omitBy.keys = <T extends object, K>(_: T, __?: K) =>
-  _unknown<NotAllowedNames<T, K>>();
+  pick: <T extends object, K extends (keyof T)[]>(_: T, ...__: K) =>
+    _unknown<Pick<T, K[number]>>(),
 
-objects.omitBy = omitBy;
+  pickBy: typeFnBasic(
+    <T extends object, K>(_?: T, __?: K) => _unknown<SubType<T, K>>(),
+    {
+      keys: <T extends object, K>(_: T, __?: K) =>
+        _unknown<AllowedNames<T, K>>(),
+    },
+  ),
 
-objects.ru = typeFn<Ru>()();
-objects.rn = typeFn<Rn>()();
-objects.ra = typeFn<Ra>()();
+  omitBy: typeFnBasic(
+    <T extends object, K>(_?: T, __?: K) => _unknown<NotSubType<T, K>>(),
+    {
+      keys: <T extends object, K>(_: T, __?: K) =>
+        _unknown<NotAllowedNames<T, K>>(),
+    },
+  ),
 
-objects.primitive = typeFn<PrimitiveObject>()();
+  ru: typeFn<Ru>()(),
+  rn: typeFn<Rn>()(),
+  ra: typeFn<Ra>()(),
+
+  primitive: typeFn<PrimitiveObject>()(),
+});

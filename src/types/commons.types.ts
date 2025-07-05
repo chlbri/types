@@ -21,6 +21,11 @@ export interface PrimitiveObjectMap {
  */
 export type _PrimitiveObject = Primitive | PrimitiveObjectMap;
 
+/**
+ * A type that represents a primitive object, which can be a primitive value or an object
+ *
+ * @remark
+ */
 export type PrimitiveObject = SoR<_PrimitiveObject>;
 
 export type NExtract<T, U extends T> = Extract<T, U>;

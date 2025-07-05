@@ -1,3 +1,4 @@
+import { Checker, isPlainObject, type FnBasic } from '~utils';
 import type {
   DeepNotReadonly,
   DeepPartial,
@@ -10,7 +11,7 @@ import type {
   Primitive,
   PrimitiveObject,
 } from '../types';
-import { Checker, isPlainObject, type FnBasic } from '~utils';
+import deepClone from './deepclone';
 
 type FnReturn<T, Tr extends object> = Tr & {
   (arg: T): T;
@@ -100,6 +101,10 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
       return _unknown<DeepPartial<T>>(value);
     },
   }),
+
+  clone: <T extends PrimitiveObject>(object: T): T => {
+    return deepClone(object);
+  },
 
   identity: _identity,
 
@@ -204,7 +209,21 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
       return _unknown<Fn<T, R>>(value);
     },
 
-    checker: castFn<Checker>()(),
+    checker: castFn<Checker>()({
+      /**
+       * Very low
+       * Checks if value is a function with one argument
+       * @param value value to check
+       * @returns true if value is a function with one argument
+       */
+      is: (value: unknown): value is Checker => {
+        return (
+          typeof value === 'function' &&
+          value.length === 1 &&
+          !/^\s*class\s+/.test(value.toString())
+        );
+      },
+    }),
   }),
 
   undefiny: <T>(value?: T) => value,

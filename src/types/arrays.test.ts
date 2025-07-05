@@ -1,120 +1,190 @@
 import { describe, expect, it } from 'vitest';
-import { t_array } from './arrays';
+import { arrays } from './arrays';
 
 describe('arrays type functions', () => {
   // Test coverage for main function
-  it('1. should call t_array function', () => {
-    const result = t_array();
+  it('1. should call arrays function', () => {
+    const result = arrays();
     expect(result).toBeUndefined();
   });
 
-  it('2. should call t_array function with parameters', () => {
-    const result = t_array(1, 2, 3);
+  it('2. should call arrays function with parameters', () => {
+    const result = arrays(1, 2, 3);
     expect(result).toBeUndefined();
   });
 
-  it('3. should call t_array function with mixed types', () => {
-    const result = t_array('a', 1, true);
+  it('3. should call arrays function with mixed types', () => {
+    const result = arrays('a', 1, true);
     expect(result).toBeUndefined();
   });
 
   // Test coverage for sub-functions
-  it('4. should call t_array.readonly', () => {
-    const result = t_array.readonly();
+  it('4. should call arrays.low', () => {
+    const result = arrays.low();
     expect(result).toBeUndefined();
   });
 
-  it('5. should call t_array.readonly with parameters', () => {
-    const result = t_array.readonly(1, 2, 3);
+  it('5. should call arrays.low with parameters', () => {
+    const result = arrays.low(1, 2, 3);
     expect(result).toBeUndefined();
   });
 
-  it('6. should call t_array.readonly with mixed types', () => {
-    const result = t_array.readonly('a', 1, true);
+  it('6. should call arrays.low with mixed types', () => {
+    const result = arrays.low('a', 'b', 'c');
     expect(result).toBeUndefined();
   });
 
-  it('7. should call t_array.tuple', () => {
-    const result = t_array.tuple();
+  it('7. should call arrays.is', () => {
+    const result = arrays.is();
     expect(result).toBeUndefined();
   });
 
-  it('8. should call t_array.tuple with parameters', () => {
-    const result = t_array.tuple(1, 2, 3);
+  it('8. should call arrays.is with parameter', () => {
+    const result = arrays.is([1, 2, 3]);
     expect(result).toBeUndefined();
   });
 
-  it('9. should call t_array.tuple with mixed types', () => {
-    const result = t_array.tuple('a', 1, true);
+  it('9. should call arrays.is with non-array parameter', () => {
+    const result = arrays.is('not an array');
     expect(result).toBeUndefined();
   });
 
-  it('10. should call t_array.forceCast', () => {
-    const result = t_array.forceCast();
+  it('10. should call arrays.indexes', () => {
+    const result = arrays.indexes();
     expect(result).toBeUndefined();
   });
 
-  it('11. should call t_array.forceCast with parameter', () => {
-    const result = t_array.forceCast([1, 2, 3]);
+  it('11. should call arrays.indexes with parameters', () => {
+    const result = arrays.indexes(1, 2, 3);
     expect(result).toBeUndefined();
   });
 
-  it('12. should call t_array.is', () => {
-    const result = t_array.is();
+  it('12. should call arrays.indexes.union', () => {
+    const result = arrays.indexes.union();
     expect(result).toBeUndefined();
   });
 
-  it('13. should call t_array.is with parameter', () => {
-    const result = t_array.is([1, 2, 3]);
+  it('13. should call arrays.indexes.union with parameters', () => {
+    const result = arrays.indexes.union(1, 2, 3);
     expect(result).toBeUndefined();
   });
 
-  it('14. should call t_array.is with non-array parameter', () => {
-    const result = t_array.is('not an array');
+  it('14. should call arrays.lengthOf', () => {
+    const result = arrays.lengthOf();
     expect(result).toBeUndefined();
   });
 
-  it('15. should call t_array.type', () => {
-    const result = t_array.type;
+  it('15. should call arrays.lengthOf with parameter', () => {
+    const result = arrays.lengthOf([1, 2, 3]);
     expect(result).toBeUndefined();
   });
 
-  it('16. should call t_array.getLength', () => {
-    const result = t_array.getLength();
+  it('16. should call arrays.tupleOf', () => {
+    const result = arrays.tupleOf();
     expect(result).toBeUndefined();
   });
 
-  it('17. should call t_array.getLength with parameter', () => {
-    const result = t_array.getLength([1, 2, 3]);
+  it('17. should call arrays.tupleOf with parameters', () => {
+    const result = arrays.tupleOf(1, 2, 3);
     expect(result).toBeUndefined();
   });
 
-  it('18. should call t_array.getLength with empty array', () => {
-    const result = t_array.getLength([]);
+  it('18. should call arrays.tupleOf.number', () => {
+    const result = arrays.tupleOf.number();
+    expect(result).toBeUndefined();
+  });
+
+  it('19. should call arrays.tupleOf.number with parameters', () => {
+    const result = arrays.tupleOf.number('test', 3);
+    expect(result).toBeUndefined();
+  });
+
+  it('20. should call arrays.tupleOf.number.is', () => {
+    const result = arrays.tupleOf.number.is()();
+    expect(result).toBeUndefined();
+  });
+
+  it('21. should call arrays.tupleOf.is', () => {
+    const result = arrays.tupleOf.is();
+    expect(result).toBeUndefined();
+  });
+
+  it('22. should call arrays.reduce', () => {
+    const result = arrays.reduce([1, 2, 3]);
+    expect(result).toBeUndefined();
+  });
+
+  it('23. should call arrays.reduce.const', () => {
+    const result = arrays.reduce.const();
+    expect(result).toBeUndefined();
+  });
+
+  it('24. should call arrays.reduce.deep', () => {
+    const result = arrays.reduce.deep();
+    expect(result).toBeUndefined();
+  });
+
+  it('25. should call arrays.toArray', () => {
+    const result = arrays.toArray();
+    expect(result).toBeUndefined();
+  });
+
+  it('26. should call arrays.reverse', () => {
+    const result = arrays.reverse();
+    expect(result).toBeUndefined();
+  });
+
+  it('27. should call arrays.freeze', () => {
+    const result = arrays.freeze();
+    expect(result).toBeUndefined();
+  });
+
+  it('28. should call arrays.extract', () => {
+    const result = arrays.extract();
+    expect(result).toBeUndefined();
+  });
+
+  it('29. should call arrays.exclude', () => {
+    const result = arrays.exclude();
+    expect(result).toBeUndefined();
+  });
+
+  it('30. should call arrays.forceCast', () => {
+    const result = arrays.forceCast();
+    expect(result).toBeUndefined();
+  });
+
+  it('31. should call arrays.dynamic', () => {
+    const result = arrays.dynamic();
+    expect(result).toBeUndefined();
+  });
+
+  it('32. should call arrays.type', () => {
+    const result = arrays.type;
     expect(result).toBeUndefined();
   });
 
   // Type-level tests
   describe('Type-level assertions', () => {
-    it('19. should have correct type inference for array operations', () => {
+    it('33. should have correct type inference for array operations', () => {
       // These are compile-time checks to ensure type safety
-      expect(typeof t_array).toBe('function');
-      expect(typeof t_array.forceCast).toBe('function');
-      expect(typeof t_array.is).toBe('function');
+      expect(typeof arrays).toBe('function');
+      expect(typeof arrays.forceCast).toBe('function');
+      expect(typeof arrays.is).toBe('function');
     });
 
-    it('20. should have correct type inference for array variants', () => {
+    it('34. should have correct type inference for array variants', () => {
       // These are compile-time checks to ensure type safety
-      expect(typeof t_array.readonly).toBe('function');
-      expect(typeof t_array.tuple).toBe('function');
-      expect(typeof t_array.getLength).toBe('function');
+      expect(typeof arrays.low).toBe('function');
+      expect(typeof arrays.tupleOf).toBe('function');
+      expect(typeof arrays.lengthOf).toBe('function');
     });
 
-    it('21. should have correct type inference for array type checks', () => {
+    it('35. should have correct type inference for array type checks', () => {
       // These are compile-time checks to ensure type safety
-      expect(t_array.type).toBeUndefined();
-      expect(typeof t_array.is).toBe('function');
-      expect(typeof t_array.getLength).toBe('function');
+      expect(arrays.type).toBeUndefined();
+      expect(typeof arrays.is).toBe('function');
+      expect(typeof arrays.lengthOf).toBe('function');
     });
   });
 });

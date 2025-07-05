@@ -36,7 +36,6 @@ type FnReturn<T = any, Tr extends object = object> = FnBasic<
   } & Tr
 >;
 
-//TODO: Replace like the function one
 export const typeFn = <T = any>() => {
   const _out = <Tr extends object = object>(
     extensions?: Tr,
@@ -45,9 +44,9 @@ export const typeFn = <T = any>() => {
 
     out.forceCast = (_?: unknown) => _unknown<T>();
 
-    out.type = undefined as T;
+    out.type = _unknown<T>();
 
-    out.dynamic = <U extends T>(_: U) => _unknown<U>();
+    out.dynamic = <U extends T>(_?: U) => _unknown<U>();
 
     out.is = <U>(_?: U) => _unknown<U extends T ? true : false>();
 
@@ -61,75 +60,86 @@ export const typeFn = <T = any>() => {
   return _out;
 };
 
-const extract = <T, U extends any[]>(_: T, ...__: U) =>
-  _unknown<Extract<T, U[number]>>();
-extract.strict = <T, U extends T[]>(_: T, ...__: U) =>
-  _unknown<Extract<T, U[number]>>();
-extract.const = <const T, const U extends T[]>(_: T, ...__: U) =>
-  _unknown<Extract<T, U[number]>>();
+export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
+  extract: typeFnBasic(
+    <T, U extends any[]>(_?: T, ...__: U) =>
+      _unknown<Extract<T, U[number]>>(),
+    {
+      strict: <T, U extends T[]>(_?: T, ...__: U) =>
+        _unknown<Extract<T, U[number]>>(),
+      const: <const T, const U extends T[]>(_?: T, ...__: U) =>
+        _unknown<Extract<T, U[number]>>(),
+    },
+  ),
 
-const exclude = <T, U extends any[]>(_: T, ...__: U) =>
-  _unknown<Exclude<T, U[number]>>();
-exclude.strict = <T, U extends T[]>(_: T, ...__: U) =>
-  _unknown<Exclude<T, U[number]>>();
-exclude.const = <const T, const U extends T[]>(_: T, ...__: U) =>
-  _unknown<Exclude<T, U[number]>>();
+  exclude: typeFnBasic(
+    <T, U extends any[]>(_?: T, ...__: U) =>
+      _unknown<Exclude<T, U[number]>>(),
+    {
+      strict: <T, U extends T[]>(_?: T, ...__: U) =>
+        _unknown<Exclude<T, U[number]>>(),
+      const: <const T, const U extends T[]>(_?: T, ...__: U) =>
+        _unknown<Exclude<T, U[number]>>(),
+    },
+  ),
 
-const required = <T extends object>(_: T) => _unknown<Required<T>>();
+  required: typeFnBasic(
+    <T extends object>(_?: T) => _unknown<Required<T>>(),
+    {
+      deep: <T extends object>(_?: T) => _unknown<DeepRequired<T>>(),
+    },
+  ),
 
-required.deep = <T extends object>(_: T) => _unknown<DeepRequired<T>>();
+  readonly: typeFnBasic(
+    <T extends object>(_?: T) => _unknown<Required<T>>(),
+    {
+      const: <const T extends object>(_?: T) => _unknown<Readonly<T>>(),
 
-const _readonly = <T extends object>(_: T) => _unknown<Readonly<T>>();
+      deep: typeFnBasic(
+        <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
+        {
+          const: <const T extends object>(_?: T) =>
+            _unknown<DeepReadonly<T>>(),
+        },
+      ),
+    },
+  ),
 
-_readonly.const = <const T extends object>(_: T) =>
-  _unknown<Readonly<T>>();
+  partial: typeFnBasic(
+    <T extends object>(_?: T) => _unknown<Partial<T>>(),
+    {
+      deep: <T extends object>(_?: T) => _unknown<DeepPartial<T>>(),
+    },
+  ),
 
-const readonlyDeep = <T extends object>(_: T) =>
-  _unknown<DeepReadonly<T>>();
+  union: <const T extends any[]>(..._: T) => _unknown<T[number]>(),
 
-readonlyDeep.const = <const T extends object>(_: T) =>
-  _unknown<DeepReadonly<T>>();
+  date: typeFn<Date>()(),
+  null: typeFn<null>()(),
+  symbol: typeFn<symbol>()(),
+  bigint: typeFn<bigint>()(),
+  never: _unknown<never>(),
+  undefined: _unknown<undefined>(),
 
-_readonly.deep = readonlyDeep;
+  function: <T extends any[], R = any>(..._: [...T, R]) =>
+    _unknown<(...args: T) => R>(),
 
-const partial = <T extends object>(_: T) => _unknown<Partial<T>>();
-partial.deep = <T extends object>(_: T) => _unknown<DeepPartial<T>>();
+  unknown: _unknown,
 
-export const commons = <T>(_?: unknown) => _unknown<T>();
+  any: typeFn()(),
 
-commons.extract = extract;
-commons.exclude = exclude;
-commons.required = required;
-commons.partial = partial;
-commons.readonly = _readonly;
+  primitive: typeFn<Primitive>()(),
 
-commons.union = <const T extends any[]>(..._: T) => _unknown<T[number]>();
+  undefiny: <T>(_?: T) => _unknown<T | undefined>(),
 
-commons.date = typeFn<Date>()();
-commons.null = typeFn<null>()();
-commons.symbol = typeFn<symbol>()();
-commons.bigint = typeFn<bigint>()();
-commons.never = _unknown<never>();
-commons.undefined = _unknown<undefined>();
+  identity: <T>(_?: T) => _unknown<T>(),
 
-commons.function = <T extends any[], R = any>(..._: [...T, R]) =>
-  _unknown<(...args: T) => R>();
+  keys: typeFn<Keys>()(),
 
-commons.unknown = _unknown;
+  keysOf: <T extends object>(_?: T) => _unknown<keyof T>(),
 
-commons.any = typeFn()();
+  default: <T, U extends NonNullable<T>>(_?: T, __?: U) =>
+    _unknown<Defaulted<T, U>>(),
 
-commons.primitive = typeFn<Primitive>()();
-
-commons.undefiny = <T>(_?: T) => _unknown<T | undefined>();
-
-commons.identity = <T>(_?: T) => _unknown<T>();
-
-commons.keys = typeFn<Keys>()();
-
-commons.keysOf = <T extends object>(_?: T) => _unknown<keyof T>();
-
-commons.default = <T, U extends NonNullable<T>>(_: T, __: U) =>
-  _unknown<Defaulted<T, U>>();
-
-commons.neverify = <T>(_?: T) => _unknown<Neverify<T>>();
+  neverify: <T>(_?: T) => _unknown<Neverify<T>>(),
+});

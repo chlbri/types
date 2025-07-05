@@ -43,6 +43,8 @@ export type ReverseArray<T extends RuA> = T extends any
 
 export type RuA = ReadonlyArray<unknown>;
 
+export type AnyArray<T = unknown> = ReadonlyArray<T> | T[];
+
 export type _NArrayOmit<
   T extends readonly object[],
   K extends keyof T[number] = never,
@@ -74,12 +76,14 @@ export type ExcludeArray<T extends any[], U> = T extends [
     : [A, ...ExcludeArray<B, U>]
   : [];
 
-export type ReduceArray<T> = T extends readonly unknown[] ? T[0] : T;
+export type ReduceArray<T> = T extends AnyArray ? T[0] : T;
 
 export type ReduceDeepArray<T> =
-  ReduceArray<T> extends readonly unknown[]
+  ReduceArray<T> extends AnyArray
     ? ReduceDeepArray<ReduceArray<T>>
     : ReduceArray<T>;
+
+export type ToArray<T> = T extends AnyArray ? T : AnyArray<T>;
 
 export type RecursiveArrayOf<T> =
   | Array<_SingleOrRecursiveArrayOf<T>>

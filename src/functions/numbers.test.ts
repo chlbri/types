@@ -345,4 +345,288 @@ describe('numbers', () => {
       });
     });
   });
+
+  describe('#05 numbers.toString', () => {
+    it('#05.01 should convert numbers to string template literals', () => {
+      expect(numbers.toString(42)).toBe('42');
+      expect(numbers.toString(0)).toBe('0');
+      expect(numbers.toString(-17)).toBe('-17');
+    });
+
+    it('#05.02 should convert float numbers to string', () => {
+      expect(numbers.toString(3.14)).toBe('3.14');
+      expect(numbers.toString(0.5)).toBe('0.5');
+      expect(numbers.toString(-2.7)).toBe('-2.7');
+    });
+
+    it('#05.03 should handle special number values', () => {
+      expect(numbers.toString(Infinity)).toBe('Infinity');
+      expect(numbers.toString(-Infinity)).toBe('-Infinity');
+      expect(numbers.toString(NaN)).toBe('NaN');
+    });
+
+    it('#05.04 should handle edge case numbers', () => {
+      expect(numbers.toString(Number.MAX_SAFE_INTEGER)).toBe(
+        '9007199254740991',
+      );
+      expect(numbers.toString(Number.MIN_SAFE_INTEGER)).toBe(
+        '-9007199254740991',
+      );
+      expect(numbers.toString(Number.MAX_VALUE)).toBe(
+        '1.7976931348623157e+308',
+      );
+      expect(numbers.toString(Number.MIN_VALUE)).toBe('5e-324');
+    });
+
+    it('#05.05 should handle zero and negative zero', () => {
+      expect(numbers.toString(0)).toBe('0');
+      expect(numbers.toString(-0)).toBe('0');
+    });
+
+    it('#05.06 should handle scientific notation', () => {
+      expect(numbers.toString(1e10)).toBe('10000000000');
+      expect(numbers.toString(1e-10)).toBe('1e-10');
+      expect(numbers.toString(1.23e5)).toBe('123000');
+    });
+
+    it('#05.07 should work with string inputs', () => {
+      expect(numbers.toString('42')).toBe('42');
+      expect(numbers.toString('hello')).toBe('hello');
+      expect(numbers.toString('3.14')).toBe('3.14');
+    });
+
+    it('#05.08 should preserve string values', () => {
+      expect(numbers.toString('test')).toBe('test');
+      expect(numbers.toString('')).toBe('');
+      expect(numbers.toString('0')).toBe('0');
+    });
+
+    it('#05.09 should handle mixed number and string inputs', () => {
+      expect(numbers.toString(123)).toBe('123');
+      expect(numbers.toString('123')).toBe('123');
+      expect(numbers.toString(-456)).toBe('-456');
+      expect(numbers.toString('-456')).toBe('-456');
+    });
+
+    it('#05.10 should handle decimal precision', () => {
+      expect(numbers.toString(0.1 + 0.2)).toBe('0.30000000000000004');
+      expect(numbers.toString(1 / 3)).toBe('0.3333333333333333');
+    });
+
+    it('#05.11 should handle very large numbers', () => {
+      expect(numbers.toString(999999999999999)).toBe('999999999999999');
+      expect(numbers.toString(1.7976931348623157e308)).toBe(
+        '1.7976931348623157e+308',
+      );
+    });
+
+    it('#05.12 should handle very small numbers', () => {
+      expect(numbers.toString(0.000001)).toBe('0.000001');
+      expect(numbers.toString(0.0000001)).toBe('1e-7');
+    });
+
+    it('#05.13 should handle hexadecimal input strings', () => {
+      expect(numbers.toString('0xFF')).toBe('0xFF');
+      expect(numbers.toString('0x10')).toBe('0x10');
+    });
+
+    it('#05.14 should handle binary input strings', () => {
+      expect(numbers.toString('0b1010')).toBe('0b1010');
+      expect(numbers.toString('0b11111111')).toBe('0b11111111');
+    });
+
+    it('#05.15 should handle octal input strings', () => {
+      expect(numbers.toString('0o777')).toBe('0o777');
+      expect(numbers.toString('0o123')).toBe('0o123');
+    });
+  });
+
+  describe('#06 numbers.bigint', () => {
+    describe('#06.01 main bigint function', () => {
+      it('#06.01.01 should return bigint when passed bigint', () => {
+        expect(numbers.bigint(123n)).toBe(123n);
+        expect(numbers.bigint(0n)).toBe(0n);
+        expect(numbers.bigint(-456n)).toBe(-456n);
+      });
+
+      it('#06.01.02 should return value when passed non-bigint (with TS error)', () => {
+        //@ts-expect-error for testing purposes
+        expect(numbers.bigint(42)).toBe(42);
+      });
+
+      it('#06.01.03 should return value when passed string (with TS error)', () => {
+        //@ts-expect-error for testing purposes
+        expect(numbers.bigint('123')).toBe('123');
+      });
+    });
+
+    describe('#06.02 numbers.bigint.forceCast', () => {
+      it('#06.02.01 should force cast any value to bigint type', () => {
+        const value = 'not a bigint';
+        const result = numbers.bigint.forceCast(value);
+        expect(result).toBe(value);
+        // TypeScript should treat result as bigint type
+      });
+
+      it('#06.02.02 should work with actual bigints', () => {
+        const value = 123n;
+        const result = numbers.bigint.forceCast(value);
+        expect(result).toBe(value);
+      });
+
+      it('#06.02.03 should work with numbers', () => {
+        const value = 42;
+        const result = numbers.bigint.forceCast(value);
+        expect(result).toBe(value);
+      });
+
+      it('#06.02.04 should work with null', () => {
+        const value = null;
+        const result = numbers.bigint.forceCast(value);
+        expect(result).toBe(value);
+      });
+
+      it('#06.02.05 should work with strings', () => {
+        const value = '123';
+        const result = numbers.bigint.forceCast(value);
+        expect(result).toBe(value);
+      });
+    });
+
+    describe('#06.03 numbers.bigint.dynamic', () => {
+      it('#06.03.01 should return bigint as-is for bigints', () => {
+        const bigintValue = 123n;
+        const result = numbers.bigint.dynamic(bigintValue);
+        expect(result).toBe(bigintValue);
+        expect(result).toBe(123n);
+      });
+
+      it('#06.03.02 should preserve specific bigint values', () => {
+        expect(numbers.bigint.dynamic(0n)).toBe(0n);
+        expect(numbers.bigint.dynamic(1n)).toBe(1n);
+        expect(numbers.bigint.dynamic(-1n)).toBe(-1n);
+      });
+
+      it('#06.03.03 should work with large bigints', () => {
+        const largeBigint = 123456789012345678901234567890n;
+        const result = numbers.bigint.dynamic(largeBigint);
+        expect(result).toBe(largeBigint);
+      });
+
+      it('#06.03.04 should work with negative bigints', () => {
+        const negativeBigint = -999999999999999999999n;
+        const result = numbers.bigint.dynamic(negativeBigint);
+        expect(result).toBe(negativeBigint);
+      });
+
+      it('#06.03.05 should work with zero bigint', () => {
+        const zeroBigint = 0n;
+        const result = numbers.bigint.dynamic(zeroBigint);
+        expect(result).toBe(zeroBigint);
+        expect(result).toBe(0n);
+      });
+    });
+
+    describe('#06.04 numbers.bigint.is', () => {
+      it('#06.04.01 should return true for bigint values', () => {
+        expect(numbers.bigint.is(123n)).toBe(true);
+        expect(numbers.bigint.is(0n)).toBe(true);
+        expect(numbers.bigint.is(-456n)).toBe(true);
+      });
+
+      it('#06.04.02 should return true for large bigints', () => {
+        expect(numbers.bigint.is(123456789012345678901234567890n)).toBe(
+          true,
+        );
+        expect(numbers.bigint.is(-999999999999999999999999999999n)).toBe(
+          true,
+        );
+      });
+
+      it('#06.04.03 should return true for bigint literals', () => {
+        expect(numbers.bigint.is(BigInt(123))).toBe(true);
+        expect(numbers.bigint.is(BigInt('456'))).toBe(true);
+        expect(numbers.bigint.is(BigInt(0))).toBe(true);
+      });
+
+      it('#06.04.04 should return false for regular numbers', () => {
+        expect(numbers.bigint.is(123)).toBe(false);
+        expect(numbers.bigint.is(0)).toBe(false);
+        expect(numbers.bigint.is(-456)).toBe(false);
+        expect(numbers.bigint.is(3.14)).toBe(false);
+      });
+
+      it('#06.04.05 should return false for special number values', () => {
+        expect(numbers.bigint.is(Infinity)).toBe(false);
+        expect(numbers.bigint.is(-Infinity)).toBe(false);
+        expect(numbers.bigint.is(NaN)).toBe(false);
+      });
+
+      it('#06.04.06 should return false for non-numeric values', () => {
+        expect(numbers.bigint.is('123')).toBe(false);
+        expect(numbers.bigint.is('123n')).toBe(false);
+        expect(numbers.bigint.is(null)).toBe(false);
+        expect(numbers.bigint.is(undefined)).toBe(false);
+        expect(numbers.bigint.is({})).toBe(false);
+        expect(numbers.bigint.is([])).toBe(false);
+        expect(numbers.bigint.is(true)).toBe(false);
+      });
+
+      it('#06.04.07 should return false for string representations of bigints', () => {
+        expect(numbers.bigint.is('123n')).toBe(false);
+        expect(numbers.bigint.is('0n')).toBe(false);
+        expect(numbers.bigint.is('-456n')).toBe(false);
+      });
+
+      it('#06.04.08 should return false for numeric strings', () => {
+        expect(numbers.bigint.is('123')).toBe(false);
+        expect(numbers.bigint.is('0')).toBe(false);
+        expect(numbers.bigint.is('-456')).toBe(false);
+      });
+
+      it('#06.04.09 should handle edge cases with BigInt constructor', () => {
+        expect(numbers.bigint.is(BigInt(Number.MAX_SAFE_INTEGER))).toBe(
+          true,
+        );
+        expect(numbers.bigint.is(BigInt('9007199254740991'))).toBe(true);
+        expect(numbers.bigint.is(BigInt('0x1fffffffffffff'))).toBe(true);
+      });
+
+      it('#06.04.10 should return false for objects that look like bigints', () => {
+        const fakeBigint = { toString: () => '123n' };
+        expect(numbers.bigint.is(fakeBigint)).toBe(false);
+      });
+
+      it('#06.04.11 should work with various bigint creation methods', () => {
+        expect(numbers.bigint.is(BigInt(123))).toBe(true);
+        expect(numbers.bigint.is(BigInt('456'))).toBe(true);
+        expect(numbers.bigint.is(BigInt('0x1a'))).toBe(true);
+        expect(numbers.bigint.is(BigInt('0b1010'))).toBe(true);
+        expect(numbers.bigint.is(BigInt('0o777'))).toBe(true);
+      });
+
+      it('#06.04.12 should handle very large bigints', () => {
+        const veryLargeBigint = BigInt(
+          '123456789012345678901234567890123456789012345678901234567890',
+        );
+        expect(numbers.bigint.is(veryLargeBigint)).toBe(true);
+      });
+
+      it('#06.04.13 should handle negative bigints', () => {
+        expect(numbers.bigint.is(-123n)).toBe(true);
+        expect(numbers.bigint.is(BigInt(-456))).toBe(true);
+        expect(numbers.bigint.is(BigInt('-789'))).toBe(true);
+      });
+
+      it('#06.04.14 should return false for symbols', () => {
+        expect(numbers.bigint.is(Symbol('123'))).toBe(false);
+        expect(numbers.bigint.is(Symbol.for('bigint'))).toBe(false);
+      });
+
+      it('#06.04.15 should return false for functions', () => {
+        expect(numbers.bigint.is(() => 123n)).toBe(false);
+        expect(numbers.bigint.is(BigInt)).toBe(false);
+      });
+    });
+  });
 });

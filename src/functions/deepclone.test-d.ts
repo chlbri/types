@@ -49,7 +49,7 @@ expectTypeOf(clonedObjectWithArrays).toEqualTypeOf<
 // #region Test edge cases with types
 const emptyObject = {} as const;
 const clonedEmptyObject = deepClone(emptyObject);
-expectTypeOf(clonedEmptyObject).toMatchTypeOf<typeof emptyObject>();
+expectTypeOf(clonedEmptyObject).toEqualTypeOf<typeof emptyObject>();
 
 const objectWithNullUndefined = {
   nullValue: null,

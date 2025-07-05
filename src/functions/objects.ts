@@ -6,16 +6,15 @@ import type {
   DeepRequired,
   Keys,
   NotReadonly,
+  NotSubType,
   Primitive2,
-  PrimitiveObject,
   PrimitiveObjectMap,
   Ra,
   Ru,
   SubType,
 } from 'types';
-import { partialCall } from '~utils';
+import { partialCall, type Equals } from '~utils';
 import { castFn, castFnBasic, commons } from './commons';
-import deepClone from './deepclone';
 
 // #region Helpers
 function isPlainObject(value: any): value is object {
@@ -141,14 +140,16 @@ const _omit = (
   object: PrimitiveObjectMap,
   ...valuesOrKeys: any[]
 ) => {
-  const result = deepClone(object);
+  const result: any = {};
 
-  const entries = Object.entries(result);
+  const entries = Object.entries(object);
   entries.forEach(([key, value]) => {
-    if (by === 'key' && valuesOrKeys.includes(key)) {
-      delete result[key];
-    } else if (by === 'element' && valuesOrKeys.includes(value)) {
-      delete result[key];
+    const checkKey = by === 'key' && !valuesOrKeys.includes(key);
+    const checkElement = by === 'element' && !valuesOrKeys.includes(value);
+    if (checkKey) {
+      result[key] = value;
+    } else if (checkElement) {
+      result[key] = value;
     }
   });
 
@@ -192,8 +193,7 @@ const _omitDeep = (
   object: PrimitiveObjectMap,
   ...valuesOrKeys: any[]
 ) => {
-  const _result: PrimitiveObjectMap = deepClone(object);
-  const result = __omitDeep(by, _result, ...valuesOrKeys);
+  const result = __omitDeep(by, object, ...valuesOrKeys);
 
   return result;
 };
@@ -256,6 +256,7 @@ export const objects = castFn<object>()({
   values: <T extends object>(object: T): T[keyof T][] => {
     return Object.values(object) as any;
   },
+
   entries: <T extends object>(object: T): [keyof T, T[keyof T]][] => {
     return Object.entries(object) as any;
   },
@@ -267,17 +268,42 @@ export const objects = castFn<object>()({
     return object[key];
   },
 
-  hasKeys: <T extends object, K extends Keys[]>(
-    object: T,
-    ...keys: K
-  ): K[number] extends keyof T ? true : false => {
-    return keys.every(key => key in object) as any;
-  },
+  hasKeys: castFnBasic(
+    <T extends object, K extends Keys[]>(
+      object: T,
+      ...keys: K
+    ): K[number] extends keyof T ? true : false => {
+      return keys.every(key => key in object) as any;
+    },
+    {
+      strict: <T extends object>() => {
+        const _out = <K extends (keyof T)[]>(
+          object: object,
+          ...keys: K
+        ): object is Pick<T, K[number]> => {
+          return keys.every(key => key in object);
+        };
+
+        return _out;
+      },
+
+      const: <const T extends object>() => {
+        const _out = <K extends (keyof T)[]>(
+          object: object,
+          ...keys: K
+        ): object is Pick<T, K[number]> => {
+          return keys.every(key => key in object);
+        };
+
+        return _out;
+      },
+    },
+  ),
 
   hasAllKeys: <T extends object, K extends Keys[]>(
     object: T,
     ...keys: K
-  ): keyof T extends K[number] ? true : false => {
+  ): Equals<keyof T, K[number]> => {
     return (
       Object.keys(object).every(key => keys.includes(key)) &&
       (keys.every(key => key in object) as any)
@@ -294,20 +320,43 @@ export const objects = castFn<object>()({
     ) => Omit<T, K[number]>,
 
     {
-      strict: <T extends PrimitiveObjectMap, K extends (keyof T)[]>(
-        object: T,
-        ...keys: K
-      ): Omit<T, K[number]> => {
-        const result = deepClone(object);
+      strict: castFnBasic(
+        partialCall(_omit, 'key') as <
+          T extends object,
+          K extends (keyof T)[],
+        >(
+          object: T,
+          ...keys: K
+        ) => Omit<T, K[number]>,
+        {
+          is: partialCall(_omitIs, 'key') as <
+            T extends object,
+            K extends (keyof T)[],
+          >(
+            object: T,
+            ...keys: K
+          ) => boolean,
+        },
+      ),
 
-        for (const key of keys) {
-          if (key in result) {
-            delete result[key];
-          }
-        }
-
-        return result;
-      },
+      const: castFnBasic(
+        partialCall(_omit, 'key') as <
+          const T extends object,
+          K extends (keyof T)[],
+        >(
+          object: T,
+          ...keys: K
+        ) => Omit<T, K[number]>,
+        {
+          is: partialCall(_omitIs, 'key') as <
+            const T extends object,
+            K extends (keyof T)[],
+          >(
+            object: T,
+            ...keys: K
+          ) => boolean,
+        },
+      ),
 
       is: partialCall(_omitIs, 'key') as <K extends Keys[]>(
         object: PrimitiveObjectMap,
@@ -316,7 +365,7 @@ export const objects = castFn<object>()({
 
       by: castFnBasic(
         partialCall(_omit, 'element') as <
-          T extends PrimitiveObjectMap,
+          T extends object,
           K extends any[],
         >(
           object: T,
@@ -343,7 +392,7 @@ export const objects = castFn<object>()({
             >(
               object: T,
               ...values: K
-            ) => SubType<T, K[number]>,
+            ) => NotSubType<T, K[number]>,
             {
               is: partialCall(_omitDeepIs, 'element'),
             },
@@ -372,12 +421,6 @@ export const objects = castFn<object>()({
   freeze: _readonly,
 
   require: castFnBasic(require, {
-    clone: castFnBasic(
-      <T extends PrimitiveObject>(object: T, requires: object): T => {
-        return require(deepClone(object) as any, requires);
-      },
-    ),
-
     strict: <T extends object, K extends AllowedNamesLow<T, undefined>>(
       object: T,
       requires: Pick<T, K>,
@@ -432,10 +475,6 @@ export const objects = castFn<object>()({
     is: (object: unknown): object is PrimitiveObjectMap => {
       if (!isPlainObject(object)) return false;
       return commons.primitiveObject.is(object);
-    },
-
-    clone: <T extends PrimitiveObjectMap>(object: T): T => {
-      return deepClone(object);
     },
   }),
 });

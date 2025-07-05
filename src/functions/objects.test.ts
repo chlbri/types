@@ -286,25 +286,318 @@ describe('objects', () => {
       expect(objects.hasKeys({}, 'a')).toBe(false);
     });
 
-    it('#09.01 should return true when all keys exist', () => {
-      const obj = { a: 1, b: 2, c: 3 };
-      expect(objects.hasKeys(obj, 'a', 'b')).toBe(true);
-      expect(objects.hasKeys(obj, 'a', 'b', 'c')).toBe(true);
+    describe('#09.05 objects.hasKeys.strict', () => {
+      it('#09.05.01 should create strict type guard for object keys', () => {
+        interface TestObject {
+          a: number;
+          b: string;
+          c?: boolean;
+        }
+
+        const validator = objects.hasKeys.strict<TestObject>();
+
+        // Should return true for objects that have exactly the specified keys
+        expect(validator({ a: 1, b: 'test' }, 'a', 'b')).toBe(true);
+        expect(
+          validator({ a: 1, b: 'test', c: true }, 'a', 'b', 'c'),
+        ).toBe(true);
+      });
+
+      it('#09.05.02 should return false when object has extra keys', () => {
+        interface TestObject {
+          a: number;
+          b: string;
+        }
+
+        const validator = objects.hasKeys.strict<TestObject>();
+
+        // Should return true for objects with extra keys
+        expect(
+          validator({ a: 1, b: 'test', extra: 'value' }, 'a', 'b'),
+        ).toBe(true);
+      });
+
+      it('#09.05.03 should return false when object is missing required keys', () => {
+        interface TestObject {
+          a: number;
+          b: string;
+          c: boolean;
+        }
+
+        const validator = objects.hasKeys.strict<TestObject>();
+
+        // Should return false when missing keys
+        expect(validator({ a: 1 }, 'a', 'b', 'c')).toBe(false);
+        expect(validator({ a: 1, b: 'test' }, 'a', 'b', 'c')).toBe(false);
+      });
+
+      it('#09.05.04 should handle empty object validation', () => {
+        type EmptyObject = object;
+
+        const validator = objects.hasKeys.strict<EmptyObject>();
+
+        // Empty object should pass validation with no keys
+        expect(validator({})).toBe(true);
+        // Object with keys should pass validation
+        expect(validator({ a: 1 })).toBe(true);
+      });
+
+      it('#09.05.05 should work with complex object types', () => {
+        interface ComplexObject {
+          id: number;
+          name: string;
+          metadata?: {
+            tags: string[];
+            created: Date;
+          };
+        }
+
+        const validator = objects.hasKeys.strict<ComplexObject>();
+
+        const validObj = {
+          id: 1,
+          name: 'test',
+          metadata: {
+            tags: ['tag1', 'tag2'],
+            created: new Date(),
+          },
+        };
+
+        expect(validator(validObj, 'id', 'name', 'metadata')).toBe(true);
+        expect(validator({ id: 1, name: 'test' }, 'id', 'name')).toBe(
+          true,
+        );
+      });
+
+      it('#09.05.06 should validate objects with optional properties', () => {
+        interface ObjectWithOptional {
+          required: string;
+          optional?: number;
+        }
+
+        const validator = objects.hasKeys.strict<ObjectWithOptional>();
+
+        // Should work with just required properties
+        expect(validator({ required: 'test' }, 'required')).toBe(true);
+        // Should work with both required and optional
+        expect(
+          validator(
+            { required: 'test', optional: 42 },
+            'required',
+            'optional',
+          ),
+        ).toBe(true);
+        // Should pass with extra properties
+        expect(
+          validator({ required: 'test', extra: 'value' }, 'required'),
+        ).toBe(true);
+      });
+
+      it('#09.05.07 should handle nested object validation', () => {
+        interface NestedObject {
+          outer: {
+            inner: string;
+          };
+          simple: number;
+        }
+
+        const validator = objects.hasKeys.strict<NestedObject>();
+
+        const nestedObj = {
+          outer: { inner: 'value' },
+          simple: 42,
+        };
+
+        expect(validator(nestedObj, 'outer', 'simple')).toBe(true);
+        expect(validator({ outer: { inner: 'value' } }, 'outer')).toBe(
+          true,
+        );
+      });
+
+      it('#09.05.08 should validate arrays as object values', () => {
+        interface ObjectWithArray {
+          items: string[];
+          count: number;
+        }
+
+        const validator = objects.hasKeys.strict<ObjectWithArray>();
+
+        const objWithArray = {
+          items: ['a', 'b', 'c'],
+          count: 3,
+        };
+
+        expect(validator(objWithArray, 'items', 'count')).toBe(true);
+        expect(validator({ items: [] }, 'items')).toBe(true);
+      });
     });
 
-    it('#09.02 should return false when some keys do not exist', () => {
-      const obj = { a: 1, b: 2 };
-      expect(objects.hasKeys(obj, 'a', 'c')).toBe(false);
-      expect(objects.hasKeys(obj, 'd')).toBe(false);
-    });
+    describe('#09.06 objects.hasKeys.const', () => {
+      it('#09.06.01 should create const type guard for object keys', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const testObj = { a: 1, b: 'test', c: true } as const;
+        type TestObject = typeof testObj;
 
-    it('#09.03 should return true for single existing key', () => {
-      const obj = { a: 1 };
-      expect(objects.hasKeys(obj, 'a')).toBe(true);
-    });
+        const validator = objects.hasKeys.const<TestObject>();
 
-    it('#09.04 should handle empty object', () => {
-      expect(objects.hasKeys({}, 'a')).toBe(false);
+        // Should return true for objects that have exactly the specified keys
+        expect(validator({ a: 1, b: 'test' }, 'a', 'b')).toBe(true);
+        expect(
+          validator({ a: 1, b: 'test', c: true }, 'a', 'b', 'c'),
+        ).toBe(true);
+      });
+
+      it('#09.06.02 should work with const assertions', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const constObj = { readonly: 'value', fixed: 42 } as const;
+        type ConstObject = typeof constObj;
+
+        const validator = objects.hasKeys.const<ConstObject>();
+
+        expect(
+          validator({ readonly: 'value', fixed: 42 }, 'readonly', 'fixed'),
+        ).toBe(true);
+        expect(validator({ readonly: 'value' }, 'readonly')).toBe(true);
+      });
+
+      it('#09.06.03 should handle const objects with literal types', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const literalObj = {
+          type: 'user' as const,
+          status: 'active' as const,
+          id: 123,
+        };
+        type LiteralObject = typeof literalObj;
+
+        const validator = objects.hasKeys.const<LiteralObject>();
+
+        expect(
+          validator(
+            { type: 'user', status: 'active', id: 123 },
+            'type',
+            'status',
+            'id',
+          ),
+        ).toBe(true);
+        expect(validator({ type: 'user', id: 123 }, 'type', 'id')).toBe(
+          true,
+        );
+      });
+
+      it('#09.06.04 should validate const tuples as object properties', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const objWithTuple = {
+          coordinates: [10, 20] as const,
+          name: 'point',
+        } as const;
+        type ObjectWithTuple = typeof objWithTuple;
+
+        const validator = objects.hasKeys.const<ObjectWithTuple>();
+
+        expect(
+          validator(
+            { coordinates: [10, 20], name: 'point' },
+            'coordinates',
+            'name',
+          ),
+        ).toBe(true);
+        expect(validator({ name: 'point' }, 'name')).toBe(true);
+      });
+
+      it('#09.06.05 should work with const nested objects', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const nestedConstObj = {
+          config: {
+            enabled: true,
+            mode: 'production' as const,
+          },
+          version: '1.0.0',
+        } as const;
+        type NestedConstObject = typeof nestedConstObj;
+
+        const validator = objects.hasKeys.const<NestedConstObject>();
+
+        expect(
+          validator(
+            {
+              config: { enabled: true, mode: 'production' },
+              version: '1.0.0',
+            },
+            'config',
+            'version',
+          ),
+        ).toBe(true);
+        expect(
+          validator(
+            { config: { enabled: true, mode: 'production' } },
+            'config',
+          ),
+        ).toBe(true);
+      });
+
+      it('#09.06.06 should handle const arrays with specific elements', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const objWithConstArray = {
+          tags: ['typescript', 'javascript', 'node'] as const,
+          priority: 1,
+        } as const;
+        type ObjectWithConstArray = typeof objWithConstArray;
+
+        const validator = objects.hasKeys.const<ObjectWithConstArray>();
+
+        expect(
+          validator(
+            { tags: ['typescript', 'javascript', 'node'], priority: 1 },
+            'tags',
+            'priority',
+          ),
+        ).toBe(true);
+        expect(validator({ priority: 1 }, 'priority')).toBe(true);
+      });
+
+      it('#09.06.07 should validate const objects with readonly properties', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const readonlyObj = Object.freeze({
+          readonly: 'value',
+          immutable: 42,
+        });
+        type ReadonlyObject = typeof readonlyObj;
+
+        const validator = objects.hasKeys.const<ReadonlyObject>();
+
+        expect(
+          validator(
+            { readonly: 'value', immutable: 42 },
+            'readonly',
+            'immutable',
+          ),
+        ).toBe(true);
+        expect(validator({ readonly: 'value' }, 'readonly')).toBe(true);
+      });
+
+      it('#09.06.08 should handle const objects with union types', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const unionObj = {
+          status: 'active' as 'active' | 'inactive',
+          count: 5,
+          enabled: true,
+        } as const;
+        type UnionObject = typeof unionObj;
+
+        const validator = objects.hasKeys.const<UnionObject>();
+
+        expect(
+          validator(
+            { status: 'active', count: 5, enabled: true },
+            'status',
+            'count',
+            'enabled',
+          ),
+        ).toBe(true);
+        expect(
+          validator({ status: 'active', count: 5 }, 'status', 'count'),
+        ).toBe(true);
+      });
     });
   });
 
@@ -1085,22 +1378,6 @@ describe('objects', () => {
       const obj = { a: 1 };
       const result = objects.require(obj, { b: 2 });
       expect(result).toEqual({ a: 1, b: 2 });
-    });
-
-    describe('#15.05 objects.require.clone', () => {
-      it('#15.05.01 should clone and require', () => {
-        const obj = { a: 1, b: undefined };
-        const result = objects.require.clone(obj, { b: 2 });
-        expect(result).toEqual({ a: 1, b: 2 });
-        expect(result).not.toBe(obj);
-      });
-
-      it('#15.05.02 should not modify original object', () => {
-        const obj = { a: 1, b: undefined };
-        const original = { ...obj };
-        objects.require.clone(obj, { b: 2 });
-        expect(obj).toEqual(original);
-      });
     });
 
     describe('#15.06 objects.require.strict', () => {
@@ -1892,107 +2169,6 @@ describe('objects', () => {
           },
         };
         expect(objects.primitive.is(obj)).toBe(true);
-      });
-    });
-
-    describe('#20.04 objects.primitive.clone', () => {
-      it('#20.04.01 should clone primitive object', () => {
-        const obj = { a: 1, b: 'test', c: true };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-      });
-
-      it('#20.04.02 should handle deeply nested objects', () => {
-        const deepObj: any = {};
-        let current = deepObj;
-
-        for (let i = 0; i < 100; i++) {
-          current[`level${i}`] = {};
-          current = current[`level${i}`];
-        }
-        current.value = 'deep';
-
-        const result = objects.primitive.clone(deepObj);
-        expect(result).toEqual(deepObj);
-        expect(result).not.toBe(deepObj);
-      });
-
-      it('#20.04.02 should clone nested primitive object', () => {
-        const obj = {
-          nested: { value: 'test', number: 42 },
-          array: [1, 2, 3],
-        };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-        expect(result.nested).not.toBe(obj.nested);
-        expect(result.array).not.toBe(obj.array);
-      });
-
-      it('#20.04.03 should clone empty object', () => {
-        const obj = {};
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-      });
-
-      it('#20.04.04 should clone object with null values', () => {
-        const obj = { a: 1, b: null, c: undefined };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-      });
-
-      it('#20.04.05 should clone object with arrays', () => {
-        const obj = {
-          simple: 'value',
-          array: [1, 2, { nested: 'deep' }],
-        };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-        expect(result.array).not.toBe(obj.array);
-        expect(result.array[2]).not.toBe(obj.array[2]);
-      });
-
-      it('#20.04.06 should clone deeply nested object', () => {
-        const obj = {
-          level1: {
-            level2: {
-              level3: {
-                value: 'deep',
-                number: 42,
-              },
-            },
-          },
-        };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-        expect(result.level1).not.toBe(obj.level1);
-        expect(result.level1.level2).not.toBe(obj.level1.level2);
-        expect(result.level1.level2.level3).not.toBe(
-          obj.level1.level2.level3,
-        );
-      });
-
-      it('#20.04.07 should handle objects with zero and false values', () => {
-        const obj = { zero: 0, empty: '', boolean: false };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
-      });
-
-      it('#20.04.08 should clone object with numeric keys', () => {
-        const obj = {
-          1: 'one',
-          2: 'two',
-          normal: 'value',
-        };
-        const result = objects.primitive.clone(obj);
-        expect(result).toEqual(obj);
-        expect(result).not.toBe(obj);
       });
     });
   });

@@ -191,6 +191,340 @@ describe('Castings common', () => {
     });
   });
 
+  describe('#04.1 => commons.clone', () => {
+    it('#04.1.01 => should deep clone simple objects', () => {
+      const original = { a: 1, b: 'test', c: true };
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+
+      // Modify cloned object should not affect original
+      cloned.a = 999;
+      expect(original.a).toBe(1);
+    });
+
+    it('#04.1.02 => should deep clone nested objects', () => {
+      const original = {
+        user: {
+          name: 'John',
+          age: 30,
+          address: {
+            street: '123 Main St',
+            city: 'New York',
+          },
+        },
+        active: true,
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+      expect(cloned.user).not.toBe(original.user);
+      expect(cloned.user.address).not.toBe(original.user.address);
+
+      // Modify nested properties
+      cloned.user.name = 'Jane';
+      cloned.user.address.city = 'Boston';
+
+      expect(original.user.name).toBe('John');
+      expect(original.user.address.city).toBe('New York');
+    });
+
+    it('#04.1.03 => should clone arrays within objects', () => {
+      const original = {
+        items: [1, 2, 3],
+        tags: ['typescript', 'javascript'],
+        metadata: {
+          categories: ['web', 'frontend'],
+        },
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned.items).not.toBe(original.items);
+      expect(cloned.tags).not.toBe(original.tags);
+      expect(cloned.metadata.categories).not.toBe(
+        original.metadata.categories,
+      );
+
+      // Modify arrays
+      cloned.items.push(4);
+      cloned.tags[0] = 'python';
+      cloned.metadata.categories.pop();
+
+      expect(original.items).toEqual([1, 2, 3]);
+      expect(original.tags[0]).toBe('typescript');
+      expect(original.metadata.categories).toEqual(['web', 'frontend']);
+    });
+
+    it('#04.1.04 => should handle primitive values in objects', () => {
+      const original = {
+        string: 'hello',
+        number: 42,
+        boolean: true,
+        nullValue: null,
+        undefinedValue: undefined,
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+
+      // Primitive values should be copied correctly
+      expect(cloned.string).toBe('hello');
+      expect(cloned.number).toBe(42);
+      expect(cloned.boolean).toBe(true);
+      expect(cloned.nullValue).toBeNull();
+      expect(cloned.undefinedValue).toBeUndefined();
+    });
+
+    it('#04.1.05 => should clone empty objects and arrays', () => {
+      const originalEmpty = {};
+      const clonedEmpty = commons.clone(originalEmpty);
+
+      expect(clonedEmpty).toEqual({});
+      expect(clonedEmpty).not.toBe(originalEmpty);
+
+      const originalWithEmptyArray = { items: [] };
+      const clonedWithEmptyArray = commons.clone(originalWithEmptyArray);
+
+      expect(clonedWithEmptyArray.items).toEqual([]);
+      expect(clonedWithEmptyArray.items).not.toBe(
+        originalWithEmptyArray.items,
+      );
+    });
+
+    it('#04.1.06 => should handle objects with mixed array and object nesting', () => {
+      const original = {
+        users: [
+          { id: 1, name: 'Alice', preferences: { theme: 'dark' } },
+          { id: 2, name: 'Bob', preferences: { theme: 'light' } },
+        ],
+        settings: {
+          notifications: ['email', 'push'],
+          security: {
+            twoFactor: true,
+            allowedIPs: ['192.168.1.1', '10.0.0.1'],
+          },
+        },
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned.users).not.toBe(original.users);
+      expect(cloned.users[0]).not.toBe(original.users[0]);
+      expect(cloned.users[0].preferences).not.toBe(
+        original.users[0].preferences,
+      );
+      expect(cloned.settings.notifications).not.toBe(
+        original.settings.notifications,
+      );
+      expect(cloned.settings.security.allowedIPs).not.toBe(
+        original.settings.security.allowedIPs,
+      );
+
+      // Modify deeply nested values
+      cloned.users[0].name = 'Carol';
+      cloned.settings.notifications.push('sms');
+      cloned.settings.security.allowedIPs[0] = '172.16.0.1';
+
+      expect(original.users[0].name).toBe('Alice');
+      expect(original.settings.notifications).toEqual(['email', 'push']);
+      expect(original.settings.security.allowedIPs[0]).toBe('192.168.1.1');
+    });
+
+    it('#04.1.07 => should clone objects with numeric and string keys', () => {
+      const original = {
+        '0': 'zero',
+        1: 'one',
+        name: 'test',
+        nested: {
+          '2': 'two',
+          value: 42,
+        },
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+      expect(cloned.nested).not.toBe(original.nested);
+
+      // Test all key types
+      expect(cloned['0']).toBe('zero');
+      expect(cloned[1]).toBe('one');
+      expect(cloned.name).toBe('test');
+      expect(cloned.nested['2']).toBe('two');
+      expect(cloned.nested.value).toBe(42);
+    });
+
+    it('#04.1.08 => should handle objects with primitive special values', () => {
+      const original = {
+        number: {
+          positive: 42,
+          negative: -17,
+          zero: 0,
+          float: 3.14,
+          infinity: Infinity,
+          negativeInfinity: -Infinity,
+          nan: NaN,
+        },
+        strings: {
+          empty: '',
+          normal: 'hello',
+          withSpaces: 'hello world',
+        },
+        booleans: {
+          truthy: true,
+          falsy: false,
+        },
+        nullish: {
+          nullValue: null,
+          undefinedValue: undefined,
+        },
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+
+      // Special values should be cloned correctly
+      const typedCloned = cloned as typeof original;
+      expect(typedCloned.number.positive).toBe(42);
+      expect(typedCloned.number.negative).toBe(-17);
+      expect(typedCloned.number.zero).toBe(0);
+      expect(typedCloned.number.float).toBe(3.14);
+      expect(typedCloned.number.infinity).toBe(Infinity);
+      expect(typedCloned.number.negativeInfinity).toBe(-Infinity);
+      expect(typedCloned.number.nan).toBe(NaN);
+      expect(typedCloned.strings.empty).toBe('');
+      expect(typedCloned.strings.normal).toBe('hello');
+      expect(typedCloned.booleans.truthy).toBe(true);
+      expect(typedCloned.booleans.falsy).toBe(false);
+      expect(typedCloned.nullish.nullValue).toBeNull();
+      expect(typedCloned.nullish.undefinedValue).toBeUndefined();
+    });
+
+    it('#04.1.09 => should clone objects with circular references safely', () => {
+      const original: any = {
+        name: 'root',
+        child: {
+          name: 'child',
+          value: 42,
+        },
+      };
+
+      // Create circular reference
+      original.child.parent = original;
+
+      // Should not throw an error and should handle circular references
+      expect(() => {
+        const cloned = commons.clone(original);
+        expect(cloned.name).toBe('root');
+        expect(cloned.child.name).toBe('child');
+        expect(cloned.child.value).toBe(42);
+      }).not.toThrow();
+    });
+
+    it('#04.1.10 => should preserve object property descriptors for simple cases', () => {
+      const original = {
+        normal: 'value',
+        nested: {
+          deep: 'content',
+        },
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(Object.getOwnPropertyDescriptor(cloned, 'normal')).toEqual(
+        Object.getOwnPropertyDescriptor(original, 'normal'),
+      );
+      expect(
+        Object.getOwnPropertyDescriptor(cloned.nested, 'deep'),
+      ).toEqual(Object.getOwnPropertyDescriptor(original.nested, 'deep'));
+    });
+
+    it('#04.1.11 => should handle large nested structures', () => {
+      const createNestedObject = (depth: number): any => {
+        if (depth === 0) return { value: 'leaf' };
+        return {
+          level: depth,
+          data: [1, 2, 3],
+          child: createNestedObject(depth - 1),
+        };
+      };
+
+      const original = createNestedObject(5);
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+
+      // Check deep nesting is properly cloned
+      let originalPtr = original;
+      let clonedPtr = cloned;
+
+      for (let i = 5; i > 0; i--) {
+        expect(clonedPtr.level).toBe(i);
+        expect(clonedPtr.data).not.toBe(originalPtr.data);
+        expect(clonedPtr.child).not.toBe(originalPtr.child);
+
+        originalPtr = originalPtr.child;
+        clonedPtr = clonedPtr.child;
+      }
+
+      expect(clonedPtr.value).toBe('leaf');
+    });
+
+    it('#04.1.12 => should work with TypeScript interfaces', () => {
+      type User = {
+        id: number;
+        profile: {
+          name: string;
+          settings: {
+            theme: 'light' | 'dark';
+            notifications: boolean;
+          };
+        };
+        tags: string[];
+      };
+
+      const original: User = {
+        id: 1,
+        profile: {
+          name: 'John Doe',
+          settings: {
+            theme: 'dark',
+            notifications: true,
+          },
+        },
+        tags: ['admin', 'user'],
+      };
+
+      const cloned = commons.clone(original);
+
+      expect(cloned).toEqual(original);
+      expect(cloned).not.toBe(original);
+      expect(cloned.profile).not.toBe(original.profile);
+      expect(cloned.profile.settings).not.toBe(original.profile.settings);
+      expect(cloned.tags).not.toBe(original.tags);
+
+      // Type safety should be preserved
+      expect(cloned.id).toBe(1);
+      expect(cloned.profile.name).toBe('John Doe');
+      expect(cloned.profile.settings.theme).toBe('dark');
+      expect(cloned.profile.settings.notifications).toBe(true);
+      expect(cloned.tags).toEqual(['admin', 'user']);
+    });
+  });
+
   describe('#05 => All "is" functions', () => {
     describe('#05.01 => commons.isDefined function', () => {
       const isDefined = commons.isDefined;
@@ -661,6 +995,213 @@ describe('Castings common', () => {
           expect(result([1, 2, 3])).toBe(true);
           expect(result([])).toBe(false);
           expect(result('not array')).toBe(false);
+        });
+      });
+
+      describe('#05.08.07 => commons.function.checker.is', () => {
+        it('#05.08.07.01 => should return true for functions with one parameter', () => {
+          const singleParamFn = (value: unknown) =>
+            typeof value === 'string';
+          const result = commons.function.checker.is(singleParamFn);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.02 => should return true for type guard functions', () => {
+          const isString = (value: unknown): value is string =>
+            typeof value === 'string';
+          const result = commons.function.checker.is(isString);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.03 => should return true for arrow functions with one parameter', () => {
+          const arrowChecker = (x: any) => x != null;
+          const result = commons.function.checker.is(arrowChecker);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.04 => should return true for anonymous functions with one parameter', () => {
+          const result = commons.function.checker.is(function (
+            value: unknown,
+          ) {
+            return typeof value === 'number';
+          });
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.05 => should return true for built-in functions with one parameter', () => {
+          const result = commons.function.checker.is(Array.isArray);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.06 => should return false for functions with zero parameters', () => {
+          const noParamFn = () => true;
+          const result = commons.function.checker.is(noParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.07 => should return false for functions with multiple parameters', () => {
+          const multiParamFn = (a: unknown, b: unknown) => a === b;
+          const result = commons.function.checker.is(multiParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.08 => should return false for functions with two parameters', () => {
+          const twoParamFn = (value: unknown, context: any) => {
+            void value;
+            void context;
+            return true;
+          };
+          const result = commons.function.checker.is(twoParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.09 => should return false for functions with three parameters', () => {
+          const threeParamFn = (a: any, b: any, c: any) => {
+            void a;
+            void b;
+            void c;
+            return true;
+          };
+          const result = commons.function.checker.is(threeParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.10 => should return false for non-function values', () => {
+          expect(commons.function.checker.is('string')).toBe(false);
+          expect(commons.function.checker.is(123)).toBe(false);
+          expect(commons.function.checker.is(true)).toBe(false);
+          expect(commons.function.checker.is(null)).toBe(false);
+          expect(commons.function.checker.is(undefined)).toBe(false);
+          expect(commons.function.checker.is({})).toBe(false);
+          expect(commons.function.checker.is([])).toBe(false);
+          expect(commons.function.checker.is(new Date())).toBe(false);
+          expect(commons.function.checker.is(Symbol('test'))).toBe(false);
+        });
+
+        it('#05.08.07.11 => should return false for class constructors', () => {
+          class TestClass {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            constructor(_: string) {}
+          }
+          const result = commons.function.checker.is(TestClass);
+          expect(result).toBe(false); // Constructor has 1 param but .length might be different
+        });
+
+        it('#05.08.07.12 => should return false for functions with default parameters', () => {
+          const defaultParamFn = (value: unknown = 'default') => value;
+          const result = commons.function.checker.is(defaultParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.13 => should return false for functions with rest parameters', () => {
+          const restParamFn = (...args: unknown[]) => args.length > 0;
+          const result = commons.function.checker.is(restParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.14 => should return false for async functions with multiple parameters', () => {
+          const asyncMultiParamFn = async (a: unknown, b: unknown) =>
+            a === b;
+          const result = commons.function.checker.is(asyncMultiParamFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.15 => should return true for async functions with one parameter', () => {
+          const asyncSingleParamFn = async (value: unknown) =>
+            typeof value === 'string';
+          const result = commons.function.checker.is(asyncSingleParamFn);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.16 => should return true for generator functions with one parameter', () => {
+          function* generatorFn(value: unknown) {
+            yield value;
+          }
+          const result = commons.function.checker.is(generatorFn);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.17 => should return false for generator functions with multiple parameters', () => {
+          function* generatorFn(a: unknown, b: unknown) {
+            yield a;
+            yield b;
+          }
+          const result = commons.function.checker.is(generatorFn);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.18 => should work with complex type checkers', () => {
+          const isValidUser = (value: unknown) => {
+            return (
+              typeof value === 'object' &&
+              value !== null &&
+              'name' in value &&
+              'id' in value
+            );
+          };
+          const result = commons.function.checker.is(isValidUser);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.19 => should work with numeric validation checkers', () => {
+          const isPositiveInteger = (value: unknown) => {
+            return (
+              typeof value === 'number' &&
+              Number.isInteger(value) &&
+              value > 0
+            );
+          };
+          const result = commons.function.checker.is(isPositiveInteger);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.20 => should work with string validation checkers', () => {
+          const isValidEmail = (value: unknown) => {
+            return (
+              typeof value === 'string' &&
+              value.includes('@') &&
+              value.includes('.')
+            );
+          };
+          const result = commons.function.checker.is(isValidEmail);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.21 => should handle functions with destructured parameters', () => {
+          const destructuredFn = ({ value }: { value: unknown }) => value;
+          const result = commons.function.checker.is(destructuredFn);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.22 => should handle functions with array destructured parameters', () => {
+          const arrayDestructuredFn = ([value]: [unknown]) => value;
+          const result = commons.function.checker.is(arrayDestructuredFn);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.23 => should return false for methods with multiple parameters', () => {
+          const obj = {
+            method: (a: unknown, b: unknown) => a === b,
+          };
+          const result = commons.function.checker.is(obj.method);
+          expect(result).toBe(false);
+        });
+
+        it('#05.08.07.24 => should return true for methods with single parameter', () => {
+          const obj = {
+            checker: (value: unknown) => typeof value === 'string',
+          };
+          const result = commons.function.checker.is(obj.checker);
+          expect(result).toBe(true);
+        });
+
+        it('#05.08.07.25 => should work with bound functions', () => {
+          const originalFn = function (this: any, value: unknown) {
+            return this.prefix + value;
+          };
+          const boundFn = originalFn.bind({ prefix: 'test: ' });
+          const result = commons.function.checker.is(boundFn);
+          expect(result).toBe(true);
         });
       });
     });

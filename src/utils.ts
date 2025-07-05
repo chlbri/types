@@ -8,6 +8,12 @@ export type Checker<T = any> =
 
 export type FnBasic<Main extends Fn, Tr extends object> = Tr & Main;
 
+export type Equals<T, U> = T extends U
+  ? U extends T
+    ? true
+    : false
+  : false;
+
 type PartialCall_F = <
   T extends ArrayR = ArrayR,
   U extends ArrayR = ArrayR,

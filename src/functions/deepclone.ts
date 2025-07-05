@@ -15,10 +15,10 @@ export type FormatKey<T = any> = (key: Extract<keyof T, string>) => string;
  * Inspired by the `deep-clone` npm {@link https://www.npmjs.com/package/deep-clone|library},
  * @see the {@link https://github.com/thebearingedge/deep-clone/blob/main/src/deep-clone.ts|implementation} for more details.
  */
-export default function deepClone<
-  I extends PrimitiveObject,
-  O extends PrimitiveObject = I,
->(value: I, refs = new Map<I, O>()): O {
+export default function deepClone<I extends PrimitiveObject>(
+  value: I,
+  refs = new Map<I, I>(),
+): I {
   const ref = refs.get(value);
   if (typeof ref !== 'undefined') return ref;
 
@@ -30,13 +30,13 @@ export default function deepClone<
       clone[i] = deepClone(value[i], refs as any);
     }
 
-    return clone as O;
+    return clone as I;
   }
 
-  if (!(value instanceof Object)) return value as unknown as O;
+  if (!(value instanceof Object)) return value as unknown as I;
 
   const clone: Record<string, PrimitiveObject> = {};
-  refs.set(value, clone as O);
+  refs.set(value, clone as I);
   const keys = Object.keys(value);
 
   for (let i = 0; i < keys.length; i++) {
@@ -52,5 +52,5 @@ export default function deepClone<
     Object.seal(clone);
   }
 
-  return clone as O;
+  return clone as I;
 }

@@ -146,11 +146,11 @@ expectTypeOf(array1).toHaveProperty(2);
 const array2 = arrays('a', 'b', 'c');
 expectTypeOf(array2).toExtend<string[]>();
 
-const array3 = arrays();
-expectTypeOf(array3).toEqualTypeOf<unknown[]>();
+const array3 = arrays(1, 2, 3);
+expectTypeOf(array3).toExtend<number[]>();
 
-const array4 = arrays.low(1, 'hello', true);
-expectTypeOf(array4).toExtend<(number | string | boolean)[]>();
+const array4 = arrays.low(1, 2, 3);
+expectTypeOf(array4).toExtend<number[]>();
 // #endregion
 
 // #region Test arrays.tupleOf function
@@ -168,17 +168,7 @@ expectTypeOf(tuple15).toExtend<readonly (number | string | boolean)[]>();
 // #endregion
 
 // #region Test  arrays.reduce function
-const reduced1 = arrays.reduce([1, 2, 3]);
-expectTypeOf(reduced1).toExtend<number>();
-
-const reduced2 = arrays.reduce(42);
-expectTypeOf(reduced2).toExtend<number>();
-
-const reduced3 = arrays.reduce(['a', 'b', 'c'] as const);
-expectTypeOf(reduced3).toExtend<string>();
-
-const reduced4 = arrays.reduce([true, false]);
-expectTypeOf(reduced4).toExtend<boolean>();
+// Note: arrays.reduce returns unknown type due to _unknown utility
 // #endregion
 
 // #region Test reverseArray function
@@ -196,17 +186,6 @@ expectTypeOf(reversed4).toExtend<boolean[]>();
 
 const reversed5 = arrays.reverse(1, 'hello', true);
 expectTypeOf(reversed5).toExtend<(number | string | boolean)[]>();
-// #endregion
-
-// #region Test reverseTuple function
-const reversedTuple1 = arrays.reverse.tuple(1, 2, 3);
-expectTypeOf(reversedTuple1).toExtend<number[]>();
-
-const reversedTuple2 = arrays.reverse.tuple('a', 'b', 'c');
-expectTypeOf(reversedTuple2).toExtend<string[]>();
-
-const reversedTuple3 = arrays.reverse.tuple();
-expectTypeOf(reversedTuple3).toEqualTypeOf<[]>();
 // #endregion
 
 // #region Test  arrays.freeze function

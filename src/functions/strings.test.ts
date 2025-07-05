@@ -121,28 +121,28 @@ describe('1. Strings Main Functions', () => {
 
   describe('1.6 strings.include/contains', () => {
     it('1.6.1 should return true when string includes segment', () => {
-      expect(strings.include('hello world', 'llo')).toBe(true);
+      expect(strings.includes('hello world', 'llo')).toBe(true);
       expect(strings.contains('hello world', 'o w')).toBe(true);
-      expect(strings.include('hello world', '')).toBe(true);
+      expect(strings.includes('hello world', '')).toBe(true);
     });
 
     it('1.6.2 should return false when string does not include segment', () => {
-      expect(strings.include('hello world', 'xyz')).toBe(false);
+      expect(strings.includes('hello world', 'xyz')).toBe(false);
       expect(strings.contains('hello world', 'Hello')).toBe(false);
-      expect(strings.include('hello world', 'hello world extra')).toBe(
+      expect(strings.includes('hello world', 'hello world extra')).toBe(
         false,
       );
     });
 
     it('1.6.3 should return false for non-string values', () => {
-      expect(strings.include(123, 'hello')).toBe(false);
+      expect(strings.includes(123, 'hello')).toBe(false);
       expect(strings.contains(null, 'hello')).toBe(false);
       expect(strings.contains(undefined, 'hello')).toBe(false);
     });
 
     it('1.6.4 should act as type guard', () => {
       const value: unknown = 'hello world';
-      if (strings.include(value, 'llo')) {
+      if (strings.includes(value, 'llo')) {
         expectTypeOf(value).toEqualTypeOf<`${string}llo${string}`>();
       }
     });
@@ -453,13 +453,13 @@ describe('3. Edge Cases and Error Handling', () => {
     });
 
     it('3.1.2 should handle newlines and tabs', () => {
-      expect(strings.include('hello\nworld', '\n')).toBe(true);
-      expect(strings.include('hello\tworld', '\t')).toBe(true);
+      expect(strings.includes('hello\nworld', '\n')).toBe(true);
+      expect(strings.includes('hello\tworld', '\t')).toBe(true);
     });
 
     it('3.1.3 should handle escape sequences', () => {
-      expect(strings.include('hello\\world', '\\')).toBe(true);
-      expect(strings.include('hello"world', '"')).toBe(true);
+      expect(strings.includes('hello\\world', '\\')).toBe(true);
+      expect(strings.includes('hello"world', '"')).toBe(true);
     });
   });
 
@@ -469,7 +469,7 @@ describe('3. Edge Cases and Error Handling', () => {
       expect(strings.getLength('')).toBe(0);
       expect(strings.startsWith('', '')).toBe(true);
       expect(strings.endsWith('', '')).toBe(true);
-      expect(strings.include('', '')).toBe(true);
+      expect(strings.includes('', '')).toBe(true);
     });
 
     it('3.2.2 should handle whitespace strings', () => {
@@ -491,7 +491,7 @@ describe('3. Edge Cases and Error Handling', () => {
       expect(strings.is(undefined)).toBe(false);
       expect(strings.startsWith(null, 'test')).toBe(false);
       expect(strings.endsWith(undefined, 'test')).toBe(false);
-      expect(strings.include(null, 'test')).toBe(false);
+      expect(strings.includes(null, 'test')).toBe(false);
     });
   });
 
