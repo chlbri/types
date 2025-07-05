@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { _unknown } from '../functions/commons';
-import { typeFn } from './common';
+import { typeFn } from './commons';
 import type { Digit } from './numbers.types';
 
 export const t_number = <T extends number>(_: T) => _unknown<T>();

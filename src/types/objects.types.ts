@@ -1,4 +1,4 @@
-import type { Fn, Keys, NotUndefined, Primitive } from './common.types';
+import type { Fn, Keys, NotUndefined, Primitive } from './commons.types';
 import { AddString } from './strings.types';
 
 export type NOmit<T, K extends keyof T> = Omit<T, K>;

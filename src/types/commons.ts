@@ -2,7 +2,7 @@
 
 import type { FnBasic } from '~utils';
 import { _unknown } from '../functions/commons';
-import type { Defaulted, Fn, Keys, Primitive } from './common.types';
+import type { Defaulted, Fn, Keys, Primitive } from './commons.types';
 import type {
   DeepPartial,
   DeepReadonly,
