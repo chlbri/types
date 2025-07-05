@@ -4,7 +4,7 @@ import { typeFn } from './commons';
 import type { Digit } from './numbers.types';
 
 export const numbers = typeFn<number>()({
-  toString: <T extends number | string>(_: T) => _unknown<`${T}`>(),
+  getString: <const T extends number>(_: T) => _unknown<`${T}`>(),
 
   digit: typeFn<Digit>()(),
 

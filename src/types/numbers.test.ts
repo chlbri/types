@@ -24,13 +24,8 @@ describe('numbers type functions', () => {
   });
 
   // Test coverage for sub-functions
-  it('5. should call t_number.toString', () => {
-    const result = numbers.toString(42);
-    expect(result).toBeUndefined();
-  });
-
-  it('6. should call t_number.toString with string', () => {
-    const result = numbers.toString('42');
+  it('5. should call t_number.getString', () => {
+    const result = numbers.getString(42);
     expect(result).toBeUndefined();
   });
 
@@ -119,7 +114,7 @@ describe('numbers type functions', () => {
     it('23. should have correct type inference for number operations', () => {
       // These are compile-time checks to ensure type safety
       expect(typeof numbers).toBe('function');
-      expect(typeof numbers.toString).toBe('function');
+      expect(typeof numbers.getString).toBe('function');
       expect(typeof numbers.forceCast).toBe('function');
       expect(typeof numbers.is).toBe('function');
     });

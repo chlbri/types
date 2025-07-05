@@ -58,12 +58,12 @@ export const arrays = typeFnBasic(
 
     freeze: <const T extends RuA>(..._: T) => _unknown<Readonly<T>>(),
 
-    extract: <const T extends unknown[], U extends T[number][]>(
+    extract: <const T extends AnyArray, const U extends T[number][]>(
       _?: T,
       ...__: U
     ) => _unknown<ExtractArray<T, U[number]>>(),
 
-    exclude: <const T extends unknown[], U extends T[number][]>(
+    exclude: <const T extends AnyArray, const U extends T[number][]>(
       _?: T,
       ...__: U
     ) => _unknown<ExcludeArray<T, U[number]>>(),

@@ -41,7 +41,7 @@ export type ReverseArray<T extends RuA> = T extends any
       : T
   : never;
 
-export type RuA = ReadonlyArray<unknown>;
+export type RuA = readonly unknown[];
 
 export type AnyArray<T = unknown> = ReadonlyArray<T> | T[];
 
@@ -58,7 +58,7 @@ export type NArrayOmit<
     ? UnionToTuple<N>
     : never;
 
-export type ExtractArray<T extends any[], U> = T extends [
+export type ExtractArray<T extends AnyArray, U> = T extends readonly [
   infer A,
   ...infer B,
 ]
@@ -67,7 +67,7 @@ export type ExtractArray<T extends any[], U> = T extends [
     : [...ExtractArray<B, U>]
   : [];
 
-export type ExcludeArray<T extends any[], U> = T extends [
+export type ExcludeArray<T extends AnyArray, U> = T extends readonly [
   infer A,
   ...infer B,
 ]
@@ -76,7 +76,8 @@ export type ExcludeArray<T extends any[], U> = T extends [
     : [A, ...ExcludeArray<B, U>]
   : [];
 
-export type ReduceArray<T> = T extends AnyArray ? T[0] : T;
+export type ReduceArray<T> = T extends AnyArray ? T[number] : T;
+export type ReduceArrayS<T> = T extends AnyArray ? T[0] : T;
 
 export type ReduceDeepArray<T> =
   ReduceArray<T> extends AnyArray
