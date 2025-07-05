@@ -1,13 +1,14 @@
-import { Neverify } from './objects.types';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { _unknown } from '../functions/commons';
+
 import type { FnBasic } from '~utils';
+import { _unknown } from '../functions/commons';
 import type { Defaulted, Fn, Keys, Primitive } from './common.types';
 import type {
   DeepPartial,
   DeepReadonly,
   DeepRequired,
 } from './objects.types';
+import { Neverify } from './objects.types';
 
 export const typeFnBasic = <
   Main extends Fn,
