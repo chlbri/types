@@ -26,7 +26,8 @@
     "declarationMap": true,
     "baseUrl": "./src",
     "paths": {
-      "~constants": ["./constants/index.ts"]
+      "~constants": ["./constants/index.ts"],
+      "~utils": ["./utils.ts"]
     }
   }
 }

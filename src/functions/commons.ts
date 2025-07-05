@@ -10,9 +10,7 @@ import type {
   Primitive,
   PrimitiveObject,
 } from '../types';
-import { isPlainObject } from '../utils';
-
-type FnReturnBasic<Main extends Fn, Tr extends object> = Tr & Main;
+import { Checker, isPlainObject, type FnBasic } from '~utils';
 
 type FnReturn<T, Tr extends object> = Tr & {
   (arg: T): T;
@@ -26,7 +24,7 @@ export const castFnBasic = <
 >(
   main: Main,
   extensions?: Tr,
-): FnReturnBasic<Main, Tr> => {
+): FnBasic<Main, Tr> => {
   const out: any = main;
 
   if (extensions) {
@@ -65,10 +63,10 @@ export const castFn = <T = any>() => {
   const _out = <const Tr extends object = object>(
     extensions?: Tr,
   ): FnReturn<T, Tr> => {
-    const out: any = castFnBasic((arg: T) => arg as T, {
+    const out: any = castFnBasic((arg: T) => arg, {
       ...extensions,
       forceCast: (arg: unknown) => {
-        return arg as T;
+        return _unknown<T>(arg);
       },
       dynamic: <U extends T>(arg: U) => {
         return arg;
@@ -79,87 +77,135 @@ export const castFn = <T = any>() => {
   return _out;
 };
 
-export const _unknown = <T>(value?: unknown) => value as T;
+// #region Helpers
+const _identity = <T>(value: T) => value;
 
-export const identity = <T>(value: T) => value;
-
-const partial = <T>(value: T) => {
+const _partial = <T>(value: T) => {
   return _unknown<Partial<T>>(value);
 };
 
-partial.deep = <T>(value: T) => {
-  return _unknown<DeepPartial<T>>(value);
-};
-
-const required = <T>(value: T) => {
+const _required = <T>(value: T) => {
   return _unknown<NotUndefined<T>>(value);
 };
-required.deep = <T extends object | undefined>(value: T) => {
-  return _unknown<DeepRequired<T>>(value);
-};
 
-const _readonly = <T>(value: T) => value as Readonly<T>;
-_readonly.const = <const T extends object>(value: T) => _unknown<T>(value);
-const readonlyDeep = <T extends object>(value: T) =>
-  _unknown<DeepReadonly<T>>(value);
-readonlyDeep.const = <const T extends object>(value: T) =>
-  _unknown<DeepReadonly<T>>(value);
+const _function = <T extends any[], R = any>(fn: Fn<T, R>) => fn;
 
-_readonly.deep = readonlyDeep;
+// #endregion
 
-const readonlyNot = <T extends object>(value: T) =>
-  _unknown<NotReadonly<T>>(value);
+export const _unknown = <T>(value?: unknown) => value as T;
 
-readonlyNot.const = <const T extends object>(value: T) =>
-  readonlyNot(value);
-readonlyNot.deep = <const T extends object>(value: T) =>
-  _unknown<DeepNotReadonly<T>>(value);
+export const commons = castFnBasic(<T>(value: unknown) => value as T, {
+  partial: castFnBasic(_partial, {
+    deep: <T>(value: T) => {
+      return _unknown<DeepPartial<T>>(value);
+    },
+  }),
 
-_readonly.not = readonlyNot;
+  identity: _identity,
 
-export const commons = <T>(value: unknown) => value as T;
-commons.partial = partial;
-commons.identity = identity;
-commons.isDefined = <T>(value: T): value is NonNullable<T> => {
-  return value !== undefined && value !== null;
-};
-commons.isUndefined = (value: unknown): value is undefined => {
-  return value === undefined;
-};
-
-commons.isNull = (value: unknown): value is null => {
-  return value === null;
-};
-commons.unknown = <T>(value: unknown) => value as T;
-commons.any = castFn()();
-commons.neverify = <T>(value: T) => {
-  return _unknown<Neverify<T>>(value);
-};
-commons.required = required;
-commons.readonly = _readonly;
-commons.primitive = castFn<Primitive>()({
-  is: (value: unknown): value is Primitive => {
-    return (
-      typeof value === 'string' ||
-      typeof value === 'number' ||
-      typeof value === 'boolean' ||
-      value === null ||
-      value === undefined
-    );
+  isDefined: <T>(value: T): value is NonNullable<T> => {
+    return value !== undefined && value !== null;
   },
-});
-commons.primitiveObject = castFn<PrimitiveObject>()({
-  is: _isPrimitiveObject,
-});
-commons.undefined = identity(undefined);
-commons.null = identity(null);
-commons.symbol = castFn<symbol>()({
-  is: (value: unknown): value is symbol => typeof value === 'symbol',
-});
-commons.date = castFn<Date>()({
-  is: (value: unknown): value is Date => {
-    return value instanceof Date;
-  },
-} as const);
 
-commons.undefiny = <T>(value?: T) => value;
+  isUndefined: (value: unknown): value is undefined => {
+    return value === undefined;
+  },
+
+  isNull: (value: unknown): value is null => {
+    return value === null;
+  },
+
+  unknown: <T>(value: unknown) => value as T,
+
+  any: castFn()(),
+
+  neverify: <T>(value: T) => {
+    return _unknown<Neverify<T>>(value);
+  },
+
+  required: castFnBasic(_required, {
+    deep: <T extends object | undefined>(value: T) => {
+      return _unknown<DeepRequired<T>>(value);
+    },
+  }),
+
+  readonly: castFnBasic(<T>(value: T) => value as Readonly<T>, {
+    const: <const T extends object>(value: T) => _unknown<T>(value),
+
+    deep: castFnBasic(
+      <T extends object>(value: T) => _unknown<DeepReadonly<T>>(value),
+      {
+        const: <const T extends object>(value: T) =>
+          _unknown<DeepReadonly<T>>(value),
+      },
+    ),
+
+    not: castFnBasic(
+      <T extends object>(value: T) => _unknown<NotReadonly<T>>(value),
+      {
+        const: <const T extends object>(value: T) =>
+          _unknown<NotReadonly<T>>(value),
+        deep: <const T extends object>(value: T) =>
+          _unknown<DeepNotReadonly<T>>(value),
+      },
+    ),
+  }),
+
+  primitive: castFn<Primitive>()({
+    is: (value: unknown): value is Primitive => {
+      return (
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        value === null ||
+        value === undefined
+      );
+    },
+  }),
+
+  primitiveObject: castFn<PrimitiveObject>()({
+    is: _isPrimitiveObject,
+  }),
+
+  undefined: _identity(undefined),
+
+  null: _identity(null),
+
+  symbol: castFn<symbol>()({
+    is: (value: unknown): value is symbol => typeof value === 'symbol',
+  }),
+
+  date: castFn<Date>()({
+    is: (value: unknown): value is Date => {
+      return value instanceof Date;
+    },
+  } as const),
+
+  function: castFnBasic(_function, {
+    is: castFnBasic(
+      (value: unknown): value is Fn => {
+        return typeof value === 'function';
+      },
+      {
+        strict: <T extends any[] = any[], R = any>(
+          fn: Checker<Fn<T, R>>,
+        ) => {
+          return (value: unknown): value is Fn<T, R> =>
+            typeof value === 'function' && fn(value);
+        },
+      },
+    ),
+
+    forceCast: <T extends any[], R = any>(value: unknown) => {
+      return value as Fn<T, R>;
+    },
+
+    dynamic: <T extends any[], R = any>(value: Fn<T, R>) => {
+      return _unknown<Fn<T, R>>(value);
+    },
+
+    checker: castFn<Checker>()(),
+  }),
+
+  undefiny: <T>(value?: T) => value,
+});

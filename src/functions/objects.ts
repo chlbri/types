@@ -13,7 +13,7 @@ import type {
   Ru,
   SubType,
 } from 'types';
-import { partialCall } from '../utils';
+import { partialCall } from '~utils';
 import { castFn, castFnBasic, commons } from './commons';
 import deepClone from './deepclone';
 

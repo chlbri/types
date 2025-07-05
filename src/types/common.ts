@@ -1,12 +1,29 @@
 import { Neverify } from './objects.types';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { _unknown } from '../functions/commons';
-import type { Defaulted, Keys, Primitive } from './common.types';
+import type { FnBasic } from '~utils';
+import type { Defaulted, Fn, Keys, Primitive } from './common.types';
 import type {
   DeepPartial,
   DeepReadonly,
   DeepRequired,
 } from './objects.types';
+
+export const typeFnBasic = <
+  Main extends Fn,
+  const Tr extends object = object,
+>(
+  main: Main,
+  extensions?: Tr,
+): FnBasic<Main, Tr> => {
+  const out: any = main;
+
+  if (extensions) {
+    Object.assign(out, extensions);
+  }
+
+  return out;
+};
 
 type FnReturn<T = any, Tr extends object = object> = {
   (_?: T): T;

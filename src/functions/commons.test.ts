@@ -1,10 +1,4 @@
-import {
-  _unknown,
-  castFn,
-  castFnBasic,
-  commons,
-  identity,
-} from './commons';
+import { _unknown, castFn, castFnBasic, commons } from './commons';
 
 describe('Castings common', () => {
   describe('#00 => castFnBasic', () => {
@@ -63,7 +57,7 @@ describe('Castings common', () => {
   describe('#02 => should have _unknown and identity', () => {
     it('#02.01 => identity and _unknwown returns same value for the same params', () => {
       const value = { a: 1, b: 'test' };
-      expect(identity(value)).toBe(value);
+      expect(commons.identity(value)).toBe(value);
       expect(_unknown(value)).toBe(value);
     });
 
