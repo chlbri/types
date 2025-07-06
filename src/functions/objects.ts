@@ -420,7 +420,7 @@ export const objects = castFn<object>()({
 
   freeze: _readonly,
 
-  require: castFnBasic(require, {
+  required: castFnBasic(require, {
     strict: <T extends object, K extends AllowedNamesLow<T, undefined>>(
       object: T,
       requires: Pick<T, K>,
@@ -446,6 +446,8 @@ export const objects = castFn<object>()({
       },
     ),
   }),
+
+  //TODO: Add partial
 
   pick: castFnBasic(
     partialCall(_pick, 'key') as <T extends object, K extends any[]>(

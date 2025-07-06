@@ -348,96 +348,96 @@ describe('numbers', () => {
 
   describe('#05 numbers.toString', () => {
     it('#05.01 should convert numbers to string template literals', () => {
-      expect(numbers.toString(42)).toBe('42');
-      expect(numbers.toString(0)).toBe('0');
-      expect(numbers.toString(-17)).toBe('-17');
+      expect(numbers.getString(42)).toBe('42');
+      expect(numbers.getString(0)).toBe('0');
+      expect(numbers.getString(-17)).toBe('-17');
     });
 
     it('#05.02 should convert float numbers to string', () => {
-      expect(numbers.toString(3.14)).toBe('3.14');
-      expect(numbers.toString(0.5)).toBe('0.5');
-      expect(numbers.toString(-2.7)).toBe('-2.7');
+      expect(numbers.getString(3.14)).toBe('3.14');
+      expect(numbers.getString(0.5)).toBe('0.5');
+      expect(numbers.getString(-2.7)).toBe('-2.7');
     });
 
     it('#05.03 should handle special number values', () => {
-      expect(numbers.toString(Infinity)).toBe('Infinity');
-      expect(numbers.toString(-Infinity)).toBe('-Infinity');
-      expect(numbers.toString(NaN)).toBe('NaN');
+      expect(numbers.getString(Infinity)).toBe('Infinity');
+      expect(numbers.getString(-Infinity)).toBe('-Infinity');
+      expect(numbers.getString(NaN)).toBe('NaN');
     });
 
     it('#05.04 should handle edge case numbers', () => {
-      expect(numbers.toString(Number.MAX_SAFE_INTEGER)).toBe(
+      expect(numbers.getString(Number.MAX_SAFE_INTEGER)).toBe(
         '9007199254740991',
       );
-      expect(numbers.toString(Number.MIN_SAFE_INTEGER)).toBe(
+      expect(numbers.getString(Number.MIN_SAFE_INTEGER)).toBe(
         '-9007199254740991',
       );
-      expect(numbers.toString(Number.MAX_VALUE)).toBe(
+      expect(numbers.getString(Number.MAX_VALUE)).toBe(
         '1.7976931348623157e+308',
       );
-      expect(numbers.toString(Number.MIN_VALUE)).toBe('5e-324');
+      expect(numbers.getString(Number.MIN_VALUE)).toBe('5e-324');
     });
 
     it('#05.05 should handle zero and negative zero', () => {
-      expect(numbers.toString(0)).toBe('0');
-      expect(numbers.toString(-0)).toBe('0');
+      expect(numbers.getString(0)).toBe('0');
+      expect(numbers.getString(-0)).toBe('0');
     });
 
     it('#05.06 should handle scientific notation', () => {
-      expect(numbers.toString(1e10)).toBe('10000000000');
-      expect(numbers.toString(1e-10)).toBe('1e-10');
-      expect(numbers.toString(1.23e5)).toBe('123000');
+      expect(numbers.getString(1e10)).toBe('10000000000');
+      expect(numbers.getString(1e-10)).toBe('1e-10');
+      expect(numbers.getString(1.23e5)).toBe('123000');
     });
 
     it('#05.07 should work with string inputs', () => {
-      expect(numbers.toString('42')).toBe('42');
-      expect(numbers.toString('hello')).toBe('hello');
-      expect(numbers.toString('3.14')).toBe('3.14');
+      expect(numbers.getString('42')).toBe('42');
+      expect(numbers.getString('hello')).toBe('hello');
+      expect(numbers.getString('3.14')).toBe('3.14');
     });
 
     it('#05.08 should preserve string values', () => {
-      expect(numbers.toString('test')).toBe('test');
-      expect(numbers.toString('')).toBe('');
-      expect(numbers.toString('0')).toBe('0');
+      expect(numbers.getString('test')).toBe('test');
+      expect(numbers.getString('')).toBe('');
+      expect(numbers.getString('0')).toBe('0');
     });
 
     it('#05.09 should handle mixed number and string inputs', () => {
-      expect(numbers.toString(123)).toBe('123');
-      expect(numbers.toString('123')).toBe('123');
-      expect(numbers.toString(-456)).toBe('-456');
-      expect(numbers.toString('-456')).toBe('-456');
+      expect(numbers.getString(123)).toBe('123');
+      expect(numbers.getString('123')).toBe('123');
+      expect(numbers.getString(-456)).toBe('-456');
+      expect(numbers.getString('-456')).toBe('-456');
     });
 
     it('#05.10 should handle decimal precision', () => {
-      expect(numbers.toString(0.1 + 0.2)).toBe('0.30000000000000004');
-      expect(numbers.toString(1 / 3)).toBe('0.3333333333333333');
+      expect(numbers.getString(0.1 + 0.2)).toBe('0.30000000000000004');
+      expect(numbers.getString(1 / 3)).toBe('0.3333333333333333');
     });
 
     it('#05.11 should handle very large numbers', () => {
-      expect(numbers.toString(999999999999999)).toBe('999999999999999');
-      expect(numbers.toString(1.7976931348623157e308)).toBe(
+      expect(numbers.getString(999999999999999)).toBe('999999999999999');
+      expect(numbers.getString(1.7976931348623157e308)).toBe(
         '1.7976931348623157e+308',
       );
     });
 
     it('#05.12 should handle very small numbers', () => {
-      expect(numbers.toString(0.000001)).toBe('0.000001');
-      expect(numbers.toString(0.0000001)).toBe('1e-7');
+      expect(numbers.getString(0.000001)).toBe('0.000001');
+      expect(numbers.getString(0.0000001)).toBe('1e-7');
     });
 
     it('#05.13 should handle hexadecimal input strings', () => {
-      expect(numbers.toString('0xFF')).toBe('0xFF');
-      expect(numbers.toString('0x10')).toBe('0x10');
+      expect(numbers.getString('0xFF')).toBe('0xFF');
+      expect(numbers.getString('0x10')).toBe('0x10');
     });
 
     it('#05.14 should handle binary input strings', () => {
-      expect(numbers.toString('0b1010')).toBe('0b1010');
-      expect(numbers.toString('0b11111111')).toBe('0b11111111');
+      expect(numbers.getString('0b1010')).toBe('0b1010');
+      expect(numbers.getString('0b11111111')).toBe('0b11111111');
     });
 
     it('#05.15 should handle octal input strings', () => {
-      expect(numbers.toString('0o777')).toBe('0o777');
-      expect(numbers.toString('0o123')).toBe('0o123');
+      expect(numbers.getString('0o777')).toBe('0o777');
+      expect(numbers.getString('0o123')).toBe('0o123');
     });
   });
 

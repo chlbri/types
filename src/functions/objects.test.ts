@@ -1358,25 +1358,25 @@ describe('objects', () => {
   describe('#15 objects.require', () => {
     it('#15.01 should add required properties', () => {
       const obj = { a: 1, b: undefined };
-      const result = objects.require(obj, { b: 2 });
+      const result = objects.required(obj, { b: 2 });
       expect(result).toEqual({ a: 1, b: 2 });
     });
 
     it('#15.02 should not override existing defined properties', () => {
       const obj = { a: 1, b: 2 };
-      const result = objects.require(obj, { b: 3 });
+      const result = objects.required(obj, { b: 3 });
       expect(result).toEqual({ a: 1, b: 3 });
     });
 
     it('#15.03 should handle null values', () => {
       const obj = { a: 1, b: null };
-      const result = objects.require(obj, { b: 2 });
+      const result = objects.required(obj, { b: 2 });
       expect(result).toEqual({ a: 1, b: 2 });
     });
 
     it('#15.04 should add new properties', () => {
       const obj = { a: 1 };
-      const result = objects.require(obj, { b: 2 });
+      const result = objects.required(obj, { b: 2 });
       expect(result).toEqual({ a: 1, b: 2 });
     });
 
@@ -1384,19 +1384,19 @@ describe('objects', () => {
       type O = { a: number; b?: number };
       it('#15.06.01 should require properties strictly', () => {
         const obj: O = { a: 1, b: undefined };
-        const result = objects.require.strict(obj, { b: 2 });
+        const result = objects.required.strict(obj, { b: 2 });
         expect(result).toEqual({ a: 1, b: 2 });
       });
 
       it('#15.06.02 should modify original object', () => {
         const obj: O = { a: 1, b: undefined };
-        objects.require.strict(obj, { b: 2 });
+        objects.required.strict(obj, { b: 2 });
         expect(obj).toEqual({ a: 1, b: 2 });
       });
 
       it('#15.06.03 should modify original object', () => {
         const obj: O = { a: 1, b: undefined };
-        objects.require.const(obj, { b: 2 });
+        objects.required.const(obj, { b: 2 });
         expect(obj).toEqual({ a: 1, b: 2 });
       });
     });
@@ -1404,46 +1404,46 @@ describe('objects', () => {
     describe('#15.07 objects.require.is', () => {
       it('#15.07.01 should return true for fully required object', () => {
         const obj = { a: 1, b: 2, c: 'test' };
-        expect(objects.require.is(obj)).toBe(true);
+        expect(objects.required.is(obj)).toBe(true);
       });
 
       it('#15.07.02 should return false for object with undefined values', () => {
         const obj = { a: 1, b: undefined };
-        expect(objects.require.is(obj)).toBe(false);
+        expect(objects.required.is(obj)).toBe(false);
       });
 
       it('#15.07.03 should return false for object with null values', () => {
         const obj = { a: 1, b: null };
-        expect(objects.require.is(obj)).toBe(false);
+        expect(objects.required.is(obj)).toBe(false);
       });
 
       it('#15.07.04 should return true for empty object', () => {
-        expect(objects.require.is({})).toBe(true);
+        expect(objects.required.is({})).toBe(true);
       });
 
       // Test 23: Object require.is.deep operations
       describe('#15.07.05 objects.require.is.deep', () => {
         it('#15.07.05.01 should return true for deeply required object', () => {
           const obj = { a: 1, nested: { b: 2, c: 'test' } };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
         });
 
         it('#15.07.05.02 should return false for object with undefined values deep', () => {
           const obj = { a: 1, nested: { b: undefined } };
-          expect(objects.require.is.deep(obj)).toBe(false);
+          expect(objects.required.is.deep(obj)).toBe(false);
         });
 
         it('#15.07.05.03 should return false for object with null values deep', () => {
           const obj = { a: 1, nested: { b: null } };
-          expect(objects.require.is.deep(obj)).toBe(false);
+          expect(objects.required.is.deep(obj)).toBe(false);
         });
 
         it('#15.07.05.04 should handle arrays', () => {
           const obj = { items: [1, 2, 3] };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
 
           const objWithUndefined = { items: [1, undefined, 3] };
-          expect(objects.require.is.deep(objWithUndefined)).toBe(false);
+          expect(objects.required.is.deep(objWithUndefined)).toBe(false);
         });
 
         it('#15.07.05.05 should handle nested arrays and objects', () => {
@@ -1453,7 +1453,7 @@ describe('objects', () => {
               { name: 'item2', value: 2 },
             ],
           };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
 
           const objWithUndefined = {
             items: [
@@ -1461,20 +1461,20 @@ describe('objects', () => {
               { name: 'item2', value: 2 },
             ],
           };
-          expect(objects.require.is.deep(objWithUndefined)).toBe(false);
+          expect(objects.required.is.deep(objWithUndefined)).toBe(false);
         });
 
         it('#15.07.05.06 should handle empty arrays', () => {
           const obj = { emptyArray: [] };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
         });
 
         it('#15.07.05.07 should handle mixed arrays with primitives', () => {
           const obj = { mixed: ['string', 42, true, null] };
-          expect(objects.require.is.deep(obj)).toBe(false);
+          expect(objects.required.is.deep(obj)).toBe(false);
 
           const objWithUndefined = { mixed: ['string', 42, undefined] };
-          expect(objects.require.is.deep(objWithUndefined)).toBe(false);
+          expect(objects.required.is.deep(objWithUndefined)).toBe(false);
         });
 
         it('#15.07.05.08 should handle deeply nested structures', () => {
@@ -1488,7 +1488,7 @@ describe('objects', () => {
               },
             },
           };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
 
           const objWithUndefined = {
             level1: {
@@ -1500,19 +1500,19 @@ describe('objects', () => {
               },
             },
           };
-          expect(objects.require.is.deep(objWithUndefined)).toBe(false);
+          expect(objects.required.is.deep(objWithUndefined)).toBe(false);
         });
 
         it('#15.07.05.09 should handle arrays containing nested objects', () => {
           const obj = {
             items: [{ nested: { value: 'test' } }, { simple: 'value' }],
           };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
 
           const objWithUndefined = {
             items: [{ nested: { value: undefined } }, { simple: 'value' }],
           };
-          expect(objects.require.is.deep(objWithUndefined)).toBe(false);
+          expect(objects.required.is.deep(objWithUndefined)).toBe(false);
         });
 
         it('#15.07.05.10 should handle complex mixed structures', () => {
@@ -1527,7 +1527,7 @@ describe('objects', () => {
               },
             },
           };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
 
           const objWithNull = {
             simple: 'value',
@@ -1540,16 +1540,16 @@ describe('objects', () => {
               },
             },
           };
-          expect(objects.require.is.deep(objWithNull)).toBe(false);
+          expect(objects.required.is.deep(objWithNull)).toBe(false);
         });
 
         it('#15.07.05.11 should return true for empty object', () => {
-          expect(objects.require.is.deep({})).toBe(true);
+          expect(objects.required.is.deep({})).toBe(true);
         });
 
         it('#15.07.05.12 should handle objects with zero values', () => {
           const obj = { zero: 0, empty: '', boolean: false };
-          expect(objects.require.is.deep(obj)).toBe(true);
+          expect(objects.required.is.deep(obj)).toBe(true);
         });
       });
     });

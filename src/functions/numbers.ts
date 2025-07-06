@@ -4,13 +4,13 @@ import { castFn, commons } from './commons';
 import { eq } from './utils';
 
 export const numbers = castFn<number>()({
-  toString: <T extends number | string>(arg: T): `${T}` => `${arg}`,
+  is: (arg: unknown): arg is number => typeof arg === 'number',
+
+  getString: <T extends number | string>(arg: T): `${T}` => `${arg}`,
 
   digit: castFn<Digit>()({
     is: (value: unknown): value is Digit => eq(value, ...DIGITS),
   }),
-
-  is: (arg: unknown): arg is number => typeof arg === 'number',
 
   type: Number,
 
@@ -21,6 +21,8 @@ export const numbers = castFn<number>()({
   MINUS_1: commons.identity(-1),
 
   bigint: castFn<bigint>()({
-    is: (value: unknown): value is bigint => typeof value === 'bigint',
+    is: commons.function.checker.dynamic(
+      value => typeof value === 'bigint',
+    ),
   }),
 });

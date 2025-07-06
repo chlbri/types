@@ -7,9 +7,7 @@ expectTypeOf(arrays.type).toEqualTypeOf<unknown[]>();
 
 // Test arrays.forceCast
 expectTypeOf(arrays.forceCast('not array')).toEqualTypeOf<unknown[]>();
-expectTypeOf(arrays.forceCast<string[]>('not array')).toEqualTypeOf<
-  string[]
->();
+expectTypeOf(arrays.forceCast('not array')).toEqualTypeOf<unknown[]>();
 
 // Test arrays.dynamic
 expectTypeOf(arrays.dynamic([1, 2, 3] as const)).toEqualTypeOf<

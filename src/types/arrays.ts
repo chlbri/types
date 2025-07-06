@@ -52,9 +52,9 @@ export const arrays = typeFnBasic(
       deep: <const T>(_?: T) => _unknown<ReduceDeepArray<T>>(),
     }),
 
-    toArray: <T>(_?: T) => _unknown<AnyArray<T>>(),
-
     reverse: <T extends RuA>(..._: T) => _unknown<ReverseArray<T>>(),
+
+    toArray: <T>(_?: T) => _unknown<AnyArray<T>>(),
 
     freeze: <const T extends RuA>(..._: T) => _unknown<Readonly<T>>(),
 
@@ -68,7 +68,7 @@ export const arrays = typeFnBasic(
       ...__: U
     ) => _unknown<ExcludeArray<T, U[number]>>(),
 
-    forceCast: <T extends unknown[]>(_?: unknown) => _unknown<T>(),
+    forceCast: (_?: unknown) => _unknown<unknown[]>(),
 
     dynamic: <T extends unknown[]>(_?: T) => _unknown<T>(),
 

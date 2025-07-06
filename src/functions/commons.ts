@@ -4,6 +4,7 @@ import type {
   DeepPartial,
   DeepReadonly,
   DeepRequired,
+  Defaulted,
   Fn,
   Neverify,
   NotReadonly,
@@ -60,7 +61,7 @@ const _isPrimitiveObject = (object: any): object is PrimitiveObject => {
   return commons.primitive.is(object);
 };
 
-export const castFn = <T = any>() => {
+export const castFn = <T>() => {
   const _out = <const Tr extends object = object>(
     extensions?: Tr,
   ): FnReturn<T, Tr> => {
@@ -122,7 +123,7 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
 
   unknown: <T>(value: unknown) => value as T,
 
-  any: castFn()(),
+  any: castFn<any>()(),
 
   neverify: <T>(value: T) => {
     return _unknown<Neverify<T>>(value);
@@ -142,6 +143,8 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
       {
         const: <const T extends object>(value: T) =>
           _unknown<DeepReadonly<T>>(value),
+        not: <const T extends object>(value: T) =>
+          _unknown<DeepNotReadonly<T>>(value),
       },
     ),
 
@@ -150,8 +153,6 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
       {
         const: <const T extends object>(value: T) =>
           _unknown<NotReadonly<T>>(value),
-        deep: <const T extends object>(value: T) =>
-          _unknown<DeepNotReadonly<T>>(value),
       },
     ),
   }),
@@ -171,20 +172,6 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
   primitiveObject: castFn<PrimitiveObject>()({
     is: _isPrimitiveObject,
   }),
-
-  undefined: _identity(undefined),
-
-  null: _identity(null),
-
-  symbol: castFn<symbol>()({
-    is: (value: unknown): value is symbol => typeof value === 'symbol',
-  }),
-
-  date: castFn<Date>()({
-    is: (value: unknown): value is Date => {
-      return value instanceof Date;
-    },
-  } as const),
 
   function: castFnBasic(_function, {
     is: castFnBasic(
@@ -226,5 +213,25 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
     }),
   }),
 
+  undefined: _identity(undefined),
+
+  null: _identity(null),
+
+  symbol: castFn<symbol>()({
+    is: (value: unknown): value is symbol => typeof value === 'symbol',
+  }),
+
+  date: castFn<Date>()({
+    is: (value: unknown): value is Date => {
+      return value instanceof Date;
+    },
+  } as const),
+
   undefiny: <T>(value?: T) => value,
+
+  defaulted: <T, U extends NonNullable<T>>(value: T, defaultValue: U) => {
+    const out =
+      value === undefined || value === null ? defaultValue : value;
+    return _unknown<Defaulted<T, U>>(out);
+  },
 });

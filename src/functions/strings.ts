@@ -1,5 +1,6 @@
 import { ENGLISH_LETTERS } from '../constants/strings';
 import type {
+  AddString,
   JoinString,
   Letters,
   LowerLetters,
@@ -122,7 +123,7 @@ export const strings = castFn<string>()({
     after = '' as After,
   ) => {
     const out = `${before}${value}${after}`;
-    return _unknown<`${Before}${T}${After}`>(out);
+    return _unknown<AddString<T, Before, After>>(out);
   },
 
   join: <T extends readonly string[], S extends string = ' '>(

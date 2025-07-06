@@ -279,46 +279,6 @@ describe('objects type functions', () => {
     expect(result).toBeUndefined();
   });
 
-  it('75. should call objects.pickBy', () => {
-    const result = objects.pickBy();
-    expect(result).toBeUndefined();
-  });
-
-  it('76. should call objects.pickBy with parameters', () => {
-    const result = objects.pickBy({ a: 1, b: 'test' }, 'string');
-    expect(result).toBeUndefined();
-  });
-
-  it('77. should call objects.pickBy.keys', () => {
-    const result = objects.pickBy.keys({ a: 1, b: 'test' });
-    expect(result).toBeUndefined();
-  });
-
-  it('78. should call objects.pickBy.keys with parameters', () => {
-    const result = objects.pickBy.keys({ a: 1, b: 'test' }, 'string');
-    expect(result).toBeUndefined();
-  });
-
-  it('79. should call objects.omitBy', () => {
-    const result = objects.omitBy();
-    expect(result).toBeUndefined();
-  });
-
-  it('80. should call objects.omitBy with parameters', () => {
-    const result = objects.omitBy({ a: 1, b: 'test' }, 'string');
-    expect(result).toBeUndefined();
-  });
-
-  it('81. should call objects.omitBy.keys', () => {
-    const result = objects.omitBy.keys({ a: 1, b: 'test' });
-    expect(result).toBeUndefined();
-  });
-
-  it('82. should call objects.omitBy.keys with parameters', () => {
-    const result = objects.omitBy.keys({ a: 1, b: 'test' }, 'string');
-    expect(result).toBeUndefined();
-  });
-
   it('83. should call objects.ru', () => {
     const result = objects.ru();
     expect(result).toBeUndefined();
@@ -454,7 +414,6 @@ describe('objects type functions', () => {
       // These are compile-time checks to ensure type safety
       expect(typeof objects.pick).toBe('function');
       expect(typeof objects.omit).toBe('function');
-      expect(typeof objects.pickBy).toBe('function');
     });
 
     it('90. should have correct type inference for utility types', () => {

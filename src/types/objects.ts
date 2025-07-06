@@ -2,7 +2,7 @@
 import type { Equals } from '~utils';
 import { _unknown } from '../functions/commons';
 import { typeFn, typeFnBasic } from './commons';
-import type { Keys, PrimitiveObject } from './commons.types';
+import type { Keys, PrimitiveObjectMap } from './commons.types';
 import type {
   AllowedNames,
   DeepNotReadonly,
@@ -10,7 +10,6 @@ import type {
   DeepPartial,
   DeepReadonly,
   DeepRequired,
-  NotAllowedNames,
   NotReadonly,
   NotSubType,
   Ra,
@@ -88,8 +87,49 @@ export const objects = typeFn<object>()({
         return _out;
       },
 
-      deep: <T, K extends Keys[]>(_?: T, ...__: K) =>
-        _unknown<DeepOmit<T, K[number]>>(),
+      by: typeFnBasic(
+        <T extends object, K extends any[]>(_?: T, ...__: K) =>
+          _unknown<NotSubType<T, K[number]>>(),
+        {
+          is: <T extends object, K extends any[]>(_?: T, ...__: K) => {
+            const _out = <U>(_?: U) =>
+              _unknown<
+                U extends NotSubType<T, K[number]> ? true : false
+              >();
+            return _out;
+          },
+          //TODO: Add strict
+        },
+      ),
+
+      deep: typeFnBasic(
+        <T, K extends Keys[]>(_?: T, ...__: K) =>
+          _unknown<DeepOmit<T, K[number]>>(),
+        {
+          is: <T, K extends Keys[]>(_?: T, ...__: K) => {
+            const _out = <U>(_?: U) =>
+              _unknown<U extends DeepOmit<T, K[number]> ? true : false>();
+
+            return _out;
+          },
+          //TODO: Add strict
+
+          by: typeFnBasic(
+            <T extends object, K extends any[]>(_?: T, ...__: K) =>
+              _unknown<NotSubType<T, K[number]>>(),
+            {
+              is: <T extends object, K extends any[]>(_?: T, ...__: K) => {
+                const _out = <U>(_?: U) =>
+                  _unknown<
+                    U extends NotSubType<T, K[number]> ? true : false
+                  >();
+                return _out;
+              },
+              //TODO: Add strict
+            },
+          ),
+        },
+      ),
     },
   ),
 
@@ -105,8 +145,14 @@ export const objects = typeFn<object>()({
   required: typeFnBasic(
     <T extends object>(_: T) => _unknown<Required<T>>(),
     {
-      deep: <T extends object>(_: T) => _unknown<DeepRequired<T>>(),
+      deep: typeFnBasic(
+        <T extends object>(_: T) => _unknown<DeepRequired<T>>(),
+        {
+          //TODO: Add strict, const, is, and
+        },
+      ),
     },
+    //TODO: Add strict, const, is, and
   ),
 
   partial: typeFnBasic(
@@ -116,22 +162,17 @@ export const objects = typeFn<object>()({
     },
   ),
 
-  pick: <T extends object, K extends (keyof T)[]>(_: T, ...__: K) =>
-    _unknown<Pick<T, K[number]>>(),
-
-  pickBy: typeFnBasic(
-    <T extends object, K>(_?: T, __?: K) => _unknown<SubType<T, K>>(),
+  pick: typeFnBasic(
+    <T extends object, K extends (keyof T)[]>(_: T, ...__: K) =>
+      _unknown<Pick<T, K[number]>>(),
     {
-      keys: <T extends object, K>(_: T, __?: K) =>
-        _unknown<AllowedNames<T, K>>(),
-    },
-  ),
-
-  omitBy: typeFnBasic(
-    <T extends object, K>(_?: T, __?: K) => _unknown<NotSubType<T, K>>(),
-    {
-      keys: <T extends object, K>(_: T, __?: K) =>
-        _unknown<NotAllowedNames<T, K>>(),
+      by: typeFnBasic(
+        <T extends object, K>(_?: T, __?: K) => _unknown<SubType<T, K>>(),
+        {
+          keys: <T extends object, K>(_: T, __?: K) =>
+            _unknown<AllowedNames<T, K>>(),
+        },
+      ),
     },
   ),
 
@@ -139,5 +180,5 @@ export const objects = typeFn<object>()({
   rn: typeFn<Rn>()(),
   ra: typeFn<Ra>()(),
 
-  primitive: typeFn<PrimitiveObject>()(),
+  primitive: typeFn<PrimitiveObjectMap>()(),
 });

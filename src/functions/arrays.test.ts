@@ -1180,3 +1180,168 @@ describe('#15 => arrays.exclude', () => {
     expect((result as any[])[1]).toBe(obj3);
   });
 });
+
+describe('#16 => arrays.dynamic', () => {
+  it('#16.01 => should return array as-is for regular arrays', () => {
+    const input = [1, 2, 3];
+    const result = arrays.dynamic(input);
+    expect(result).toBe(input);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
+  it('#16.02 => should preserve array type and content', () => {
+    const stringArray = ['hello', 'world'];
+    const result = arrays.dynamic(stringArray);
+    expect(result).toBe(stringArray);
+    expect(result).toEqual(['hello', 'world']);
+  });
+
+  it('#16.03 => should work with empty arrays', () => {
+    const emptyArray: number[] = [];
+    const result = arrays.dynamic(emptyArray);
+    expect(result).toBe(emptyArray);
+    expect(result).toEqual([]);
+  });
+
+  it('#16.04 => should work with readonly arrays', () => {
+    const readonlyArray = [1, 2, 3] as const;
+    const result = arrays.dynamic(readonlyArray);
+    expect(result).toBe(readonlyArray);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
+  it('#16.05 => should work with mixed type arrays', () => {
+    const mixedArray = [1, 'hello', true, null];
+    const result = arrays.dynamic(mixedArray);
+    expect(result).toBe(mixedArray);
+    expect(result).toEqual([1, 'hello', true, null]);
+  });
+
+  it('#16.06 => should work with nested arrays', () => {
+    const nestedArray = [
+      [1, 2],
+      [3, 4],
+    ];
+    const result = arrays.dynamic(nestedArray);
+    expect(result).toBe(nestedArray);
+    expect(result).toEqual([
+      [1, 2],
+      [3, 4],
+    ]);
+  });
+
+  it('#16.07 => should work with object arrays', () => {
+    const objectArray = [{ a: 1 }, { b: 2 }];
+    const result = arrays.dynamic(objectArray);
+    expect(result).toBe(objectArray);
+    expect(result).toEqual([{ a: 1 }, { b: 2 }]);
+  });
+});
+
+describe('#17 => arrays.forceCast', () => {
+  it('#17.01 => should cast any value to unknown array type', () => {
+    const result = arrays.forceCast(42);
+    expect(result).toBe(42);
+  });
+
+  it('#17.02 => should work with actual arrays', () => {
+    const input = [1, 2, 3];
+    const result = arrays.forceCast(input);
+    expect(result).toBe(input);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
+  it('#17.03 => should work with strings', () => {
+    const result = arrays.forceCast('hello');
+    expect(result).toBe('hello');
+  });
+
+  it('#17.04 => should work with objects', () => {
+    const obj = { a: 1, b: 2 };
+    const result = arrays.forceCast(obj);
+    expect(result).toBe(obj);
+  });
+
+  it('#17.05 => should work with null', () => {
+    const result = arrays.forceCast(null);
+    expect(result).toBe(null);
+  });
+
+  it('#17.06 => should work with undefined', () => {
+    const result = arrays.forceCast(undefined);
+    expect(result).toBe(undefined);
+  });
+
+  it('#17.07 => should work with boolean values', () => {
+    const result = arrays.forceCast(true);
+    expect(result).toBe(true);
+  });
+
+  it('#17.08 => should work with functions', () => {
+    const fn = () => 'test';
+    const result = arrays.forceCast(fn);
+    expect(result).toBe(fn);
+  });
+
+  it('#17.09 => should work with symbols', () => {
+    const sym = Symbol('test');
+    const result = arrays.forceCast(sym);
+    expect(result).toBe(sym);
+  });
+
+  it('#17.10 => should work with dates', () => {
+    const date = new Date();
+    const result = arrays.forceCast(date);
+    expect(result).toBe(date);
+  });
+});
+
+describe('#18 => arrays.type', () => {
+  it('#18.01 => should be the Array constructor', () => {
+    expect(arrays.type).toBe(Array);
+  });
+
+  it('#18.02 => should be a function', () => {
+    expect(typeof arrays.type).toBe('function');
+  });
+
+  it('#18.03 => should have correct name', () => {
+    expect(arrays.type.name).toBe('Array');
+  });
+
+  it('#18.04 => should be able to create arrays', () => {
+    const arr = new arrays.type(3);
+    expect(arr).toBeInstanceOf(Array);
+    expect(arr.length).toBe(3);
+  });
+
+  it('#18.05 => should be able to create arrays with values', () => {
+    const arr = new arrays.type(1, 2, 3);
+    expect(arr).toBeInstanceOf(Array);
+    expect(arr).toEqual([1, 2, 3]);
+  });
+
+  it('#18.06 => should work with Array.from', () => {
+    const arr = arrays.type.from([1, 2, 3]);
+    expect(arr).toBeInstanceOf(Array);
+    expect(arr).toEqual([1, 2, 3]);
+  });
+
+  it('#18.07 => should work with Array.of', () => {
+    const arr = arrays.type.of(1, 2, 3);
+    expect(arr).toBeInstanceOf(Array);
+    expect(arr).toEqual([1, 2, 3]);
+  });
+
+  it('#18.08 => should work with Array.isArray', () => {
+    expect(arrays.type.isArray([1, 2, 3])).toBe(true);
+    expect(arrays.type.isArray('not array')).toBe(false);
+  });
+
+  it('#18.09 => should have prototype methods', () => {
+    expect(arrays.type.prototype.push).toBeInstanceOf(Function);
+    expect(arrays.type.prototype.pop).toBeInstanceOf(Function);
+    expect(arrays.type.prototype.map).toBeInstanceOf(Function);
+    expect(arrays.type.prototype.filter).toBeInstanceOf(Function);
+  });
+});

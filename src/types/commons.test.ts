@@ -353,18 +353,8 @@ describe('common type functions', () => {
       });
     });
 
-    it('#13.06 should call commons.keysOf', () => {
-      const result = commons.keysOf();
-      expect(result).toBeUndefined();
-    });
-
-    it('#13.07 should call commons.keysOf with parameter', () => {
-      const result = commons.keysOf({ a: 1, b: 2 });
-      expect(result).toBeUndefined();
-    });
-
     it('#13.08 should call commons.default', () => {
-      const result = commons.default('test' as string, 'default');
+      const result = commons.defaulted('test' as string, 'default');
       expect(result).toBeUndefined();
     });
 

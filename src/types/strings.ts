@@ -12,6 +12,11 @@ import {
   type UpperLetters,
 } from './strings.types';
 
+const _contains = <const T extends string, U extends string[]>(
+  _?: T,
+  ...__: U
+) => _unknown<T extends `${string}${U[number]}${string}` ? true : false>();
+
 export const strings = typeFn<string>()({
   getLength: <const T extends string>(_?: T) => _unknown<T['length']>(),
 
@@ -21,13 +26,12 @@ export const strings = typeFn<string>()({
   endsWith: <const T extends string, U extends string>(_?: T, __?: U) =>
     _unknown<T extends `${string}${U}` ? true : false>(),
 
-  includes: <const T extends string, U extends string[]>(
-    _?: T,
-    ...__: U
-  ) =>
-    _unknown<T extends `${string}${U[number]}${string}` ? true : false>(),
+  includes: _contains,
+
+  contains: _contains,
 
   toLowerCase: <const T extends string>(_?: T) => _unknown<Lowercase<T>>(),
+
   toUpperCase: <const T extends string>(_?: T) => _unknown<Uppercase<T>>(),
 
   letters: typeFn<Letters>()({

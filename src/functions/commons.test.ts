@@ -137,11 +137,6 @@ describe('Castings common', () => {
         const fn = commons.readonly.not.const;
         expect(fn(value)).toBe(value);
       });
-
-      it('#03.15.06 => for readonly.not.deep', () => {
-        const fn = commons.readonly.not.deep;
-        expect(fn(value)).toBe(value);
-      });
     });
 
     describe('#03.16 => primitive', () => {

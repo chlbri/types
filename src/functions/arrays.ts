@@ -1,5 +1,6 @@
 import type { Checker } from '~utils';
 import type {
+  AnyArray,
   ExcludeArray,
   ExtractArray,
   IndexesOfArray,
@@ -107,4 +108,14 @@ export const arrays = castFnBasic(<T>(...values: T[]) => values, {
     const out = array.filter(item => !excludes.includes(item));
     return _unknown<ExcludeArray<T, Ex[number]>>(out);
   },
+
+  forceCast: (value: unknown) => {
+    return _unknown<unknown[]>(value);
+  },
+
+  dynamic: <T extends AnyArray>(value: T) => {
+    return _unknown<T>(value);
+  },
+
+  type: Array,
 });

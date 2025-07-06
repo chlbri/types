@@ -1,12 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import type { FnBasic } from '~utils';
+import type { Checker, FnBasic } from '~utils';
 import { _unknown } from '../functions/commons';
-import type { Defaulted, Fn, Keys, Primitive } from './commons.types';
 import type {
+  Defaulted,
+  Fn,
+  Keys,
+  Primitive,
+  PrimitiveObject,
+} from './commons.types';
+import type {
+  DeepNotReadonly,
   DeepPartial,
   DeepReadonly,
   DeepRequired,
+  NotReadonly,
 } from './objects.types';
 import { Neverify } from './objects.types';
 
@@ -61,6 +69,91 @@ export const typeFn = <T = any>() => {
 };
 
 export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
+  partial: typeFnBasic(
+    <T extends object>(_?: T) => _unknown<Partial<T>>(),
+    {
+      deep: <T extends object>(_?: T) => _unknown<DeepPartial<T>>(),
+    },
+  ),
+
+  identity: <T>(_?: T) => _unknown<T>(),
+
+  is: {
+    defined: <T>(_?: T) => _unknown<T extends undefined ? false : true>(),
+    undefined: <T>(_?: T) =>
+      _unknown<T extends undefined ? true : false>(),
+    null: <T>(_?: T) => _unknown<T extends null ? true : false>(),
+    notNull: <T>(_?: T) => _unknown<T extends null ? false : true>(),
+  },
+
+  unknown: _unknown,
+
+  any: typeFn()(),
+
+  neverify: <T>(_?: T) => _unknown<Neverify<T>>(),
+
+  required: typeFnBasic(
+    <T extends object>(_?: T) => _unknown<Required<T>>(),
+    {
+      deep: <T extends object>(_?: T) => _unknown<DeepRequired<T>>(),
+    },
+  ),
+
+  readonly: typeFnBasic(
+    <T extends object>(_?: T) => _unknown<Required<T>>(),
+    {
+      const: <const T extends object>(_?: T) => _unknown<Readonly<T>>(),
+
+      deep: typeFnBasic(
+        <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
+        {
+          const: <const T extends object>(_?: T) =>
+            _unknown<DeepReadonly<T>>(),
+
+          not: <const T extends object>(_?: T) =>
+            _unknown<DeepNotReadonly<T>>(),
+        },
+      ),
+
+      not: typeFnBasic(
+        <T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
+        {
+          const: <const T extends object>(_?: T) =>
+            _unknown<NotReadonly<T>>(),
+        },
+      ),
+    },
+  ),
+
+  primitive: typeFn<Primitive>()(),
+
+  primitiveObject: typeFn<PrimitiveObject>()(),
+
+  symbol: typeFn<symbol>()(),
+
+  date: typeFn<Date>()(),
+
+  function: typeFnBasic(
+    <T extends any[], R = any>(..._: [...T, R]) => _unknown<Fn<T, R>>(),
+    {
+      forceCast: <T extends any[], R = any>(_: unknown) =>
+        _unknown<Fn<T, R>>(),
+
+      is: <T extends any[], R = any>(_?: T, __?: R) => {
+        const _out = <U>(_?: U) =>
+          _unknown<U extends Fn<T, R> ? true : false>();
+        return _out;
+      },
+
+      dynamic: <T extends any[], R = any>(..._: [...T, R]) =>
+        _unknown<Fn<T, R>>(),
+
+      checker: typeFn<Checker>()(),
+    },
+  ),
+
+  undefiny: <T>(_?: T) => _unknown<T | undefined>(),
+
   extract: typeFnBasic(
     <T, U extends any[]>(_?: T, ...__: U) =>
       _unknown<Extract<T, U[number]>>(),
@@ -83,63 +176,15 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
     },
   ),
 
-  required: typeFnBasic(
-    <T extends object>(_?: T) => _unknown<Required<T>>(),
-    {
-      deep: <T extends object>(_?: T) => _unknown<DeepRequired<T>>(),
-    },
-  ),
-
-  readonly: typeFnBasic(
-    <T extends object>(_?: T) => _unknown<Required<T>>(),
-    {
-      const: <const T extends object>(_?: T) => _unknown<Readonly<T>>(),
-
-      deep: typeFnBasic(
-        <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
-        {
-          const: <const T extends object>(_?: T) =>
-            _unknown<DeepReadonly<T>>(),
-        },
-      ),
-    },
-  ),
-
-  partial: typeFnBasic(
-    <T extends object>(_?: T) => _unknown<Partial<T>>(),
-    {
-      deep: <T extends object>(_?: T) => _unknown<DeepPartial<T>>(),
-    },
-  ),
-
   union: <const T extends any[]>(..._: T) => _unknown<T[number]>(),
 
-  date: typeFn<Date>()(),
   null: typeFn<null>()(),
-  symbol: typeFn<symbol>()(),
   bigint: typeFn<bigint>()(),
   never: _unknown<never>(),
   undefined: _unknown<undefined>(),
 
-  function: <T extends any[], R = any>(..._: [...T, R]) =>
-    _unknown<(...args: T) => R>(),
-
-  unknown: _unknown,
-
-  any: typeFn()(),
-
-  primitive: typeFn<Primitive>()(),
-
-  undefiny: <T>(_?: T) => _unknown<T | undefined>(),
-
-  identity: <T>(_?: T) => _unknown<T>(),
-
   keys: typeFn<Keys>()(),
 
-  keysOf: <T extends object>(_?: T) => _unknown<keyof T>(),
-
-  default: <T, U extends NonNullable<T>>(_?: T, __?: U) =>
+  defaulted: <T, U extends NonNullable<T>>(_?: T, __?: U) =>
     _unknown<Defaulted<T, U>>(),
-
-  neverify: <T>(_?: T) => _unknown<Neverify<T>>(),
 });
