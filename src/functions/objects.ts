@@ -14,10 +14,14 @@ import type {
   Ra,
   Ru,
   SubType,
+  To,
 } from '../types/types';
 import { _unknown, castFn, castFnBasic, commons } from './commons';
 
 // #region Helpers
+
+type Picker = 'element' | 'key';
+
 function isPlainObject(value: any): value is object {
   return (
     Object.prototype.toString.call(value) == '[object Object]' &&
@@ -194,8 +198,6 @@ const _omitDeep = (
   return result;
 };
 
-type Picker = 'element' | 'key';
-
 const _pickDeep = (by: Picker, object: object, ...valuesOrKeys: any[]) => {
   const result: any = {};
 
@@ -241,7 +243,7 @@ const _pick = (by: Picker, object: object, ...keys: any[]) => {
 // #endregion
 
 export const objects = castFn<object>()({
-  is: isPlainObject,
+  trueObject: castFn<To>()({ is: isPlainObject }),
 
   type: Object,
 

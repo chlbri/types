@@ -39,6 +39,25 @@ export const castFnBasic = <
   return out;
 };
 
+export const castFn = <T>() => {
+  const _out = <const Tr extends object = object>(
+    extensions?: Tr,
+  ): FnReturn<T, Tr> => {
+    const out: any = castFnBasic((arg: T) => arg, {
+      ...extensions,
+      forceCast: (arg: unknown) => {
+        return _unknown<T>(arg);
+      },
+      dynamic: <U extends T>(arg: U) => {
+        return arg;
+      },
+    });
+    return out;
+  };
+  return _out;
+};
+
+// #region Helpers
 const _isPrimitiveObject = (object: any): object is PrimitiveObject => {
   const isObject = isPlainObject(object);
   if (isObject) {
@@ -64,25 +83,6 @@ const _isPrimitiveObject = (object: any): object is PrimitiveObject => {
   return commons.primitive.is(object);
 };
 
-export const castFn = <T>() => {
-  const _out = <const Tr extends object = object>(
-    extensions?: Tr,
-  ): FnReturn<T, Tr> => {
-    const out: any = castFnBasic((arg: T) => arg, {
-      ...extensions,
-      forceCast: (arg: unknown) => {
-        return _unknown<T>(arg);
-      },
-      dynamic: <U extends T>(arg: U) => {
-        return arg;
-      },
-    });
-    return out;
-  };
-  return _out;
-};
-
-// #region Helpers
 const _identity = <T>(value: T) => value;
 
 const _partial = <T>(value: T) => {

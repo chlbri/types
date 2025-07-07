@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+## [0.1.8] - **2025/07/07** _18:15_
+
+- Add TrueObject type
+- tests(cov): 100%
+
+<br/>
+
 ## [0.1.7] - **2025/07/07** _04:55_
 
 - Better docs

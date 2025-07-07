@@ -1,4 +1,5 @@
 import type { RecursiveArrayOf } from './arrays.types';
+import type { TrueObject } from './objects.types';
 
 export type SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
 
@@ -11,15 +12,11 @@ export type SingleOrArray<T> = T | T[] | ReadonlyArray<T>;
 
 export type SoA<T> = SingleOrArray<T>;
 
-export interface PrimitiveObjectMap {
+export type PrimitiveObjectMap = {
   [key: Keys]: SoR<_PrimitiveObject>;
-}
+} & TrueObject;
 
-/**
- * A type that represents a primitive value, which can be a string, number, boolean,
- * null, undefined, or an object.
- */
-export type _PrimitiveObject = Primitive | PrimitiveObjectMap;
+type _PrimitiveObject = Primitive | PrimitiveObjectMap;
 
 /**
  * A type that represents a primitive object, which can be a primitive value or an object

@@ -1,6 +1,27 @@
 import type { Fn, Keys, NotUndefined, Primitive } from './commons.types';
 import { AddString } from './strings.types';
 
+/**
+ * A type that represents a true object, which is an object that does not have
+ * any iterable properties or the `SymbolConstructor` property.
+ *
+ * @remarks This type is useful to ensure that the object is a plain object
+ * without any special properties.
+ *
+ * @see {@linkcode Ru} for a utility type that represents a true object.
+ * @see {@linkcode SymbolConstructor} for the symbol constructor type.
+ */
+export type TrueObject = Ru & {
+  [Symbol.iterator]?: never;
+  //@ts-expect-error - 'SymbolConstructor' does not exist on type 'object'
+  [SymbolConstructor]?: never;
+};
+
+/**
+ * Alias of {@linkcode TrueObject}
+ */
+export type To = TrueObject;
+
 export type NOmit<T, K extends keyof T> = Omit<T, K>;
 
 export type DeepOmit<T, K extends Keys> = {

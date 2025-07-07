@@ -16,6 +16,7 @@ import type {
   Rn,
   Ru,
   SubType,
+  To,
   ValuesOf,
 } from './objects.types';
 
@@ -59,6 +60,8 @@ const _readonly = typeFnBasic(
 );
 
 export const objects = typeFn<object>()({
+  trueObject: typeFn<To>()(),
+
   keysOf: typeFnBasic(
     <T extends object>(_?: T) => _unknown<(keyof T)[]>(),
     {

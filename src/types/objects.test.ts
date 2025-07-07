@@ -36,123 +36,180 @@ describe('#objects type functions', () => {
       const result = objects.type;
       expect(result).toBeUndefined();
     });
+
+    it('#01.08 => should call objects.dynamic', () => {
+      const result = objects.dynamic();
+      expect(result).toBeUndefined();
+    });
+
+    it('#01.09 => should call objects.dynamic with parameter', () => {
+      const result = objects.dynamic({ a: 1 });
+      expect(result).toBeUndefined();
+    });
   });
 
-  describe('#02 => keysOf', () => {
-    it('#02.01 => should call objects.keysOf', () => {
+  describe('#02 => trueObject', () => {
+    it('#02.01 => should call objects.trueObject', () => {
+      const result = objects.trueObject();
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.02 => should call objects.trueObject with parameter', () => {
+      const result = objects.trueObject({ a: 1 });
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.03 => should call objects.trueObject.forceCast', () => {
+      const result = objects.trueObject.forceCast();
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.04 => should call objects.trueObject.forceCast with parameter', () => {
+      const result = objects.trueObject.forceCast({ a: 1 });
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.05 => should call objects.trueObject.dynamic', () => {
+      const result = objects.trueObject.dynamic();
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.06 => should call objects.trueObject.dynamic with parameter', () => {
+      const result = objects.trueObject.dynamic({ a: 1 });
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.07 => should call objects.trueObject.is', () => {
+      const result = objects.trueObject.is();
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.08 => should call objects.trueObject.is with parameter', () => {
+      const result = objects.trueObject.is({ a: 1 });
+      expect(result).toBeUndefined();
+    });
+
+    it('#02.09 => should call objects.trueObject.type', () => {
+      const result = objects.trueObject.type;
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('#03 => keysOf', () => {
+    it('#03.01 => should call objects.keysOf', () => {
       const result = objects.keysOf();
       expect(result).toBeUndefined();
     });
 
-    it('#02.02 => should call objects.keysOf with parameter', () => {
+    it('#03.02 => should call objects.keysOf with parameter', () => {
       const result = objects.keysOf({ a: 1, b: 2 });
       expect(result).toBeUndefined();
     });
 
-    it('#02.03 => should call objects.keysOf.union', () => {
+    it('#03.03 => should call objects.keysOf.union', () => {
       const result = objects.keysOf.union();
       expect(result).toBeUndefined();
     });
 
-    it('#02.04 => should call objects.keysOf.union with parameter', () => {
+    it('#03.04 => should call objects.keysOf.union with parameter', () => {
       const result = objects.keysOf.union({ a: 1, b: 2 });
       expect(result).toBeUndefined();
     });
   });
 
-  describe('#03 => values', () => {
-    it('#03.01 => should call objects.values', () => {
+  describe('#04 => values', () => {
+    it('#04.01 => should call objects.values', () => {
       const result = objects.values();
       expect(result).toBeUndefined();
     });
 
-    it('#03.02 => should call objects.values with parameter', () => {
+    it('#04.02 => should call objects.values with parameter', () => {
       const result = objects.values({ a: 1, b: 2 });
       expect(result).toBeUndefined();
     });
 
-    it('#03.03 => should call objects.values.union', () => {
+    it('#04.03 => should call objects.values.union', () => {
       const result = objects.values.union();
       expect(result).toBeUndefined();
     });
 
-    it('#03.04 => should call objects.values.union with parameter', () => {
+    it('#04.04 => should call objects.values.union with parameter', () => {
       const result = objects.values.union({ a: 1, b: 2 });
       expect(result).toBeUndefined();
     });
   });
 
-  describe('#04 => entries', () => {
-    it('#04.01 => should call objects.entries', () => {
+  describe('#05 => entries', () => {
+    it('#05.01 => should call objects.entries', () => {
       const result = objects.entries();
       expect(result).toBeUndefined();
     });
 
-    it('#04.02 => should call objects.entries with parameter', () => {
+    it('#05.02 => should call objects.entries with parameter', () => {
       const result = objects.entries({ a: 1, b: 2 });
       expect(result).toBeUndefined();
     });
   });
 
-  describe('#05 => byKey', () => {
-    it('#05.01 => should call objects.byKey', () => {
+  describe('#06 => byKey', () => {
+    it('#06.01 => should call objects.byKey', () => {
       const result = objects.byKey();
       expect(result).toBeUndefined();
     });
 
-    it('#05.02 => should call objects.byKey with parameters', () => {
+    it('#06.02 => should call objects.byKey with parameters', () => {
       const result = objects.byKey({ a: 1, b: 2 }, 'a');
       expect(result).toBeUndefined();
     });
   });
 
-  describe('#06 => hasKeys', () => {
-    it('#06.01 => should call objects.hasKeys', () => {
+  describe('#07 => hasKeys', () => {
+    it('#07.01 => should call objects.hasKeys', () => {
       const result = objects.hasKeys();
       expect(result).toBeUndefined();
     });
 
-    it('#06.02 => should call objects.hasKeys with parameters', () => {
+    it('#07.02 => should call objects.hasKeys with parameters', () => {
       const result = objects.hasKeys({ a: 1, b: 2 }, 'a', 'b');
       expect(result).toBeUndefined();
     });
   });
 
-  describe('#07 => hasAllKeys', () => {
-    it('#07.01 => should call objects.hasAllKeys', () => {
+  describe('#08 => hasAllKeys', () => {
+    it('#08.01 => should call objects.hasAllKeys', () => {
       const result = objects.hasAllKeys();
       expect(result).toBeUndefined();
     });
 
-    it('#07.02 => should call objects.hasAllKeys with parameters', () => {
+    it('#08.02 => should call objects.hasAllKeys with parameters', () => {
       const result = objects.hasAllKeys({ a: 1, b: 2 }, 'a', 'b');
       expect(result).toBeUndefined();
     });
   });
 
-  describe('#08 => omit', () => {
-    it('#08.01 => should call objects.omit', () => {
+  describe('#09 => omit', () => {
+    it('#09.01 => should call objects.omit', () => {
       const result = objects.omit();
       expect(result).toBeUndefined();
     });
 
-    it('#08.02 => should call objects.omit with parameters', () => {
+    it('#09.02 => should call objects.omit with parameters', () => {
       const result = objects.omit({ a: 1, b: 2 }, 'a');
       expect(result).toBeUndefined();
     });
 
-    describe('#08.01 => omit.is', () => {
-      it('#08.01.01 => should call objects.omit.is', () => {
+    describe('#09.01 => omit.is', () => {
+      it('#09.01.01 => should call objects.omit.is', () => {
         const result = objects.omit.is();
         expect(typeof result).toBe('function');
       });
 
-      it('#08.01.02 => should call objects.omit.is with parameters', () => {
+      it('#09.01.02 => should call objects.omit.is with parameters', () => {
         const result = objects.omit.is({ a: 1, b: 2 }, 'a');
         expect(typeof result).toBe('function');
       });
 
-      it('#08.01.03 => should test objects.omit.is predicate functionality', () => {
+      it('#09.01.03 => should test objects.omit.is predicate functionality', () => {
         const checkOmit = objects.omit.is({ a: 1, b: 2, c: 3 }, 'a');
 
         // Test with object that should match (has b and c, but not a)
@@ -168,7 +225,7 @@ describe('#objects type functions', () => {
         expect(result3).toBeUndefined();
       });
 
-      it('#08.01.04 => should test objects.omit.is with multiple keys', () => {
+      it('#09.01.04 => should test objects.omit.is with multiple keys', () => {
         const checkOmitMultiple = objects.omit.is(
           { a: 1, b: 2, c: 3, d: 4 },
           'a',
@@ -184,7 +241,7 @@ describe('#objects type functions', () => {
         expect(result2).toBeUndefined();
       });
 
-      it('#08.01.05 => should test objects.omit.is edge cases', () => {
+      it('#09.01.05 => should test objects.omit.is edge cases', () => {
         // Test with empty object
         const checkEmptyOmit = objects.omit.is({}, 'nonexistent');
         const result1 = checkEmptyOmit({});
@@ -196,7 +253,7 @@ describe('#objects type functions', () => {
         expect(result2).toBeUndefined();
       });
 
-      it('#08.01.06 => should test objects.omit.is works with different object shapes', () => {
+      it('#09.01.06 => should test objects.omit.is works with different object shapes', () => {
         // Test with nested objects
         const nestedObj = {
           user: { id: 1, name: 'John' },
@@ -214,31 +271,31 @@ describe('#objects type functions', () => {
       });
     });
 
-    describe('#08.02 => omit.const', () => {
-      it('#08.02.01 => should call objects.omit.const', () => {
+    describe('#09.02 => omit.const', () => {
+      it('#09.02.01 => should call objects.omit.const', () => {
         const result = objects.omit.const();
         expect(result).toBeUndefined();
       });
 
-      it('#08.02.02 => should call objects.omit.const with parameters', () => {
+      it('#09.02.02 => should call objects.omit.const with parameters', () => {
         const result = objects.omit.const({ a: 1, b: 2 }, 'a');
         expect(result).toBeUndefined();
       });
 
-      describe('#08.02.01 => omit.const.is', () => {
-        it('#08.02.01.01 => should call objects.omit.const.is', () => {
+      describe('#09.02.01 => omit.const.is', () => {
+        it('#09.02.01.01 => should call objects.omit.const.is', () => {
           const result = objects.omit.const.is();
           expect(typeof result).toBe('function');
         });
 
-        it('#08.02.01.02 => should call objects.omit.const.is with parameters', () => {
+        it('#09.02.01.02 => should call objects.omit.const.is with parameters', () => {
           const checkFunction = objects.omit.const.is({ a: 1, b: 2 }, 'a');
           expect(typeof checkFunction).toBe('function');
           const result = checkFunction({ b: 2 });
           expect(result).toBeUndefined();
         });
 
-        it('#08.02.01.03 => should test objects.omit.const.is with multiple keys', () => {
+        it('#09.02.01.03 => should test objects.omit.const.is with multiple keys', () => {
           const checkStrictOmitMultiple = objects.omit.const.is(
             { a: 1, b: 2, c: 3, d: 4 },
             'a',
