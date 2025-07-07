@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+## [0.1.7] - **2025/07/07** _04:55_
+
+- Better docs
+
+<br/>
+
 ## [0.1.6] - **2025/07/07** _04:50_
 
 - Functions typings

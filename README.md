@@ -30,13 +30,19 @@ pnpm add @bemedev/types
 ## Usage
 
 ```typescript
-import { IndexOfArray, ReverseArray } from '@bemedev/types';
+import { types, typings, castings } from '@bemedev/types';
 
 // Example with IndexOfArray
-type Indices = IndexOfArray<['a', 'b', 'c']>; // 0 | 1 | 2
+type Indices = types.IndexOfArray<['a', 'b', 'c']>; // 0 | 1 | 2
 
 // Example with ReverseArray
-type Reversed = ReverseArray<['a', 'b', 'c']>; // ['c', 'b', 'a']
+type Reversed = types.ReverseArray<['a', 'b', 'c']>; // ['c', 'b', 'a']
+
+const array = typings.tupleOf<string, 3>()(['a', 'b', 'c']); // typed ['a', 'b', 'c'], but returns undefined
+
+const _readonly castings.commons.const({
+  key: 'value',
+}); // typed as <{ readonly key: 'value' }> and returns same object
 ```
 
 <br/>
