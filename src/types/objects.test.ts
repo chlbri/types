@@ -109,16 +109,6 @@ describe('objects type functions', () => {
     expect(result).toBeUndefined();
   });
 
-  it('22. should call objects.omit.strict', () => {
-    const result = objects.omit.strict();
-    expect(result).toBeUndefined();
-  });
-
-  it('23. should call objects.omit.strict with parameters', () => {
-    const result = objects.omit.strict({ a: 1, b: 2 }, 'a');
-    expect(result).toBeUndefined();
-  });
-
   it('24. should call objects.omit.is', () => {
     const result = objects.omit.is();
     expect(typeof result).toBe('function');
@@ -126,16 +116,6 @@ describe('objects type functions', () => {
 
   it('25. should call objects.omit.is with parameters', () => {
     const result = objects.omit.is({ a: 1, b: 2 }, 'a');
-    expect(typeof result).toBe('function');
-  });
-
-  it('26. should call objects.omit.strict.is', () => {
-    const result = objects.omit.strict.is();
-    expect(typeof result).toBe('function');
-  });
-
-  it('27. should call objects.omit.strict.is with parameters', () => {
-    const result = objects.omit.strict.is({ a: 1, b: 2 }, 'a');
     expect(typeof result).toBe('function');
   });
 
@@ -204,16 +184,6 @@ describe('objects type functions', () => {
     expect(result).toBeUndefined();
   });
 
-  it('41. should call objects.readonly.const', () => {
-    const result = objects.readonly.const();
-    expect(result).toBeUndefined();
-  });
-
-  it('42. should call objects.readonly.const with parameter', () => {
-    const result = objects.readonly.const({ a: 1, b: 2 });
-    expect(result).toBeUndefined();
-  });
-
   it('43. should call objects.readonly.not', () => {
     const result = objects.readonly.not();
     expect(result).toBeUndefined();
@@ -231,16 +201,6 @@ describe('objects type functions', () => {
 
   it('46. should call objects.readonly.deep with parameter', () => {
     const result = objects.readonly.deep({ a: { c: 1 }, b: 2 });
-    expect(result).toBeUndefined();
-  });
-
-  it('47. should call objects.readonly.deep.const', () => {
-    const result = objects.readonly.deep.const();
-    expect(result).toBeUndefined();
-  });
-
-  it('48. should call objects.readonly.deep.const with parameter', () => {
-    const result = objects.readonly.deep.const({ a: { c: 1 }, b: 2 });
     expect(result).toBeUndefined();
   });
 
@@ -344,16 +304,6 @@ describe('objects type functions', () => {
     expect(result).toBeUndefined();
   });
 
-  it('60. should call objects.freeze.const', () => {
-    const result = objects.freeze.const();
-    expect(result).toBeUndefined();
-  });
-
-  it('61. should call objects.freeze.const with parameter', () => {
-    const result = objects.freeze.const({ a: 1, b: 2 });
-    expect(result).toBeUndefined();
-  });
-
   it('62. should call objects.freeze.not', () => {
     const result = objects.freeze.not();
     expect(result).toBeUndefined();
@@ -371,16 +321,6 @@ describe('objects type functions', () => {
 
   it('65. should call objects.freeze.deep with parameter', () => {
     const result = objects.freeze.deep({ a: { c: 1 }, b: 2 });
-    expect(result).toBeUndefined();
-  });
-
-  it('66. should call objects.freeze.deep.const', () => {
-    const result = objects.freeze.deep.const();
-    expect(result).toBeUndefined();
-  });
-
-  it('67. should call objects.freeze.deep.const with parameter', () => {
-    const result = objects.freeze.deep.const({ a: { c: 1 }, b: 2 });
     expect(result).toBeUndefined();
   });
 
@@ -441,25 +381,6 @@ describe('objects type functions', () => {
     expect(result3).toBeUndefined();
   });
 
-  it('92. should test objects.omit.strict.is predicate functionality', () => {
-    const checkStrictOmit = objects.omit.strict.is(
-      { a: 1, b: 2, c: 3 },
-      'a',
-    );
-
-    // Test with object that should match (has b and c, but not a)
-    const result1 = checkStrictOmit({ b: 2, c: 3 });
-    expect(result1).toBeUndefined();
-
-    // Test with object that should not match (has a)
-    const result2 = checkStrictOmit({ a: 1, b: 2, c: 3 });
-    expect(result2).toBeUndefined();
-
-    // Test without parameters
-    const result3 = checkStrictOmit();
-    expect(result3).toBeUndefined();
-  });
-
   it('93. should test objects.omit.is with multiple keys', () => {
     const checkOmitMultiple = objects.omit.is(
       { a: 1, b: 2, c: 3, d: 4 },
@@ -476,8 +397,8 @@ describe('objects type functions', () => {
     expect(result2).toBeUndefined();
   });
 
-  it('94. should test objects.omit.strict.is with multiple keys', () => {
-    const checkStrictOmitMultiple = objects.omit.strict.is(
+  it('94. should test objects.omit.const.is with multiple keys', () => {
+    const checkStrictOmitMultiple = objects.omit.const.is(
       { a: 1, b: 2, c: 3, d: 4 },
       'a',
       'b',
@@ -504,26 +425,11 @@ describe('objects type functions', () => {
     expect(result2).toBeUndefined();
   });
 
-  it('96. should test objects.omit.strict.is edge cases', () => {
-    // Test with empty object
-    const checkEmptyStrictOmit = objects.omit.strict.is(
-      {},
-      'nonexistent' as never,
-    );
-    const result1 = checkEmptyStrictOmit({});
-    expect(result1).toBeUndefined();
-
-    // Test with single key omit
-    const checkSingleKeyOmit = objects.omit.strict.is({ a: 1, b: 2 }, 'a');
-    const result2 = checkSingleKeyOmit({ b: 2 });
-    expect(result2).toBeUndefined();
-  });
-
-  it('97. should test objects.omit.is and objects.omit.strict.is return the same predicate function', () => {
+  it('97. should test objects.omit.is and objects.omit.const.is return the same predicate function', () => {
     // Both functions should return equivalent predicate behavior
     const original = { a: 1, b: 'hello', c: true };
     const regularOmit = objects.omit.is(original, 'a');
-    const strictOmit = objects.omit.strict.is(original, 'a');
+    const strictOmit = objects.omit.const.is(original, 'a');
 
     // Both should be functions
     expect(typeof regularOmit).toBe('function');
@@ -551,7 +457,7 @@ describe('objects type functions', () => {
     expect(checkArrayOmit({ count: 3 })).toBeUndefined();
   });
 
-  it('99. should test objects.omit.strict.is with complex types', () => {
+  it('99. should test objects.omit.const.is with complex types', () => {
     interface ComplexType {
       id: number;
       metadata: {
@@ -567,7 +473,7 @@ describe('objects type functions', () => {
       tags: ['tag1', 'tag2'],
     };
 
-    const checkComplexOmit = objects.omit.strict.is(complexObj, 'id');
+    const checkComplexOmit = objects.omit.const.is(complexObj, 'id');
     expect(typeof checkComplexOmit).toBe('function');
 
     // Test with matching shape

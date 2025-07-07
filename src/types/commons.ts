@@ -6,6 +6,7 @@ import type {
   Defaulted,
   Fn,
   Keys,
+  NonN,
   Primitive,
   PrimitiveObject,
 } from './commons.types';
@@ -76,6 +77,8 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
     },
   ),
 
+  const: <const T extends object>(_?: T) => _unknown<T>(),
+
   identity: <T>(_?: T) => _unknown<T>(),
 
   is: {
@@ -102,24 +105,27 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
   readonly: typeFnBasic(
     <T extends object>(_?: T) => _unknown<Required<T>>(),
     {
-      const: <const T extends object>(_?: T) => _unknown<Readonly<T>>(),
-
       deep: typeFnBasic(
         <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
         {
-          const: <const T extends object>(_?: T) =>
-            _unknown<DeepReadonly<T>>(),
+          not: typeFnBasic(
+            <T extends object>(_?: T) => _unknown<DeepNotReadonly<T>>(),
+            {
+              is: <T extends object>(_?: T) =>
+                _unknown<T extends DeepNotReadonly<T> ? true : false>(),
+            },
+          ),
 
-          not: <const T extends object>(_?: T) =>
-            _unknown<DeepNotReadonly<T>>(),
+          is: <T extends object>(_?: T) =>
+            _unknown<T extends DeepReadonly<T> ? true : false>(),
         },
       ),
 
       not: typeFnBasic(
         <T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
         {
-          const: <const T extends object>(_?: T) =>
-            _unknown<NotReadonly<T>>(),
+          is: <T extends object>(_?: T) =>
+            _unknown<T extends NotReadonly<T> ? true : false>(),
         },
       ),
     },
@@ -158,8 +164,6 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
     <T, U extends any[]>(_?: T, ...__: U) =>
       _unknown<Extract<T, U[number]>>(),
     {
-      strict: <T, U extends T[]>(_?: T, ...__: U) =>
-        _unknown<Extract<T, U[number]>>(),
       const: <const T, const U extends T[]>(_?: T, ...__: U) =>
         _unknown<Extract<T, U[number]>>(),
     },
@@ -169,8 +173,6 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
     <T, U extends any[]>(_?: T, ...__: U) =>
       _unknown<Exclude<T, U[number]>>(),
     {
-      strict: <T, U extends T[]>(_?: T, ...__: U) =>
-        _unknown<Exclude<T, U[number]>>(),
       const: <const T, const U extends T[]>(_?: T, ...__: U) =>
         _unknown<Exclude<T, U[number]>>(),
     },
@@ -185,6 +187,6 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
 
   keys: typeFn<Keys>()(),
 
-  defaulted: <T, U extends NonNullable<T>>(_?: T, __?: U) =>
+  defaulted: <T, U extends NonN<T>>(_?: T, __?: U) =>
     _unknown<Defaulted<T, U>>(),
 });

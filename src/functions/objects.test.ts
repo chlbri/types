@@ -1050,38 +1050,6 @@ describe('objects', () => {
       });
     });
 
-    describe('#13.06 objects.readonly.const', () => {
-      it('#13.06.01 should make const object readonly', () => {
-        const obj = { a: 1, b: 2 } as const;
-        const result = objects.readonly.const(obj);
-        expect(result).toEqual(obj);
-        expect(Object.isFrozen(result)).toBe(true);
-        expect(result).toBe(obj);
-      });
-
-      it('#13.06.02 should work with const nested objects', () => {
-        const obj = { nested: { value: 'test' } } as const;
-        const result = objects.readonly.const(obj);
-        expect(result).toEqual(obj);
-        expect(Object.isFrozen(result)).toBe(true);
-      });
-
-      it('#13.06.01 should make const object readonly', () => {
-        const obj = { a: 1, b: 2 } as const;
-        const result = objects.readonly.const(obj);
-        expect(result).toEqual(obj);
-        expect(Object.isFrozen(result)).toBe(true);
-        expect(result).toBe(obj);
-      });
-
-      it('#13.06.02 should work with const nested objects', () => {
-        const obj = { nested: { value: 'test' } } as const;
-        const result = objects.readonly.const(obj);
-        expect(result).toEqual(obj);
-        expect(Object.isFrozen(result)).toBe(true);
-      });
-    });
-
     describe('#13.07 objects.readonly.not', () => {
       it('#13.07.01 should return object without readonly type', () => {
         const obj = { a: 1, b: 2 };
@@ -1130,29 +1098,6 @@ describe('objects', () => {
         const result = objects.readonly.deep(obj);
         expect(result).toEqual(obj);
         expect(Object.isFrozen(result)).toBe(true);
-      });
-
-      describe('#13.08.03 objects.readonly.deep.const', () => {
-        it('#13.08.03.01 should deep make const object readonly', () => {
-          const obj = { a: 1, nested: { b: 2 } } as const;
-          const result = objects.readonly.deep.const(obj);
-          expect(result).toEqual(obj);
-          expect(Object.isFrozen(result)).toBe(true);
-          expect(result).toBe(obj);
-        });
-
-        it('#13.08.03.02 should work with deeply nested const objects', () => {
-          const obj = {
-            level1: {
-              level2: {
-                value: 'deep',
-              },
-            },
-          } as const;
-          const result = objects.readonly.deep.const(obj);
-          expect(result).toEqual(obj);
-          expect(Object.isFrozen(result)).toBe(true);
-        });
       });
 
       describe('#13.08.04 objects.readonly.deep.not', () => {
@@ -1255,23 +1200,6 @@ describe('objects', () => {
       });
     });
 
-    describe('#14.06 objects.freeze.const', () => {
-      it('#14.06.01 should freeze const object', () => {
-        const obj = { a: 1, b: 2 } as const;
-        const result = objects.freeze.const(obj);
-        expect(result).toEqual(obj);
-        expect(Object.isFrozen(result)).toBe(true);
-        expect(result).toBe(obj);
-      });
-
-      it('#14.06.02 should work with const nested objects', () => {
-        const obj = { nested: { value: 'test' } } as const;
-        const result = objects.freeze.const(obj);
-        expect(result).toEqual(obj);
-        expect(Object.isFrozen(result)).toBe(true);
-      });
-    });
-
     describe('#14.07 objects.freeze.not', () => {
       it('#14.07.01 should return object without readonly type', () => {
         const obj = { a: 1, b: 2 };
@@ -1307,29 +1235,6 @@ describe('objects', () => {
         const result = objects.freeze.deep(obj);
         expect(result).toEqual(obj);
         expect(Object.isFrozen(result)).toBe(true);
-      });
-
-      describe('#14.08.03 objects.freeze.deep.const', () => {
-        it('#14.08.03.01 should deep freeze const object', () => {
-          const obj = { a: 1, nested: { b: 2 } } as const;
-          const result = objects.freeze.deep.const(obj);
-          expect(result).toEqual(obj);
-          expect(Object.isFrozen(result)).toBe(true);
-          expect(result).toBe(obj);
-        });
-
-        it('#14.08.03.02 should work with deeply nested const objects', () => {
-          const obj = {
-            level1: {
-              level2: {
-                value: 'deep',
-              },
-            },
-          } as const;
-          const result = objects.freeze.deep.const(obj);
-          expect(result).toEqual(obj);
-          expect(Object.isFrozen(result)).toBe(true);
-        });
       });
 
       describe('#14.08.04 objects.freeze.deep.not', () => {

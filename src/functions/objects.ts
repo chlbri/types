@@ -14,7 +14,7 @@ import type {
   SubType,
 } from 'types';
 import { partialCall, type Equals } from '~utils';
-import { castFn, castFnBasic, commons } from './commons';
+import { _unknown, castFn, castFnBasic, commons } from './commons';
 
 // #region Helpers
 function isPlainObject(value: any): value is object {
@@ -55,15 +55,16 @@ const _isRequiredDeep = (object: any): object is DeepRequired<any> => {
 };
 
 const _readonly = castFnBasic(
-  <T extends object>(object: T): Readonly<T> => {
+  <T extends object>(object: T) => {
     return Object.freeze(object);
   },
   {
-    forceCast: <T extends object>(object: T): Readonly<T> => {
-      return Object.freeze(object);
+    forceCast: <T extends object>(object: unknown) => {
+      const out = Object.freeze(object);
+      return _unknown<Readonly<T>>(out);
     },
 
-    dynamic: <U extends object>(object: U): Readonly<U> => {
+    dynamic: <U extends object>(object: U) => {
       return Object.freeze(object);
     },
 
@@ -71,24 +72,18 @@ const _readonly = castFnBasic(
       return Object.isFrozen(object);
     },
 
-    const: <const T extends object>(object: T): Readonly<T> => {
-      return Object.freeze(object);
-    },
-
-    not: <const T extends object>(object: T): NotReadonly<T> => {
-      return object as any;
+    not: <const T extends object>(object: T) => {
+      return _unknown<NotReadonly<T>>(object);
     },
 
     deep: castFnBasic(
-      <T extends object>(object: T): DeepReadonly<T> => {
-        return Object.freeze(object) as any;
+      <T extends object>(object: T) => {
+        const out = Object.freeze(object);
+        return _unknown<DeepReadonly<T>>(out);
       },
       {
-        const: <const T extends object>(object: T): DeepReadonly<T> => {
-          return Object.freeze(object) as any;
-        },
-        not: <const T extends object>(object: T): DeepNotReadonly<T> => {
-          return object as any;
+        not: <T extends object>(object: T) => {
+          return _unknown<DeepNotReadonly<T>>(object);
         },
       },
     ),
@@ -446,8 +441,6 @@ export const objects = castFn<object>()({
       },
     ),
   }),
-
-  //TODO: Add partial
 
   pick: castFnBasic(
     partialCall(_pick, 'key') as <T extends object, K extends any[]>(

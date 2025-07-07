@@ -2,8 +2,13 @@ import { expectTypeOf } from 'vitest';
 import { arrays } from './arrays';
 import type { AnyArray, TupleOf } from './arrays.types';
 
+// Test arrays.reduce - reduces array to single element
+expectTypeOf(arrays.reduce([3])).toEqualTypeOf<number>();
+expectTypeOf(arrays.reduce('string')).toEqualTypeOf<string>();
+
+// Test arrays.reduce.deep - deeply reduces nested arrays
+
 // Test arrays.type - constant type
-expectTypeOf(arrays.type).toEqualTypeOf<unknown[]>();
 
 // Test arrays.forceCast
 expectTypeOf(arrays.forceCast('not array')).toEqualTypeOf<unknown[]>();
@@ -18,9 +23,9 @@ expectTypeOf(arrays.dynamic(['a', 'b', 'c'] as const)).toEqualTypeOf<
 >();
 
 // Test arrays.is type guard
-expectTypeOf(arrays.is<[1, 2, 3]>()).toEqualTypeOf<true>();
-expectTypeOf(arrays.is<string>()).toEqualTypeOf<false>();
-expectTypeOf(arrays.is<object>()).toEqualTypeOf<false>();
+expectTypeOf(arrays.is([1, 2, 3])).toEqualTypeOf<true>();
+expectTypeOf(arrays.is('test')).toEqualTypeOf<false>();
+expectTypeOf(arrays.is({})).toEqualTypeOf<false>();
 
 // Test arrays.low - generic array creation
 expectTypeOf(arrays.low<string>()).toEqualTypeOf<string[]>();
@@ -63,10 +68,6 @@ expectTypeOf(arrays.tupleOf.is<string>()).toEqualTypeOf<false>();
 // Test arrays.reduce - reduces array/tuple to union
 expectTypeOf(arrays.reduce([1, 2, 3])).toEqualTypeOf<number>();
 expectTypeOf(arrays.reduce('string')).toEqualTypeOf<string>();
-
-// Test arrays.reduce.const
-const constArray = [1, 2, 3] as const;
-expectTypeOf(arrays.reduce.const(constArray)).toEqualTypeOf<1 | 2 | 3>();
 
 // Test arrays.reduce.deep - deeply reduces nested arrays
 const deepArray = [

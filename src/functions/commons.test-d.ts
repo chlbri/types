@@ -49,27 +49,27 @@ const deepReadonly1 = commons.readonly.deep({
   },
 });
 
-const deepReadonly2 = commons.readonly.deep.const({
-  a: 1,
-  b: {
-    c: 2,
-  },
-});
-
+// Test that deep readonly works correctly
 expectTypeOf(deepReadonly1).toEqualTypeOf<{
   readonly a: number;
   readonly b: {
     readonly c: number;
   };
 }>();
-expectTypeOf(deepReadonly1).toExtend<{
-  readonly a: number;
-  readonly b: NonNullable<unknown>;
-}>();
-expectTypeOf(deepReadonly2).toEqualTypeOf<{
-  readonly a: 1;
-  readonly b: {
-    readonly c: 2;
+
+// Test that readonly.deep.not works with a readonly object
+const readonlyObj = {
+  a: 1,
+  b: {
+    c: 2,
+  },
+} as const;
+
+const deepNotReadonly = commons.readonly.deep.not(readonlyObj);
+expectTypeOf(deepNotReadonly).toEqualTypeOf<{
+  a: 1;
+  b: {
+    c: 2;
   };
 }>();
 
@@ -87,28 +87,19 @@ const readonly1 = commons.readonly({
   },
 });
 
-const readonly2 = commons.readonly.const({
-  a: 1,
-  b: {
-    c: 2,
-  },
-});
-
-expectTypeOf(readonly1).not.toEqualTypeOf<{
-  readonly a: 1;
+expectTypeOf(readonly1).toEqualTypeOf<{
+  readonly a: number;
   readonly b: {
-    c: 2;
+    c: number;
   };
 }>();
 
-expectTypeOf(readonly2).toEqualTypeOf<{
-  readonly a: 1;
-  readonly b: {
-    readonly c: 2;
-  };
-}>();
+// Test readonly.not - it should remove readonly modifiers
+const readonlyValue = readonly1;
+const notReadonly = commons.readonly.not(readonlyValue);
 
-expectTypeOf(readonly1).toExtend<{
+// The result should have readonly modifiers removed
+expectTypeOf(notReadonly).toEqualTypeOf<{
   a: number;
   b: {
     c: number;

@@ -114,11 +114,6 @@ describe('arrays type functions', () => {
     expect(result).toBeUndefined();
   });
 
-  it('23. should call arrays.reduce.const', () => {
-    const result = arrays.reduce.const();
-    expect(result).toBeUndefined();
-  });
-
   it('24. should call arrays.reduce.deep', () => {
     const result = arrays.reduce.deep();
     expect(result).toBeUndefined();

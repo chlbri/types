@@ -113,28 +113,13 @@ describe('Castings common', () => {
     });
 
     describe('#03.15 => readonly interns', () => {
-      it('#03.15.01 => for readonly.const', () => {
-        const fn = commons.readonly.const;
-        expect(fn(value)).toBe(value);
-      });
-
       it('#03.15.02 => for readonly.deep', () => {
         const fn = commons.readonly.deep;
         expect(fn(value)).toBe(value);
       });
 
-      it('#03.15.03 => for readonly.deep.const', () => {
-        const fn = commons.readonly.deep.const;
-        expect(fn(value)).toBe(value);
-      });
-
       it('#03.15.04 => for readonly.not', () => {
         const fn = commons.readonly.not;
-        expect(fn(value)).toBe(value);
-      });
-
-      it('#03.15.05 => for readonly.not.const', () => {
-        const fn = commons.readonly.not.const;
         expect(fn(value)).toBe(value);
       });
     });
@@ -1198,6 +1183,300 @@ describe('Castings common', () => {
           const result = commons.function.checker.is(boundFn);
           expect(result).toBe(true);
         });
+      });
+    });
+  });
+
+  describe('#06 => Additional commons subfunctions', () => {
+    describe('#06.01 => commons.const', () => {
+      it('#06.01.01 => should return the same value as identity', () => {
+        const value = { a: 1, b: 'test' };
+        const result = commons.const(value);
+        expect(result).toBe(value);
+      });
+
+      it('#06.01.02 => should work with primitive values', () => {
+        expect(commons.const(42)).toBe(42);
+        expect(commons.const('hello')).toBe('hello');
+        expect(commons.const(true)).toBe(true);
+        expect(commons.const(null)).toBe(null);
+        expect(commons.const(undefined)).toBe(undefined);
+      });
+
+      it('#06.01.03 => should work with arrays', () => {
+        const array = [1, 2, 3];
+        const result = commons.const(array);
+        expect(result).toBe(array);
+        expect(result).toEqual([1, 2, 3]);
+      });
+
+      it('#06.01.04 => should work with nested objects', () => {
+        const nested = {
+          level1: {
+            level2: {
+              value: 'deep',
+            },
+          },
+          array: [1, 2, 3],
+        };
+        const result = commons.const(nested);
+        expect(result).toBe(nested);
+        expect(result.level1.level2.value).toBe('deep');
+      });
+
+      it('#06.01.05 => should work with functions', () => {
+        const fn = () => 'test';
+        const result = commons.const(fn);
+        expect(result).toBe(fn);
+        expect(result()).toBe('test');
+      });
+
+      it('#06.01.06 => should work with symbols', () => {
+        const symbol = Symbol('test');
+        const result = commons.const(symbol);
+        expect(result).toBe(symbol);
+      });
+
+      it('#06.01.07 => should work with Date objects', () => {
+        const date = new Date('2023-01-01');
+        const result = commons.const(date);
+        expect(result).toBe(date);
+        expect(result.getFullYear()).toBe(2023);
+      });
+    });
+
+    describe('#06.02 => commons.readonly.deep.not', () => {
+      it('#06.02.01 => should return the same object reference', () => {
+        const obj = { a: 1, b: { c: 2 } };
+        const result = commons.readonly.deep.not(obj);
+        expect(result).toBe(obj);
+      });
+
+      it('#06.02.02 => should work with nested objects', () => {
+        const nested = {
+          level1: {
+            level2: {
+              value: 'test',
+              number: 42,
+            },
+            array: [1, 2, 3],
+          },
+          simple: 'value',
+        };
+        const result = commons.readonly.deep.not(nested);
+        expect(result).toBe(nested);
+        expect(result.level1.level2.value).toBe('test');
+        expect(result.level1.array).toEqual([1, 2, 3]);
+      });
+
+      it('#06.02.03 => should work with arrays', () => {
+        const array = [
+          { id: 1, name: 'Alice' },
+          { id: 2, name: 'Bob' },
+        ];
+        const result = commons.readonly.deep.not(array);
+        expect(result).toBe(array);
+        expect(result[0].name).toBe('Alice');
+      });
+
+      it('#06.02.04 => should work with complex nested structures', () => {
+        const complex = {
+          users: [
+            {
+              id: 1,
+              profile: {
+                name: 'John',
+                settings: { theme: 'dark' },
+              },
+            },
+          ],
+          config: {
+            app: {
+              version: '1.0.0',
+              features: ['auth', 'dashboard'],
+            },
+          },
+        };
+        const result = commons.readonly.deep.not(complex);
+        expect(result).toBe(complex);
+        expect(result.users[0].profile.settings.theme).toBe('dark');
+        expect(result.config.app.features).toEqual(['auth', 'dashboard']);
+      });
+
+      it('#06.02.05 => should work with empty objects and arrays', () => {
+        const emptyObj = {};
+        const emptyArray: any[] = [];
+
+        expect(commons.readonly.deep.not(emptyObj)).toBe(emptyObj);
+        expect(commons.readonly.deep.not(emptyArray)).toBe(emptyArray);
+      });
+
+      it('#06.02.06 => should work with objects containing null and undefined', () => {
+        const objWithNulls = {
+          nullable: null,
+          undefinable: undefined,
+          nested: {
+            also_null: null,
+            also_undefined: undefined,
+          },
+        };
+        const result = commons.readonly.deep.not(objWithNulls);
+        expect(result).toBe(objWithNulls);
+        expect(result.nullable).toBeNull();
+        expect(result.undefinable).toBeUndefined();
+        expect(result.nested.also_null).toBeNull();
+      });
+    });
+
+    describe('#06.03 => commons.defaulted', () => {
+      it('#06.03.01 => should return default value when input is null, with ts error', () => {
+        const result = commons.defaulted(null, 'default');
+        expect(result).toBe('default');
+      });
+
+      it('#06.03.02 => should return default value when input is undefined', () => {
+        const result = commons.defaulted(undefined, 'default');
+        expect(result).toBe('default');
+      });
+
+      it('#06.03.03 => should return original value when it is defined and not null', () => {
+        expect(commons.defaulted('actual' as string, 'default')).toBe(
+          'actual',
+        );
+        expect(commons.defaulted(42 as number, 0)).toBe(42);
+        expect(commons.defaulted(true as boolean, false)).toBe(true);
+        expect(commons.defaulted(false as boolean, true)).toBe(false);
+      });
+
+      it('#06.03.04 => should work with falsy but defined values', () => {
+        expect(commons.defaulted(0 as number, 99)).toBe(0);
+        expect(commons.defaulted('' as string, 'default')).toBe('');
+        expect(commons.defaulted(false as boolean, true)).toBe(false);
+        expect(commons.defaulted(NaN, 0)).toBe(NaN);
+      });
+
+      it('#06.03.05 => should work with object defaults', () => {
+        const defaultObj = { a: 1, b: 'default' };
+        const result1 = commons.defaulted(null, defaultObj);
+        const result2 = commons.defaulted(undefined, defaultObj);
+        const actualObj = { x: 1, y: 2 };
+        const result3 = commons.defaulted(actualObj as object, defaultObj);
+
+        expect(result1).toBe(defaultObj);
+        expect(result2).toBe(defaultObj);
+        expect(result3).toBe(actualObj);
+      });
+
+      it('#06.03.06 => should work with array defaults', () => {
+        const defaultArray = [1, 2, 3];
+        const result1 = commons.defaulted(null, defaultArray);
+        const result2 = commons.defaulted(undefined, defaultArray);
+        const actualArray = ['a', 'b'];
+        const result3 = commons.defaulted(
+          actualArray as any,
+          defaultArray,
+        );
+
+        expect(result1).toBe(defaultArray);
+        expect(result2).toBe(defaultArray);
+        expect(result3).toBe(actualArray);
+      });
+
+      it('#06.03.07 => should work with function defaults', () => {
+        const defaultFn = () => 'default';
+        const result1 = commons.defaulted(null, defaultFn);
+        const result2 = commons.defaulted(undefined, defaultFn);
+        const actualFn = () => 'actual';
+        const result3 = commons.defaulted(actualFn, defaultFn);
+
+        expect(result1).toBe(defaultFn);
+        expect(result2).toBe(defaultFn);
+        expect(result3).toBe(actualFn);
+        expect(result1()).toBe('default');
+        expect(result3()).toBe('actual');
+      });
+
+      it('#06.03.08 => should work with complex nested defaults', () => {
+        const defaultConfig = {
+          theme: 'light',
+          settings: {
+            notifications: true,
+            privacy: {
+              tracking: false,
+            },
+          },
+        };
+
+        const result1 = commons.defaulted(null, defaultConfig);
+        const result2 = commons.defaulted(undefined, defaultConfig);
+
+        expect(result1).toBe(defaultConfig);
+        expect(result2).toBe(defaultConfig);
+        expect(result1.settings.privacy.tracking).toBe(false);
+      });
+
+      it('#06.03.09 => should work with different types for value and default', () => {
+        // When value is null/undefined, default type is used
+        const result1 = commons.defaulted(null as string | null, 42);
+        const result2 = commons.defaulted(
+          undefined as number | undefined,
+          'fallback',
+        );
+
+        expect(result1).toBe(42);
+        expect(result2).toBe('fallback');
+      });
+
+      it('#06.03.10 => should work with union types', () => {
+        type Value = string | number | null | undefined;
+        const getValue = (input: Value) =>
+          commons.defaulted(input, 'default');
+
+        expect(getValue(null)).toBe('default');
+        expect(getValue(undefined)).toBe('default');
+        expect(getValue('actual')).toBe('actual');
+        expect(getValue(42)).toBe(42);
+      });
+
+      it('#06.03.11 => should handle edge cases', () => {
+        // Empty object as default
+        const emptyObj = {};
+        expect(commons.defaulted(null, emptyObj)).toBe(emptyObj);
+
+        // Symbol as default
+        const sym = Symbol('test');
+        expect(commons.defaulted(undefined, sym)).toBe(sym);
+
+        // Date as default
+        const date = new Date();
+        expect(commons.defaulted(null, date)).toBe(date);
+      });
+
+      it('#06.03.12 => should work in real-world scenarios', () => {
+        // Configuration object with defaults
+        const getConfig = (userConfig: any) => ({
+          api: commons.defaulted(
+            userConfig?.api,
+            'https://api.default.com',
+          ),
+          timeout: commons.defaulted(userConfig?.timeout, 5000),
+          retries: commons.defaulted(userConfig?.retries, 3),
+          debug: commons.defaulted(userConfig?.debug, false),
+        });
+
+        const config1 = getConfig(null);
+        const config2 = getConfig({
+          api: 'https://custom.com',
+          debug: true,
+        });
+
+        expect(config1.api).toBe('https://api.default.com');
+        expect(config1.timeout).toBe(5000);
+        expect(config1.debug).toBe(false);
+
+        expect(config2.api).toBe('https://custom.com');
+        expect(config2.timeout).toBe(5000); // default
+        expect(config2.debug).toBe(true);
       });
     });
   });

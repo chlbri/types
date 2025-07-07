@@ -45,7 +45,9 @@ export type Cast<A, B> = A extends B ? A : B;
 
 export type Keys = keyof any;
 
-export type Defaulted<T, U extends NonNullable<T>> = T extends
+export type NonN<T> = T extends undefined | null ? any : NonNullable<T>;
+
+export type Defaulted<T, U extends NonN<T>> = T extends
   | undefined
   | never
   | null

@@ -7,6 +7,7 @@ import type {
   Defaulted,
   Fn,
   Neverify,
+  NonN,
   NotReadonly,
   NotUndefined,
   Primitive,
@@ -103,6 +104,8 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
     },
   }),
 
+  const: <const T>(value: T) => value,
+
   clone: <T extends PrimitiveObject>(object: T): T => {
     return deepClone(object);
   },
@@ -136,25 +139,15 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
   }),
 
   readonly: castFnBasic(<T>(value: T) => value as Readonly<T>, {
-    const: <const T extends object>(value: T) => _unknown<T>(value),
-
     deep: castFnBasic(
       <T extends object>(value: T) => _unknown<DeepReadonly<T>>(value),
       {
-        const: <const T extends object>(value: T) =>
-          _unknown<DeepReadonly<T>>(value),
         not: <const T extends object>(value: T) =>
           _unknown<DeepNotReadonly<T>>(value),
       },
     ),
 
-    not: castFnBasic(
-      <T extends object>(value: T) => _unknown<NotReadonly<T>>(value),
-      {
-        const: <const T extends object>(value: T) =>
-          _unknown<NotReadonly<T>>(value),
-      },
-    ),
+    not: <T extends object>(value: T) => _unknown<NotReadonly<T>>(value),
   }),
 
   primitive: castFn<Primitive>()({
@@ -189,12 +182,10 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
     ),
 
     forceCast: <T extends any[], R = any>(value: unknown) => {
-      return value as Fn<T, R>;
-    },
-
-    dynamic: <T extends any[], R = any>(value: Fn<T, R>) => {
       return _unknown<Fn<T, R>>(value);
     },
+
+    dynamic: <T extends any[], R = any>(value: Fn<T, R>) => value,
 
     checker: castFn<Checker>()({
       /**
@@ -229,7 +220,7 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
 
   undefiny: <T>(value?: T) => value,
 
-  defaulted: <T, U extends NonNullable<T>>(value: T, defaultValue: U) => {
+  defaulted: <T, const U extends NonN<T>>(value: T, defaultValue: U) => {
     const out =
       value === undefined || value === null ? defaultValue : value;
     return _unknown<Defaulted<T, U>>(out);

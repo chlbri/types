@@ -69,16 +69,6 @@ describe('common type functions', () => {
       expect(result).toBeUndefined();
     });
 
-    it('#03.03 should call commons.extract.strict', () => {
-      const result = commons.extract.strict('test');
-      expect(result).toBeUndefined();
-    });
-
-    it('#03.04 should call commons.extract.strict with parameters', () => {
-      const result = commons.extract.strict('test', 'test', 'hello');
-      expect(result).toBeUndefined();
-    });
-
     it('#03.05 should call commons.extract.const', () => {
       const result = commons.extract.const('test');
       expect(result).toBeUndefined();
@@ -98,16 +88,6 @@ describe('common type functions', () => {
 
     it('#04.02 should call commons.exclude with parameters', () => {
       const result = commons.exclude('test', 'string', 'number');
-      expect(result).toBeUndefined();
-    });
-
-    it('#04.03 should call commons.exclude.strict', () => {
-      const result = commons.exclude.strict('test');
-      expect(result).toBeUndefined();
-    });
-
-    it('#04.04 should call commons.exclude.strict with parameters', () => {
-      const result = commons.exclude.strict('test', 'test');
       expect(result).toBeUndefined();
     });
 
@@ -152,18 +132,8 @@ describe('common type functions', () => {
       expect(result).toBeUndefined();
     });
 
-    it('#07.02 should call commons.readonly.const', () => {
-      const result = commons.readonly.const({ a: 1 });
-      expect(result).toBeUndefined();
-    });
-
     it('#07.03 should call commons.readonly.deep', () => {
       const result = commons.readonly.deep({ a: { b: 1 } });
-      expect(result).toBeUndefined();
-    });
-
-    it('#07.04 should call commons.readonly.deep.const', () => {
-      const result = commons.readonly.deep.const({ a: { b: 1 } });
       expect(result).toBeUndefined();
     });
   });
@@ -398,9 +368,9 @@ describe('common type functions', () => {
 
     it('#14.05 should have correct type inference for readonly operations', () => {
       expect(typeof commons.readonly).toBe('function');
-      expect(typeof commons.readonly.const).toBe('function');
+      expect(typeof commons.readonly.not).toBe('function');
       expect(typeof commons.readonly.deep).toBe('function');
-      expect(typeof commons.readonly.deep.const).toBe('function');
+      expect(typeof commons.readonly.deep.not).toBe('function');
     });
   });
 });

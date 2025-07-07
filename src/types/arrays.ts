@@ -5,7 +5,6 @@ import type {
   ExcludeArray,
   ExtractArray,
   IndexesOfArray,
-  ReduceArray,
   ReduceDeepArray,
   ReverseArray,
   RuA,
@@ -48,8 +47,7 @@ export const arrays = typeFnBasic(
     }),
 
     reduce: typeFnBasic(<T>(_: T | readonly T[] | T[]) => _unknown<T>(), {
-      const: <const T>(_?: T) => _unknown<ReduceArray<T>>(),
-      deep: <const T>(_?: T) => _unknown<ReduceDeepArray<T>>(),
+      deep: <T>(_?: T) => _unknown<ReduceDeepArray<T>>(),
     }),
 
     reverse: <T extends RuA>(..._: T) => _unknown<ReverseArray<T>>(),
