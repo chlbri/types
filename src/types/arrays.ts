@@ -14,7 +14,7 @@ import { typeFnBasic } from './commons';
 import type { UnionToTuple } from './commons.types';
 
 export const arrays = typeFnBasic(
-  (..._: unknown[]) => _unknown<unknown[]>(),
+  <T extends AnyArray>(..._: T) => _unknown<T[number][]>(),
   {
     low: <T>(..._: T[]) => _unknown<T[]>(),
 

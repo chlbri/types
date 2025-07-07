@@ -1,22 +1,8 @@
-import type { Fn } from 'types';
-
-export type ArrayR = readonly any[] | any[];
-
-export type Checker<T = any> =
-  | ((value: unknown) => value is T)
-  | ((value: unknown) => boolean);
-
-export type FnBasic<Main extends Fn, Tr extends object> = Tr & Main;
-
-export type Equals<T, U> = T extends U
-  ? U extends T
-    ? true
-    : false
-  : false;
+import type { AnyArray, Fn } from './types/types';
 
 type PartialCall_F = <
-  T extends ArrayR = ArrayR,
-  U extends ArrayR = ArrayR,
+  T extends AnyArray = AnyArray,
+  U extends AnyArray = AnyArray,
   R = any,
 >(
   f: Fn<[...T, ...U], R>,

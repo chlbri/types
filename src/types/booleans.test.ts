@@ -1,84 +1,83 @@
-import { describe, expect, it } from 'vitest';
 import { booleans } from './booleans';
 
-describe('booleans type functions', () => {
+describe('#01 => booleans type functions', () => {
   // Test coverage for main function
-  it('1. should call t_boolean function', () => {
+  it('#01.01 => should call booleans function', () => {
     const result = booleans(true);
     expect(result).toBeUndefined();
   });
 
-  it('2. should call t_boolean function with false', () => {
+  it('#01.02 => should call booleans function with false', () => {
     const result = booleans(false);
     expect(result).toBeUndefined();
   });
 
   // Test coverage for sub-functions
-  it('3. should call t_boolean.forceCast', () => {
+  it('#01.03 => should call booleans.forceCast', () => {
     const result = booleans.forceCast(true);
     expect(result).toBeUndefined();
   });
 
-  it('4. should call t_boolean.forceCast with parameter', () => {
+  it('#01.04 => should call booleans.forceCast with parameter', () => {
     const result = booleans.forceCast(true);
     expect(result).toBeUndefined();
   });
 
-  it('5. should call t_boolean.is', () => {
+  it('#01.05 => should call booleans.is', () => {
     const result = booleans.is(true);
     expect(result).toBeUndefined();
   });
 
-  it('6. should call t_boolean.is with false', () => {
+  it('#01.06 => should call booleans.is with false', () => {
     const result = booleans.is(false);
     expect(result).toBeUndefined();
   });
 
-  it('7. should call t_boolean.type', () => {
+  it('#01.07 => should call booleans.type', () => {
     const result = booleans.type;
     expect(result).toBeUndefined();
   });
 
-  it('8. should call t_boolean.true', () => {
+  it('#01.08 => should call booleans.true', () => {
     const result = booleans.true();
     expect(result).toBeUndefined();
   });
 
-  it('9. should call t_boolean.true.forceCast', () => {
+  it('#01.09 => should call booleans.true.forceCast', () => {
     const result = booleans.true.forceCast();
     expect(result).toBeUndefined();
   });
 
-  it('10. should call t_boolean.true.is', () => {
+  it('#01.10 => should call booleans.true.is', () => {
     const result = booleans.true.is();
     expect(result).toBeUndefined();
   });
 
-  it('11. should call t_boolean.false', () => {
+  it('#01.11 => should call booleans.false', () => {
     const result = booleans.false();
     expect(result).toBeUndefined();
   });
 
-  it('12. should call t_boolean.false.forceCast', () => {
+  it('#01.12 => should call booleans.false.forceCast', () => {
     const result = booleans.false.forceCast();
     expect(result).toBeUndefined();
   });
 
-  it('13. should call t_boolean.false.is', () => {
+  it('#01.13 => should call booleans.false.is', () => {
     const result = booleans.false.is();
     expect(result).toBeUndefined();
   });
 
   // Type-level tests
-  describe('Type-level assertions', () => {
-    it('14. should have correct type inference for boolean operations', () => {
+  describe('#02 => Type-level assertions', () => {
+    it('#02.01 => should have correct type inference for boolean operations', () => {
       // These are compile-time checks to ensure type safety
       expect(typeof booleans).toBe('function');
       expect(typeof booleans.forceCast).toBe('function');
       expect(typeof booleans.is).toBe('function');
     });
 
-    it('15. should have correct type inference for boolean literals', () => {
+    it('#02.02 => should have correct type inference for boolean literals', () => {
       // These are compile-time checks to ensure type safety
       expect(typeof booleans.true).toBe('function');
       expect(typeof booleans.false).toBe('function');
@@ -86,7 +85,7 @@ describe('booleans type functions', () => {
       expect(typeof booleans.false.forceCast).toBe('function');
     });
 
-    it('16. should have correct type inference for boolean type checks', () => {
+    it('#02.03 => should have correct type inference for boolean type checks', () => {
       // These are compile-time checks to ensure type safety
       expect(typeof booleans.true.is).toBe('function');
       expect(typeof booleans.false.is).toBe('function');

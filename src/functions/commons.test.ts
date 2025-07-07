@@ -172,7 +172,7 @@ describe('Castings common', () => {
   });
 
   describe('#04.1 => commons.clone', () => {
-    it('#04.1.01 => should deep clone simple objects', () => {
+    it('#04.01.01 => should deep clone simple objects', () => {
       const original = { a: 1, b: 'test', c: true };
       const cloned = commons.clone(original);
 
@@ -184,7 +184,7 @@ describe('Castings common', () => {
       expect(original.a).toBe(1);
     });
 
-    it('#04.1.02 => should deep clone nested objects', () => {
+    it('#04.01.02 => should deep clone nested objects', () => {
       const original = {
         user: {
           name: 'John',
@@ -212,7 +212,7 @@ describe('Castings common', () => {
       expect(original.user.address.city).toBe('New York');
     });
 
-    it('#04.1.03 => should clone arrays within objects', () => {
+    it('#04.01.03 => should clone arrays within objects', () => {
       const original = {
         items: [1, 2, 3],
         tags: ['typescript', 'javascript'],
@@ -240,7 +240,7 @@ describe('Castings common', () => {
       expect(original.metadata.categories).toEqual(['web', 'frontend']);
     });
 
-    it('#04.1.04 => should handle primitive values in objects', () => {
+    it('#04.01.04 => should handle primitive values in objects', () => {
       const original = {
         string: 'hello',
         number: 42,
@@ -262,7 +262,7 @@ describe('Castings common', () => {
       expect(cloned.undefinedValue).toBeUndefined();
     });
 
-    it('#04.1.05 => should clone empty objects and arrays', () => {
+    it('#04.01.05 => should clone empty objects and arrays', () => {
       const originalEmpty = {};
       const clonedEmpty = commons.clone(originalEmpty);
 
@@ -278,7 +278,7 @@ describe('Castings common', () => {
       );
     });
 
-    it('#04.1.06 => should handle objects with mixed array and object nesting', () => {
+    it('#04.01.06 => should handle objects with mixed array and object nesting', () => {
       const original = {
         users: [
           { id: 1, name: 'Alice', preferences: { theme: 'dark' } },
@@ -288,7 +288,7 @@ describe('Castings common', () => {
           notifications: ['email', 'push'],
           security: {
             twoFactor: true,
-            allowedIPs: ['192.168.1.1', '10.0.0.1'],
+            allowedIPs: ['192.168.01.1', '10.0.0.1'],
           },
         },
       };
@@ -315,10 +315,12 @@ describe('Castings common', () => {
 
       expect(original.users[0].name).toBe('Alice');
       expect(original.settings.notifications).toEqual(['email', 'push']);
-      expect(original.settings.security.allowedIPs[0]).toBe('192.168.1.1');
+      expect(original.settings.security.allowedIPs[0]).toBe(
+        '192.168.01.1',
+      );
     });
 
-    it('#04.1.07 => should clone objects with numeric and string keys', () => {
+    it('#04.01.07 => should clone objects with numeric and string keys', () => {
       const original = {
         '0': 'zero',
         1: 'one',
@@ -343,7 +345,7 @@ describe('Castings common', () => {
       expect(cloned.nested.value).toBe(42);
     });
 
-    it('#04.1.08 => should handle objects with primitive special values', () => {
+    it('#04.01.08 => should handle objects with primitive special values', () => {
       const original = {
         number: {
           positive: 42,
@@ -391,7 +393,7 @@ describe('Castings common', () => {
       expect(typedCloned.nullish.undefinedValue).toBeUndefined();
     });
 
-    it('#04.1.09 => should clone objects with circular references safely', () => {
+    it('#04.01.09 => should clone objects with circular references safely', () => {
       const original: any = {
         name: 'root',
         child: {
@@ -412,7 +414,7 @@ describe('Castings common', () => {
       }).not.toThrow();
     });
 
-    it('#04.1.10 => should preserve object property descriptors for simple cases', () => {
+    it('#04.01.10 => should preserve object property descriptors for simple cases', () => {
       const original = {
         normal: 'value',
         nested: {
@@ -431,7 +433,7 @@ describe('Castings common', () => {
       ).toEqual(Object.getOwnPropertyDescriptor(original.nested, 'deep'));
     });
 
-    it('#04.1.11 => should handle large nested structures', () => {
+    it('#04.01.11 => should handle large nested structures', () => {
       const createNestedObject = (depth: number): any => {
         if (depth === 0) return { value: 'leaf' };
         return {
@@ -463,7 +465,7 @@ describe('Castings common', () => {
       expect(clonedPtr.value).toBe('leaf');
     });
 
-    it('#04.1.12 => should work with TypeScript interfaces', () => {
+    it('#04.01.12 => should work with TypeScript interfaces', () => {
       type User = {
         id: number;
         profile: {

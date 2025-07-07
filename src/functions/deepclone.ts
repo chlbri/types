@@ -1,4 +1,4 @@
-import type { PrimitiveObject } from 'types';
+import type { PrimitiveObject } from '../types/types';
 
 export type FormatKey<T = any> = (key: Extract<keyof T, string>) => string;
 

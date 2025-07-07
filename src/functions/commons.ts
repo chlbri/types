@@ -1,18 +1,20 @@
-import { Checker, isPlainObject, type FnBasic } from '~utils';
+import { isPlainObject } from '~utils';
 import type {
+  Checker,
   DeepNotReadonly,
   DeepPartial,
   DeepReadonly,
   DeepRequired,
   Defaulted,
   Fn,
+  FnBasic,
   Neverify,
   NonN,
   NotReadonly,
   NotUndefined,
   Primitive,
   PrimitiveObject,
-} from '../types';
+} from '../types/types';
 import deepClone from './deepclone';
 
 type FnReturn<T, Tr extends object> = Tr & {

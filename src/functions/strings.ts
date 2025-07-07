@@ -6,7 +6,7 @@ import type {
   LowerLetters,
   SplitStringBy,
   UpperLetters,
-} from '../types';
+} from '../types/types';
 import { _unknown, castFn, castFnBasic } from './commons';
 
 /**

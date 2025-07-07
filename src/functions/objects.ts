@@ -1,9 +1,11 @@
+import { partialCall } from '~utils';
 import type {
   AllowedNamesLow,
   DeepNotReadonly,
   DeepOmit,
   DeepReadonly,
   DeepRequired,
+  Equals,
   Keys,
   NotReadonly,
   NotSubType,
@@ -12,8 +14,7 @@ import type {
   Ra,
   Ru,
   SubType,
-} from 'types';
-import { partialCall, type Equals } from '~utils';
+} from '../types/types';
 import { _unknown, castFn, castFnBasic, commons } from './commons';
 
 // #region Helpers

@@ -1,6 +1,6 @@
-import type { Checker } from '~utils';
 import type {
   AnyArray,
+  Checker,
   ExcludeArray,
   ExtractArray,
   IndexesOfArray,
@@ -9,7 +9,7 @@ import type {
   ToArray,
   TupleOf,
   UnionToTuple,
-} from '../types';
+} from '../types/types';
 
 import { _unknown, castFnBasic } from './commons';
 

@@ -87,3 +87,15 @@ export type UnionToTuple<T, A extends any[] = []> = [T] extends [never]
   : UnionToTuple<Exclude<T, LastOfUnion<T>>, [LastOfUnion<T>, ...A]>;
 
 // #endregion
+
+export type Checker<T = any> =
+  | ((value: unknown) => value is T)
+  | ((value: unknown) => boolean);
+
+export type FnBasic<Main extends Fn, Tr extends object> = Tr & Main;
+
+export type Equals<T, U> = T extends U
+  ? U extends T
+    ? true
+    : false
+  : false;

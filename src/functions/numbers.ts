@@ -1,5 +1,5 @@
 import { DIGITS } from '~constants';
-import type { Digit } from '../types';
+import type { Digit } from '../types/types';
 import { castFn, commons } from './commons';
 import { eq } from './utils';
 
