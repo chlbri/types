@@ -1,5 +1,5 @@
-import type { UpperLetters } from 'types';
 import { describe, expect, expectTypeOf, it } from 'vitest';
+import type { UpperLetters } from '../types/types';
 import { strings } from './strings';
 
 describe('#01 => Strings Main Functions', () => {

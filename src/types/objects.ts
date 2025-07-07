@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { Equals } from '~utils';
 import { _unknown } from '../functions/commons';
 import { typeFn, typeFnBasic } from './commons';
-import type { Keys, PrimitiveObjectMap } from './commons.types';
+import type { Equals, Keys, PrimitiveObjectMap } from './commons.types';
 import type {
   AllowedNames,
   DeepNotReadonly,
