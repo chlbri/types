@@ -1,9 +1,8 @@
 import type { RecursiveArrayOf } from './arrays.types';
-import type { TrueObject } from './objects.types';
 
 export type SingleOrRecursiveArrayOf<T> = T | RecursiveArrayOf<T>;
 
-export type SoR<T> = SingleOrRecursiveArrayOf<T>;
+export type SoRa<T> = SingleOrRecursiveArrayOf<T>;
 
 export type Primitive2 = string | number | boolean;
 export type Primitive = Primitive2 | undefined | null;
@@ -13,8 +12,8 @@ export type SingleOrArray<T> = T | T[] | ReadonlyArray<T>;
 export type SoA<T> = SingleOrArray<T>;
 
 export type PrimitiveObjectMap = {
-  [key: Keys]: SoR<_PrimitiveObject>;
-} & TrueObject;
+  [key: Keys]: SoRa<_PrimitiveObject>;
+};
 
 type _PrimitiveObject = Primitive | PrimitiveObjectMap;
 

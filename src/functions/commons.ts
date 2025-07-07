@@ -58,6 +58,17 @@ export const castFn = <T>() => {
 };
 
 // #region Helpers
+
+const _isPrimitive = (value: unknown): value is Primitive => {
+  return (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === null ||
+    value === undefined
+  );
+};
+
 const _isPrimitiveObject = (object: any): object is PrimitiveObject => {
   const isObject = isPlainObject(object);
   if (isObject) {
@@ -80,7 +91,7 @@ const _isPrimitiveObject = (object: any): object is PrimitiveObject => {
     return true;
   }
 
-  return commons.primitive.is(object);
+  return _isPrimitive(object);
 };
 
 const _identity = <T>(value: T) => value;
@@ -153,15 +164,7 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
   }),
 
   primitive: castFn<Primitive>()({
-    is: (value: unknown): value is Primitive => {
-      return (
-        typeof value === 'string' ||
-        typeof value === 'number' ||
-        typeof value === 'boolean' ||
-        value === null ||
-        value === undefined
-      );
-    },
+    is: _isPrimitive,
   }),
 
   primitiveObject: castFn<PrimitiveObject>()({
