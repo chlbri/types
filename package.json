@@ -1,7 +1,7 @@
 {
   "name": "@bemedev/types",
   "version": "0.1.6",
-  "description": "https://github.com/chlbri/types.git",
+  "description": "Type definitions for Bemedev projects",
   "author": "chlbri <bri_lvi@icloud.com>",
   "license": "MIT",
   "type": "module",
@@ -14,6 +14,27 @@
   "engines": {
     "node": ">=22"
   },
+  "maintainers": [
+    {
+      "email": "bri_lvi@icloud.com",
+      "name": "chlbri",
+      "url": "https://bemedev.vercel.app"
+    }
+  ],
+  "contributors": [
+    {
+      "email": "bri_lvi@icloud.com",
+      "name": "chlbri",
+      "url": "https://bemedev.vercel.app"
+    }
+  ],
+  "keywords": [
+    "typescript",
+    "typings",
+    "type",
+    "type castings",
+    "type definitions"
+  ],
   "scripts": {
     "config": "pnpm install",
     "config:off": "pnpm run config --offline",

@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+## [0.1.6] - **2025/07/07** _04:50_
+
+- Functions typings
+- Functions castings
+- tests(cov): 100%
+
+<br/>
+
 ## [0.1.5] - 2025/02/18 16:00
 
 ### Added
