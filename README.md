@@ -18,14 +18,12 @@ pnpm add @bemedev/types
 
 ## Features
 
-- Types for array manipulation
-- Types for object manipulation
-- Types for promises
-- Types for strings
-- Types for unions
-- Types for use cases
-- Types for domain
-- Types for nullable values
+- Types and functions for castings and typings of array manipulation
+- Types and functions for castings and typings of object manipulation
+- Types and functions for castings and typings of promises
+- Types and functions for castings and typings of strings
+- Types and functions for castings and typings of unions
+- Types and functions for castings and typings of nullable values
 
 <br/>
 
@@ -43,13 +41,6 @@ type Reversed = ReverseArray<['a', 'b', 'c']>; // ['c', 'b', 'a']
 
 <br/>
 
-## Documentation
-
-For more details on the available types, check the test files:
-`src/types/*.test-d.ts`.
-
-<br/>
-
 ## CHANGE_LOG
 
 <details>
@@ -58,45 +49,7 @@ For more details on the available types, check the test files:
 ...
 </summary>
 
-## [0.1.5] - 2025/02/18 16:00
-
-### Added
-
-- Add type TrueObject
-- Add function for FlatMapByKeys
-
-<br/>
-
-## [0.1.4] - 2025/02/17 16:30
-
-### Added
-
-- Types for array manipulation
-- Types for object manipulation
-- Types for promises
-- Types for strings
-- Types for unions
-- Types for use cases
-- Types for domain
-- Types for nullable values
-
-### Changed
-
-- N/A
-
-### Deprecated
-
-- N/A
-
-### Removed
-
-- N/A
-
-### Fixed
-
-- N/A
-
-<br/>
+[CHANGE_LOG.md](https://github.com/chlbri/types/blob/master/CHANGE_LOG.md)
 
 </details>
 

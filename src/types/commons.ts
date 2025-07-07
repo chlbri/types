@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import type { Checker, FnBasic } from '~utils';
 import { _unknown } from '../functions/commons';
 import type {
   Defaulted,
@@ -18,6 +17,7 @@ import type {
   NotReadonly,
 } from './objects.types';
 import { Neverify } from './objects.types';
+import type { Checker, FnBasic } from './types';
 
 export const typeFnBasic = <
   Main extends Fn,
