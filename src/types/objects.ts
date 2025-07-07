@@ -32,13 +32,28 @@ const _readonly = typeFnBasic(
     is: <T extends object>(_?: T) =>
       _unknown<T extends Readonly<T> ? true : false>(),
 
-    not: <const T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
+    not: typeFnBasic(
+      <const T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
+      {
+        is: <const T extends object>(_?: T) =>
+          _unknown<T extends NotReadonly<T> ? true : false>(),
+      },
+    ),
 
     deep: typeFnBasic(
       <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
       {
-        not: <const T extends object>(_?: T) =>
-          _unknown<DeepNotReadonly<T>>(),
+        not: typeFnBasic(
+          <const T extends object>(_?: T) =>
+            _unknown<DeepNotReadonly<T>>(),
+          {
+            is: <const T extends object>(_?: T) =>
+              _unknown<T extends DeepNotReadonly<T> ? true : false>(),
+          },
+        ),
+
+        is: <T extends object>(_?: T) =>
+          _unknown<T extends DeepReadonly<T> ? true : false>(),
       },
     ),
   },

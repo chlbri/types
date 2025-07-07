@@ -373,4 +373,387 @@ describe('common type functions', () => {
       expect(typeof commons.readonly.deep.not).toBe('function');
     });
   });
+
+  describe('#15 commons.const', () => {
+    it('#15.01 should call commons.const', () => {
+      const result = commons.const({ a: 1, b: 'test' });
+      expect(result).toBeUndefined();
+    });
+
+    it('#15.02 should call commons.const with nested object', () => {
+      const result = commons.const({
+        nested: {
+          value: 42,
+          array: [1, 2, 3],
+        },
+      });
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('#16 commons.is sub-functions', () => {
+    describe('#16.01 commons.is.defined', () => {
+      it('#16.01.01 should call commons.is.defined', () => {
+        const result = commons.is.defined('test');
+        expect(result).toBeUndefined();
+      });
+
+      it('#16.01.02 should call commons.is.defined with undefined', () => {
+        const result = commons.is.defined(undefined);
+        expect(result).toBeUndefined();
+      });
+
+      it('#16.01.03 should call commons.is.defined with null', () => {
+        const result = commons.is.defined(null);
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('#16.02 commons.is.undefined', () => {
+      it('#16.02.01 should call commons.is.undefined', () => {
+        const result = commons.is.undefined(undefined);
+        expect(result).toBeUndefined();
+      });
+
+      it('#16.02.02 should call commons.is.undefined with defined value', () => {
+        const result = commons.is.undefined('test');
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('#16.03 commons.is.null', () => {
+      it('#16.03.01 should call commons.is.null', () => {
+        const result = commons.is.null(null);
+        expect(result).toBeUndefined();
+      });
+
+      it('#16.03.02 should call commons.is.null with non-null value', () => {
+        const result = commons.is.null('test');
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('#16.04 commons.is.notNull', () => {
+      it('#16.04.01 should call commons.is.notNull', () => {
+        const result = commons.is.notNull('test');
+        expect(result).toBeUndefined();
+      });
+
+      it('#16.04.02 should call commons.is.notNull with null', () => {
+        const result = commons.is.notNull(null);
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('#17 commons.readonly extended tests', () => {
+    describe('#17.01 commons.readonly.not', () => {
+      it('#17.01.01 should call commons.readonly.not', () => {
+        const result = commons.readonly.not({ a: 1 });
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.01.02 should call commons.readonly.not with complex object', () => {
+        const result = commons.readonly.not({
+          user: { name: 'test', age: 30 },
+          tags: ['a', 'b'],
+        });
+        expect(result).toBeUndefined();
+      });
+
+      describe('#17.01.03 commons.readonly.not.is', () => {
+        it('#17.01.03.01 should call commons.readonly.not.is', () => {
+          const result = commons.readonly.not.is({ a: 1 });
+          expect(result).toBeUndefined();
+        });
+
+        it('#17.01.03.02 should call commons.readonly.not.is with readonly object', () => {
+          const readonlyObj = { a: 1 } as const;
+          const result = commons.readonly.not.is(readonlyObj);
+          expect(result).toBeUndefined();
+        });
+      });
+    });
+
+    describe('#17.02 commons.readonly.deep', () => {
+      it('#17.02.01 should call commons.readonly.deep', () => {
+        const result = commons.readonly.deep({
+          nested: { value: 42 },
+        });
+        expect(result).toBeUndefined();
+      });
+
+      describe('#17.02.02 commons.readonly.deep.is', () => {
+        it('#17.02.02.01 should call commons.readonly.deep.is', () => {
+          const result = commons.readonly.deep.is({
+            nested: { value: 42 },
+          });
+          expect(result).toBeUndefined();
+        });
+
+        it('#17.02.02.02 should call commons.readonly.deep.is with deep readonly object', () => {
+          const deepReadonlyObj = {
+            nested: { value: 42 },
+          } as const;
+          const result = commons.readonly.deep.is(deepReadonlyObj);
+          expect(result).toBeUndefined();
+        });
+      });
+
+      describe('#17.02.03 commons.readonly.deep.not', () => {
+        it('#17.02.03.01 should call commons.readonly.deep.not', () => {
+          const result = commons.readonly.deep.not({
+            nested: { value: 42 },
+          });
+          expect(result).toBeUndefined();
+        });
+
+        it('#17.02.03.02 should call commons.readonly.deep.not with complex structure', () => {
+          const result = commons.readonly.deep.not({
+            user: {
+              profile: { name: 'test', settings: { theme: 'dark' } },
+              permissions: ['read', 'write'],
+            },
+          });
+          expect(result).toBeUndefined();
+        });
+
+        describe('#17.02.03.03 commons.readonly.deep.not.is', () => {
+          it('#17.02.03.03.01 should call commons.readonly.deep.not.is', () => {
+            const result = commons.readonly.deep.not.is({
+              nested: { value: 42 },
+            });
+            expect(result).toBeUndefined();
+          });
+
+          it('#17.02.03.03.02 should call commons.readonly.deep.not.is with readonly object', () => {
+            const readonlyObj = {
+              nested: { value: 42 },
+            } as const;
+            const result = commons.readonly.deep.not.is(readonlyObj);
+            expect(result).toBeUndefined();
+          });
+        });
+      });
+    });
+
+    describe('#17.03 commons.readonly.is', () => {
+      it('#17.03.01 should call commons.readonly.is', () => {
+        const result = commons.readonly.is({ a: 1 });
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.02 should call commons.readonly.is with readonly object', () => {
+        const readonlyObj = { a: 1 } as const;
+        const result = commons.readonly.is(readonlyObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.03 should call commons.readonly.is with mutable object', () => {
+        const mutableObj = { a: 1, b: 'test' };
+        const result = commons.readonly.is(mutableObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.04 should call commons.readonly.is with complex object', () => {
+        const complexObj = {
+          user: { name: 'test', age: 30 },
+          tags: ['a', 'b'],
+          metadata: { created: new Date(), updated: null },
+        };
+        const result = commons.readonly.is(complexObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.05 should call commons.readonly.is with nested readonly object', () => {
+        const nestedReadonlyObj = {
+          config: { theme: 'dark', lang: 'en' } as const,
+          data: [1, 2, 3],
+        };
+        const result = commons.readonly.is(nestedReadonlyObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.06 should call commons.readonly.is with array', () => {
+        const arrayObj = {
+          items: [1, 2, 3],
+          length: 3,
+        };
+        const result = commons.readonly.is(arrayObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.07 should call commons.readonly.is with readonly array', () => {
+        const readonlyArrayObj = {
+          items: [1, 2, 3] as const,
+          length: 3,
+        };
+        const result = commons.readonly.is(readonlyArrayObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.08 should call commons.readonly.is with empty object', () => {
+        const emptyObj = {};
+        const result = commons.readonly.is(emptyObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.09 should call commons.readonly.is with readonly empty object', () => {
+        const readonlyEmptyObj = {} as const;
+        const result = commons.readonly.is(readonlyEmptyObj);
+        expect(result).toBeUndefined();
+      });
+
+      it('#17.03.10 should call commons.readonly.is with function properties', () => {
+        const objWithFunctions = {
+          method: () => 'test',
+          value: 42,
+        };
+        const result = commons.readonly.is(objWithFunctions);
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('#18 commons.function extended tests', () => {
+    describe('#18.01 commons.function.forceCast', () => {
+      it('#18.01.01 should call commons.function.forceCast', () => {
+        const result = commons.function.forceCast('not a function');
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.01.02 should call commons.function.forceCast with object', () => {
+        const result = commons.function.forceCast({ not: 'function' });
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.01.03 should call commons.function.forceCast with actual function', () => {
+        const actualFunction = () => 'test';
+        const result = commons.function.forceCast(actualFunction);
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('#18.02 commons.function.is', () => {
+      it('#18.02.01 should call commons.function.is', () => {
+        const result = commons.function.is();
+        expect(typeof result).toBe('function');
+      });
+
+      it('#18.02.02 should call commons.function.is with parameters', () => {
+        const result = commons.function.is(['string'], 'number');
+        expect(typeof result).toBe('function');
+      });
+
+      it('#18.02.03 should call returned function from commons.function.is', () => {
+        const checker = commons.function.is();
+        const result = checker(() => 'test');
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.02.04 should call returned function with non-function value', () => {
+        const checker = commons.function.is();
+        const result = checker('not a function');
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('#18.03 commons.function.dynamic', () => {
+      it('#18.03.01 should call commons.function.dynamic', () => {
+        const result = commons.function.dynamic('return type');
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.03.02 should call commons.function.dynamic with parameters', () => {
+        const result = commons.function.dynamic(
+          'arg1',
+          'arg2',
+          'return type',
+        );
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.03.03 should call commons.function.dynamic with complex types', () => {
+        const result = commons.function.dynamic(
+          { complex: 'arg' },
+          ['array', 'arg'],
+          { return: 'type' },
+        );
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('#18.04 commons.function.checker', () => {
+      it('#18.04.01 should call commons.function.checker', () => {
+        const result = commons.function.checker();
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.02 should call commons.function.checker.forceCast', () => {
+        const result = commons.function.checker.forceCast('not a checker');
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.03 should call commons.function.checker.dynamic', () => {
+        const actualChecker = (x: unknown): x is string =>
+          typeof x === 'string';
+        const result = commons.function.checker.dynamic(actualChecker);
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.04 should call commons.function.checker.type', () => {
+        const result = commons.function.checker.type;
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.05 should call commons.function.checker.is', () => {
+        const result = commons.function.checker.is();
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.06 should call commons.function.checker.is with checker function', () => {
+        const checker = (x: unknown): x is number => typeof x === 'number';
+        const result = commons.function.checker.is(checker);
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.07 should call commons.function.checker.is with non-checker', () => {
+        const notChecker = 'not a function';
+        const result = commons.function.checker.is(notChecker);
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('#19 Type-level assertions for new functions', () => {
+    it('#19.01 should have correct type inference for commons.const', () => {
+      expect(typeof commons.const).toBe('function');
+    });
+
+    it('#19.02 should have correct type inference for commons.is sub-functions', () => {
+      expect(typeof commons.is.defined).toBe('function');
+      expect(typeof commons.is.undefined).toBe('function');
+      expect(typeof commons.is.null).toBe('function');
+      expect(typeof commons.is.notNull).toBe('function');
+    });
+
+    it('#19.03 should have correct type inference for readonly extended functions', () => {
+      expect(typeof commons.readonly.not).toBe('function');
+      expect(typeof commons.readonly.not.is).toBe('function');
+      expect(typeof commons.readonly.deep).toBe('function');
+      expect(typeof commons.readonly.deep.is).toBe('function');
+      expect(typeof commons.readonly.deep.not).toBe('function');
+      expect(typeof commons.readonly.deep.not.is).toBe('function');
+    });
+
+    it('#19.04 should have correct type inference for function extended functions', () => {
+      expect(typeof commons.function.forceCast).toBe('function');
+      expect(typeof commons.function.is).toBe('function');
+      expect(typeof commons.function.dynamic).toBe('function');
+      expect(typeof commons.function.checker).toBe('function');
+      expect(typeof commons.function.checker.forceCast).toBe('function');
+      expect(typeof commons.function.checker.dynamic).toBe('function');
+      expect(typeof commons.function.checker.is).toBe('function');
+    });
+  });
 });

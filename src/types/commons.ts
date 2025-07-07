@@ -40,7 +40,7 @@ type FnReturn<T = any, Tr extends object = object> = FnBasic<
   {
     forceCast(_?: unknown): T;
     type: T;
-    dynamic<U extends T>(_: U): U;
+    dynamic<U extends T>(_?: U): U;
     is<U>(_?: U): U extends T ? true : false;
   } & Tr
 >;
@@ -128,6 +128,9 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
             _unknown<T extends NotReadonly<T> ? true : false>(),
         },
       ),
+
+      is: <T extends object>(_?: T) =>
+        _unknown<T extends Readonly<T> ? true : false>(),
     },
   ),
 
