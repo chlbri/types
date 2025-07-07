@@ -23,7 +23,7 @@ type _PrimitiveObject = Primitive | PrimitiveObjectMap;
  *
  * @remark
  */
-export type PrimitiveObject = SoR<_PrimitiveObject>;
+export type PrimitiveObject = _PrimitiveObject;
 
 export type NExtract<T, U extends T> = Extract<T, U>;
 export type NExclude<T, U extends T> = Exclude<T, U>;

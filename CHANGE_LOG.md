@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+## [0.1.9] - **2025/07/07** _22:40_
+
+- Fix PrimitiveObject
+- tests(cov): 100%
+
+<br/>
+
 ## [0.1.8] - **2025/07/07** _18:15_
 
 - Add TrueObject type
