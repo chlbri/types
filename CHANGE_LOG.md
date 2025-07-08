@@ -7,6 +7,17 @@ All notable changes to this project will be documented in this file.
 <br/>
 
 <details>
+<summary> [0.2.5] - 2025/07/08 => 16:00</summary>
+
+- tests(js): 100% coverage
+- tests(ts): 100% coverage
+- Fix castings.commons.function
+
+</details>
+
+<br/>
+
+<details>
 <summary> [0.2.4] - 2025/07/08 => 12:00</summary>
 
 ### 📋 Functions added since the last commit

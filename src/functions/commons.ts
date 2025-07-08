@@ -105,7 +105,9 @@ const _required = <T>(value: T) => {
   return _unknown<NotUndefined<T>>(value);
 };
 
-const _function = <T extends any[], R = any>(fn: Fn<T, R>) => fn;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _function = <T extends any[], R = any>(..._: [...T, R]) =>
+  _identity<Fn<T, R>>;
 
 // #endregion
 

@@ -705,40 +705,36 @@ describe('Castings common', () => {
     describe('#05.08 => function main and subfunctions', () => {
       const testFn = (x: number, y: number) => x + y;
       const testAsyncFn = async (x: number) => x * 2;
-      const testVoidFn = () => {};
 
       describe('#05.08.01 => commons.function main function', () => {
-        it('#05.08.01.01 => should return the same function', () => {
-          const result = commons.function(testFn);
-          expect(result).toBe(testFn);
-          expect(result(5, 3)).toBe(8);
+        it('#05.08.01.01 => should return a typed identity function', () => {
+          const result = commons.function(5, 3);
+          expect(typeof result).toBe('function');
+          expect(result).toBe(commons.identity);
         });
 
-        it('#05.08.01.02 => should work with arrow functions', () => {
-          const arrowFn = (x: string) => x.toUpperCase();
-          const result = commons.function(arrowFn);
-          expect(result).toBe(arrowFn);
-          expect(result('hello')).toBe('HELLO');
+        it('#05.08.01.02 => should work with different parameter types', () => {
+          const result = commons.function('hello');
+          expect(typeof result).toBe('function');
+          expect(result).toBe(commons.identity);
         });
 
-        it('#05.08.01.03 => should work with async functions', async () => {
-          const result = commons.function(testAsyncFn);
-          expect(result).toBe(testAsyncFn);
-          await expect(result(5)).resolves.toBe(10);
+        it('#05.08.01.03 => should work with multiple parameters', () => {
+          const result = commons.function(1, 'test', true);
+          expect(typeof result).toBe('function');
+          expect(result).toBe(commons.identity);
         });
 
-        it('#05.08.01.04 => should work with void functions', () => {
-          const result = commons.function(testVoidFn);
-          expect(result).toBe(testVoidFn);
-          expect(result()).toBeUndefined();
+        it('#05.08.01.04 => should require at least one parameter', () => {
+          const result = commons.function(undefined);
+          expect(typeof result).toBe('function');
+          expect(result).toBe(commons.identity);
         });
 
-        it('#05.08.01.05 => should work with constructor functions', () => {
-          function TestConstructor(this: any, value: number) {
-            this.value = value;
-          }
-          const result = commons.function(TestConstructor);
-          expect(result).toBe(TestConstructor);
+        it('#05.08.01.05 => should return identity function for any input', () => {
+          const result = commons.function(42, 'test', { a: 1 }, [1, 2, 3]);
+          expect(typeof result).toBe('function');
+          expect(result).toBe(commons.identity);
         });
       });
 
