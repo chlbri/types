@@ -738,14 +738,25 @@ describe('common type functions', () => {
 
       it('#18.04.10 => should call commons.function.checker.byType.foreCast', () => {
         const result =
-          commons.function.checker.byType.foreCast('not a checker');
+          // @ts-expect-error Testing forceCast with non-checker
+          commons.function.checker.byType.forceCast('not a checker');
         expect(result).toBeUndefined();
       });
 
       it('#18.04.11 => should call commons.function.checker.byType.foreCast with actual function', () => {
         const actualFunction = () => 'test';
         const result =
-          commons.function.checker.byType.foreCast(actualFunction);
+          // @ts-expect-error Testing forceCast with actual function
+          commons.function.checker.byType.forceCast(actualFunction);
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.12 => should call commons.function.checker.byType.foreCast with Checker function', () => {
+        const actualFunction = () => true;
+
+        const result = commons.function.checker.byType.forceCast<{
+          a: true;
+        }>(actualFunction);
         expect(result).toBeUndefined();
       });
     });
@@ -781,7 +792,7 @@ describe('common type functions', () => {
       expect(typeof commons.function.checker.dynamic).toBe('function');
       expect(typeof commons.function.checker.is).toBe('function');
       expect(typeof commons.function.checker.byType).toBe('function');
-      expect(typeof commons.function.checker.byType.foreCast).toBe(
+      expect(typeof commons.function.checker.byType.forceCast).toBe(
         'function',
       );
     });

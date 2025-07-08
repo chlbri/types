@@ -1,6 +1,6 @@
 import type {
   AnyArray,
-  Checker,
+  Checker2,
   ExcludeArray,
   ExtractArray,
   IndexesOfArray,
@@ -48,7 +48,7 @@ export const arrays = castFnBasic(<T>(...values: T[]) => values, {
         return _unknown<TupleOf<T, N>>(out);
       },
       {
-        is: <T>(fn: Checker<T>) => {
+        is: <T>(fn: Checker2<T>) => {
           const _out = <L extends number>(
             value: unknown,
             length: L,
@@ -64,7 +64,7 @@ export const arrays = castFnBasic(<T>(...values: T[]) => values, {
       },
     ),
 
-    is: <const T>(fn: Checker<T>) => {
+    is: <const T>(fn: Checker2<T>) => {
       const _out = (value: unknown): value is Array<T> => {
         return Array.isArray(value) && value.every(fn);
       };

@@ -2,6 +2,7 @@
 
 import { _unknown } from '../functions/commons';
 import type {
+  Checker,
   Defaulted,
   Fn,
   Keys,
@@ -17,7 +18,7 @@ import type {
   NotReadonly,
 } from './objects.types';
 import { Neverify } from './objects.types';
-import type { Checker, FnBasic } from './types';
+import type { Checker2, FnBasic } from './types';
 
 export const typeFnBasic = <
   Main extends Fn,
@@ -159,9 +160,10 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
 
       checker: typeFn<Checker>()({
         byType: typeFnBasic(
-          <T>(_?: Checker<T>) => _unknown<Checker<T>>(),
+          <T>(_?: Checker2<T>) => _unknown<Checker2<T>>(),
           {
-            foreCast: <T>(_?: unknown) => _unknown<Checker<T>>(),
+            forceCast: <T>(_?: Fn<[unknown], boolean>) =>
+              _unknown<Checker2<T>>(),
           },
         ),
       }),

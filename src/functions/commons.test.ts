@@ -1198,17 +1198,17 @@ describe('Castings common', () => {
       });
 
       describe('#05.08.09 => commons.function.checker.byType.forceCast', () => {
-        it('#05.08.09.01 => should force cast any value to Checker type', () => {
-          const notAFunction = 'this is not a function';
+        it('#05.08.09.01 => should force cast boolean checker to Checker2 type', () => {
+          const booleanChecker = (value: unknown) =>
+            typeof value === 'boolean';
           const result =
-            commons.function.checker.byType.forceCast(notAFunction);
+            commons.function.checker.byType.forceCast(booleanChecker);
 
-          expect(result).toBe(notAFunction);
-          // TypeScript should treat this as Checker<unknown>, but runtime it's still a string
-          expect(typeof result).toBe('string');
+          expect(result).toBe(booleanChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.02 => should work with actual checker functions', () => {
+        it('#05.08.09.02 => should work with type guard checker functions', () => {
           const isStringChecker = (value: unknown): value is string => {
             return typeof value === 'string';
           };
@@ -1219,89 +1219,118 @@ describe('Castings common', () => {
           expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.03 => should work with null and undefined', () => {
-          const nullResult =
-            commons.function.checker.byType.forceCast(null);
-          const undefinedResult =
-            commons.function.checker.byType.forceCast(undefined);
-
-          expect(nullResult).toBeNull();
-          expect(undefinedResult).toBeUndefined();
-        });
-
-        it('#05.08.09.04 => should work with numbers', () => {
-          const numberValue = 42;
+        it('#05.08.09.03 => should work with number checker', () => {
+          const isNumberChecker = (value: unknown): value is number => {
+            return typeof value === 'number';
+          };
           const result =
-            commons.function.checker.byType.forceCast(numberValue);
+            commons.function.checker.byType.forceCast(isNumberChecker);
 
-          expect(result).toBe(42);
-          expect(typeof result).toBe('number');
+          expect(result).toBe(isNumberChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.05 => should work with objects', () => {
-          const objectValue = { a: 1, b: 'test' };
+        it('#05.08.09.04 => should work with object checker', () => {
+          const isObjectChecker = (value: unknown) => {
+            return typeof value === 'object' && value !== null;
+          };
           const result =
-            commons.function.checker.byType.forceCast(objectValue);
+            commons.function.checker.byType.forceCast(isObjectChecker);
 
-          expect(result).toBe(objectValue);
-          expect(typeof result).toBe('object');
+          expect(result).toBe(isObjectChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.06 => should work with arrays', () => {
-          const arrayValue = [1, 2, 3];
+        it('#05.08.09.05 => should work with array checker', () => {
+          const isArrayChecker = (value: unknown) => {
+            return Array.isArray(value);
+          };
           const result =
-            commons.function.checker.byType.forceCast(arrayValue);
+            commons.function.checker.byType.forceCast(isArrayChecker);
 
-          expect(result).toBe(arrayValue);
-          expect(Array.isArray(result)).toBe(true);
+          expect(result).toBe(isArrayChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.07 => should work with booleans', () => {
-          const trueResult =
-            commons.function.checker.byType.forceCast(true);
-          const falseResult =
-            commons.function.checker.byType.forceCast(false);
-
-          expect(trueResult).toBe(true);
-          expect(falseResult).toBe(false);
-        });
-
-        it('#05.08.09.08 => should work with symbols', () => {
-          const symbolValue = Symbol('test');
+        it('#05.08.09.06 => should work with null checker', () => {
+          const isNullChecker = (value: unknown) => {
+            return value === null;
+          };
           const result =
-            commons.function.checker.byType.forceCast(symbolValue);
+            commons.function.checker.byType.forceCast(isNullChecker);
 
-          expect(result).toBe(symbolValue);
-          expect(typeof result).toBe('symbol');
+          expect(result).toBe(isNullChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.09 => should work with Date objects', () => {
-          const dateValue = new Date();
+        it('#05.08.09.07 => should work with undefined checker', () => {
+          const isUndefinedChecker = (
+            value: unknown,
+          ): value is undefined => {
+            return value === undefined;
+          };
           const result =
-            commons.function.checker.byType.forceCast(dateValue);
+            commons.function.checker.byType.forceCast(isUndefinedChecker);
 
-          expect(result).toBe(dateValue);
-          expect(result instanceof Date).toBe(true);
+          expect(result).toBe(isUndefinedChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.09.10 => should work with complex nested objects', () => {
-          const complexObject = {
-            user: {
-              name: 'John',
-              preferences: {
-                theme: 'dark',
-                notifications: true,
-              },
-            },
-            data: [1, 2, 3],
-            timestamp: new Date(),
+        it('#05.08.09.08 => should work with symbol checker', () => {
+          const isSymbolChecker = (value: unknown): value is symbol => {
+            return typeof value === 'symbol';
+          };
+          const result =
+            commons.function.checker.byType.forceCast(isSymbolChecker);
+
+          expect(result).toBe(isSymbolChecker);
+          expect(typeof result).toBe('function');
+        });
+
+        it('#05.08.09.09 => should work with Date checker', () => {
+          const isDateChecker = (value: unknown): value is Date => {
+            return value instanceof Date;
+          };
+          const result =
+            commons.function.checker.byType.forceCast(isDateChecker);
+
+          expect(result).toBe(isDateChecker);
+          expect(typeof result).toBe('function');
+        });
+
+        it('#05.08.09.10 => should work with complex object checker', () => {
+          interface UserPreferences {
+            theme: string;
+            notifications: boolean;
+          }
+
+          interface User {
+            name: string;
+            preferences: UserPreferences;
+          }
+
+          interface ComplexObject {
+            user: User;
+            data: number[];
+            timestamp: Date;
+          }
+
+          const isComplexObjectChecker = (value: unknown) => {
+            return (
+              typeof value === 'object' &&
+              value !== null &&
+              'user' in value &&
+              'data' in value &&
+              'timestamp' in value
+            );
           };
 
           const result =
-            commons.function.checker.byType.forceCast(complexObject);
-          expect(result).toBe(complexObject);
-          expect((result as any).user.name).toBe('John');
-          expect((result as any).data).toEqual([1, 2, 3]);
+            commons.function.checker.byType.forceCast<ComplexObject>(
+              isComplexObjectChecker,
+            );
+          expect(result).toBe(isComplexObjectChecker);
+          expect(typeof result).toBe('function');
         });
       });
     });

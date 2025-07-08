@@ -84,7 +84,11 @@ export type UnionToTuple<T, A extends any[] = []> = [T] extends [never]
 
 // #endregion
 
-export type Checker<T = unknown> = (value: unknown) => value is T;
+export type Checker<T = unknown> =
+  | ((value: unknown) => value is T)
+  | Fn<[unknown], boolean>;
+
+export type Checker2<T = unknown> = (value: unknown) => value is T;
 // | ((value: unknown) => boolean);
 
 export type FnBasic<Main extends Fn, Tr extends object> = Tr & Main;
