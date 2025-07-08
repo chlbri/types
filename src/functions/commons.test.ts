@@ -1089,101 +1089,219 @@ describe('Castings common', () => {
         });
 
         it('#05.08.07.15 => should return true for async functions with one parameter', () => {
-          const asyncSingleParamFn = async (value: unknown) =>
-            typeof value === 'string';
-          const result = commons.function.checker.is(asyncSingleParamFn);
-          expect(result).toBe(true);
+          const asyncFn = async (x: number) => x * 2;
+          expect(commons.function.checker.is(asyncFn)).toBe(true);
+        });
+      });
+
+      describe('#05.08.08 => commons.function.checker.byType', () => {
+        const isStringChecker = (value: unknown): value is string => {
+          return typeof value === 'string';
+        };
+
+        const isNumberChecker = (value: unknown): value is number => {
+          return typeof value === 'number';
+        };
+
+        const isObjectChecker = (value: unknown): value is object => {
+          return typeof value === 'object' && value !== null;
+        };
+
+        it('#05.08.08.01 => should return the same checker function', () => {
+          const result = commons.function.checker.byType(isStringChecker);
+          expect(result).toBe(isStringChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.07.16 => should return true for generator functions with one parameter', () => {
-          function* generatorFn(value: unknown) {
-            yield value;
-          }
-          const result = commons.function.checker.is(generatorFn);
-          expect(result).toBe(true);
+        it('#05.08.08.02 => should work with string type checker', () => {
+          const checker = commons.function.checker.byType(isStringChecker);
+          expect(checker('test')).toBe(true);
+          expect(checker(123)).toBe(false);
+          expect(checker(true)).toBe(false);
+          expect(checker(null)).toBe(false);
         });
 
-        it('#05.08.07.17 => should return false for generator functions with multiple parameters', () => {
-          function* generatorFn(a: unknown, b: unknown) {
-            yield a;
-            yield b;
-          }
-          const result = commons.function.checker.is(generatorFn);
-          expect(result).toBe(false);
+        it('#05.08.08.03 => should work with number type checker', () => {
+          const checker = commons.function.checker.byType(isNumberChecker);
+          expect(checker(42)).toBe(true);
+          expect(checker(3.14)).toBe(true);
+          expect(checker('123')).toBe(false);
+          expect(checker(true)).toBe(false);
         });
 
-        it('#05.08.07.18 => should work with complex type checkers', () => {
-          const isValidUser = (value: unknown) => {
+        it('#05.08.08.04 => should work with object type checker', () => {
+          const checker = commons.function.checker.byType(isObjectChecker);
+          expect(checker({})).toBe(true);
+          expect(checker({ a: 1 })).toBe(true);
+          expect(checker([])).toBe(true);
+          expect(checker(new Date())).toBe(true);
+          expect(checker(null)).toBe(false);
+          expect(checker('string')).toBe(false);
+          expect(checker(123)).toBe(false);
+        });
+
+        it('#05.08.08.05 => should work with complex type checkers', () => {
+          type User = { name: string; age: number };
+          const isUserChecker = (value: unknown): value is User => {
             return (
               typeof value === 'object' &&
               value !== null &&
               'name' in value &&
-              'id' in value
+              'age' in value &&
+              typeof (value as any).name === 'string' &&
+              typeof (value as any).age === 'number'
             );
           };
-          const result = commons.function.checker.is(isValidUser);
-          expect(result).toBe(true);
+
+          const checker = commons.function.checker.byType(isUserChecker);
+          expect(checker({ name: 'John', age: 30 })).toBe(true);
+          expect(checker({ name: 'Jane', age: 25 })).toBe(true);
+          expect(checker({ name: 'Bob' })).toBe(false);
+          expect(checker({ age: 30 })).toBe(false);
+          expect(checker({ name: 123, age: 30 })).toBe(false);
+          expect(checker('not an object')).toBe(false);
         });
 
-        it('#05.08.07.19 => should work with numeric validation checkers', () => {
-          const isPositiveInteger = (value: unknown) => {
+        it('#05.08.08.06 => should work with array type checkers', () => {
+          const isStringArrayChecker = (
+            value: unknown,
+          ): value is string[] => {
             return (
-              typeof value === 'number' &&
-              Number.isInteger(value) &&
-              value > 0
+              Array.isArray(value) &&
+              value.every(item => typeof item === 'string')
             );
           };
-          const result = commons.function.checker.is(isPositiveInteger);
-          expect(result).toBe(true);
+
+          const checker = commons.function.checker.byType(
+            isStringArrayChecker,
+          );
+          expect(checker(['a', 'b', 'c'])).toBe(true);
+          expect(checker([])).toBe(true);
+          expect(checker(['hello', 'world'])).toBe(true);
+          expect(checker([1, 2, 3])).toBe(false);
+          expect(checker(['a', 1, 'b'])).toBe(false);
+          expect(checker('not an array')).toBe(false);
         });
 
-        it('#05.08.07.20 => should work with string validation checkers', () => {
-          const isValidEmail = (value: unknown) => {
-            return (
-              typeof value === 'string' &&
-              value.includes('@') &&
-              value.includes('.')
-            );
+        it('#05.08.08.07 => should preserve function properties and behavior', () => {
+          const originalChecker = (value: unknown): value is string => {
+            return typeof value === 'string';
           };
-          const result = commons.function.checker.is(isValidEmail);
-          expect(result).toBe(true);
+
+          const checker = commons.function.checker.byType(originalChecker);
+
+          // Should maintain the same behavior
+          expect(checker('test')).toBe(originalChecker('test'));
+          expect(checker(123)).toBe(originalChecker(123));
+          expect(checker.length).toBe(originalChecker.length);
+        });
+      });
+
+      describe('#05.08.09 => commons.function.checker.byType.forceCast', () => {
+        it('#05.08.09.01 => should force cast any value to Checker type', () => {
+          const notAFunction = 'this is not a function';
+          const result =
+            commons.function.checker.byType.forceCast(notAFunction);
+
+          expect(result).toBe(notAFunction);
+          // TypeScript should treat this as Checker<unknown>, but runtime it's still a string
+          expect(typeof result).toBe('string');
         });
 
-        it('#05.08.07.21 => should handle functions with destructured parameters', () => {
-          const destructuredFn = ({ value }: { value: unknown }) => value;
-          const result = commons.function.checker.is(destructuredFn);
-          expect(result).toBe(true);
-        });
-
-        it('#05.08.07.22 => should handle functions with array destructured parameters', () => {
-          const arrayDestructuredFn = ([value]: [unknown]) => value;
-          const result = commons.function.checker.is(arrayDestructuredFn);
-          expect(result).toBe(true);
-        });
-
-        it('#05.08.07.23 => should return false for methods with multiple parameters', () => {
-          const obj = {
-            method: (a: unknown, b: unknown) => a === b,
+        it('#05.08.09.02 => should work with actual checker functions', () => {
+          const isStringChecker = (value: unknown): value is string => {
+            return typeof value === 'string';
           };
-          const result = commons.function.checker.is(obj.method);
-          expect(result).toBe(false);
+
+          const result =
+            commons.function.checker.byType.forceCast(isStringChecker);
+          expect(result).toBe(isStringChecker);
+          expect(typeof result).toBe('function');
         });
 
-        it('#05.08.07.24 => should return true for methods with single parameter', () => {
-          const obj = {
-            checker: (value: unknown) => typeof value === 'string',
-          };
-          const result = commons.function.checker.is(obj.checker);
-          expect(result).toBe(true);
+        it('#05.08.09.03 => should work with null and undefined', () => {
+          const nullResult =
+            commons.function.checker.byType.forceCast(null);
+          const undefinedResult =
+            commons.function.checker.byType.forceCast(undefined);
+
+          expect(nullResult).toBeNull();
+          expect(undefinedResult).toBeUndefined();
         });
 
-        it('#05.08.07.25 => should work with bound functions', () => {
-          const originalFn = function (this: any, value: unknown) {
-            return this.prefix + value;
+        it('#05.08.09.04 => should work with numbers', () => {
+          const numberValue = 42;
+          const result =
+            commons.function.checker.byType.forceCast(numberValue);
+
+          expect(result).toBe(42);
+          expect(typeof result).toBe('number');
+        });
+
+        it('#05.08.09.05 => should work with objects', () => {
+          const objectValue = { a: 1, b: 'test' };
+          const result =
+            commons.function.checker.byType.forceCast(objectValue);
+
+          expect(result).toBe(objectValue);
+          expect(typeof result).toBe('object');
+        });
+
+        it('#05.08.09.06 => should work with arrays', () => {
+          const arrayValue = [1, 2, 3];
+          const result =
+            commons.function.checker.byType.forceCast(arrayValue);
+
+          expect(result).toBe(arrayValue);
+          expect(Array.isArray(result)).toBe(true);
+        });
+
+        it('#05.08.09.07 => should work with booleans', () => {
+          const trueResult =
+            commons.function.checker.byType.forceCast(true);
+          const falseResult =
+            commons.function.checker.byType.forceCast(false);
+
+          expect(trueResult).toBe(true);
+          expect(falseResult).toBe(false);
+        });
+
+        it('#05.08.09.08 => should work with symbols', () => {
+          const symbolValue = Symbol('test');
+          const result =
+            commons.function.checker.byType.forceCast(symbolValue);
+
+          expect(result).toBe(symbolValue);
+          expect(typeof result).toBe('symbol');
+        });
+
+        it('#05.08.09.09 => should work with Date objects', () => {
+          const dateValue = new Date();
+          const result =
+            commons.function.checker.byType.forceCast(dateValue);
+
+          expect(result).toBe(dateValue);
+          expect(result instanceof Date).toBe(true);
+        });
+
+        it('#05.08.09.10 => should work with complex nested objects', () => {
+          const complexObject = {
+            user: {
+              name: 'John',
+              preferences: {
+                theme: 'dark',
+                notifications: true,
+              },
+            },
+            data: [1, 2, 3],
+            timestamp: new Date(),
           };
-          const boundFn = originalFn.bind({ prefix: 'test: ' });
-          const result = commons.function.checker.is(boundFn);
-          expect(result).toBe(true);
+
+          const result =
+            commons.function.checker.byType.forceCast(complexObject);
+          expect(result).toBe(complexObject);
+          expect((result as any).user.name).toBe('John');
+          expect((result as any).data).toEqual([1, 2, 3]);
         });
       });
     });

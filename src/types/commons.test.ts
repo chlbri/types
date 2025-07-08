@@ -724,6 +724,30 @@ describe('common type functions', () => {
         const result = commons.function.checker.is(notChecker);
         expect(result).toBeUndefined();
       });
+
+      it('#18.04.08 => should call commons.function.checker.byType', () => {
+        const result = commons.function.checker.byType();
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.09 => should call commons.function.checker.byType with checker', () => {
+        const checker = (x: unknown): x is string => typeof x === 'string';
+        const result = commons.function.checker.byType(checker);
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.10 => should call commons.function.checker.byType.foreCast', () => {
+        const result =
+          commons.function.checker.byType.foreCast('not a checker');
+        expect(result).toBeUndefined();
+      });
+
+      it('#18.04.11 => should call commons.function.checker.byType.foreCast with actual function', () => {
+        const actualFunction = () => 'test';
+        const result =
+          commons.function.checker.byType.foreCast(actualFunction);
+        expect(result).toBeUndefined();
+      });
     });
   });
 
@@ -756,6 +780,10 @@ describe('common type functions', () => {
       expect(typeof commons.function.checker.forceCast).toBe('function');
       expect(typeof commons.function.checker.dynamic).toBe('function');
       expect(typeof commons.function.checker.is).toBe('function');
+      expect(typeof commons.function.checker.byType).toBe('function');
+      expect(typeof commons.function.checker.byType.foreCast).toBe(
+        'function',
+      );
     });
   });
 });

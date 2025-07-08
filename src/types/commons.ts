@@ -157,7 +157,14 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
       dynamic: <T extends any[], R = any>(..._: [...T, R]) =>
         _unknown<Fn<T, R>>(),
 
-      checker: typeFn<Checker>()(),
+      checker: typeFn<Checker>()({
+        byType: typeFnBasic(
+          <T>(_?: Checker<T>) => _unknown<Checker<T>>(),
+          {
+            foreCast: <T>(_?: unknown) => _unknown<Checker<T>>(),
+          },
+        ),
+      }),
     },
   ),
 
