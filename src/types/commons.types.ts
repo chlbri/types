@@ -41,6 +41,26 @@ export type Cast<A, B> = A extends B ? A : B;
 
 export type Keys = keyof any;
 
+export type TypeStrings =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'bigint'
+  | 'symbol'
+  | 'undefined'
+  | 'object'
+  | 'function';
+
+export type KeyTypes = Record<Keys, TypeStrings | Checker2>;
+
+export type KeyTypesFrom<T extends KeyTypes> = {
+  [K in keyof T]: T[K] extends TypeStrings
+    ? T[K]
+    : T[K] extends Checker<infer R>
+      ? R
+      : never;
+};
+
 export type NonN<T> = T extends undefined | null ? any : NonNullable<T>;
 
 export type Defaulted<T, U extends NonN<T>> = T extends

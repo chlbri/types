@@ -1,3 +1,4 @@
+import { commons } from './commons';
 import { objects } from './objects';
 
 describe('objects', () => {
@@ -444,74 +445,38 @@ describe('objects', () => {
       expect(objects.hasKeys({}, 'a')).toBe(false);
     });
 
-    describe('#07.05 => objects.hasKeys.strict', () => {
-      it('#07.05.01 => should create strict type guard for object keys', () => {
-        interface TestObject {
-          a: number;
-          b: string;
-          c?: boolean;
-        }
-
-        const validator = objects.hasKeys.strict<TestObject>();
-
-        // Should return true for objects that have exactly the specified keys
-        expect(validator({ a: 1, b: 'test' }, 'a', 'b')).toBe(true);
+    describe('#07.05 => objects.hasKeys (strict-like behavior)', () => {
+      it('#07.05.01 => should create type guard for object keys', () => {
+        // Should return true for objects that have the specified keys
+        expect(objects.hasKeys({ a: 1, b: 'test' }, 'a', 'b')).toBe(true);
         expect(
-          validator({ a: 1, b: 'test', c: true }, 'a', 'b', 'c'),
+          objects.hasKeys({ a: 1, b: 'test', c: true }, 'a', 'b', 'c'),
         ).toBe(true);
       });
 
-      it('#07.05.02 => should return false when object has extra keys', () => {
-        interface TestObject {
-          a: number;
-          b: string;
-        }
-
-        const validator = objects.hasKeys.strict<TestObject>();
-
+      it('#07.05.02 => should return true when object has extra keys', () => {
         // Should return true for objects with extra keys
         expect(
-          validator({ a: 1, b: 'test', extra: 'value' }, 'a', 'b'),
+          objects.hasKeys({ a: 1, b: 'test', extra: 'value' }, 'a', 'b'),
         ).toBe(true);
       });
 
       it('#07.05.03 => should return false when object is missing required keys', () => {
-        interface TestObject {
-          a: number;
-          b: string;
-          c: boolean;
-        }
-
-        const validator = objects.hasKeys.strict<TestObject>();
-
         // Should return false when missing keys
-        expect(validator({ a: 1 }, 'a', 'b', 'c')).toBe(false);
-        expect(validator({ a: 1, b: 'test' }, 'a', 'b', 'c')).toBe(false);
+        expect(objects.hasKeys({ a: 1 }, 'a', 'b', 'c')).toBe(false);
+        expect(objects.hasKeys({ a: 1, b: 'test' }, 'a', 'b', 'c')).toBe(
+          false,
+        );
       });
 
       it('#07.05.04 => should handle empty object validation', () => {
-        type EmptyObject = object;
-
-        const validator = objects.hasKeys.strict<EmptyObject>();
-
+        // Empty object should fail validation when keys are required
+        expect(objects.hasKeys({}, 'a')).toBe(false);
         // Empty object should pass validation with no keys
-        expect(validator({})).toBe(true);
-        // Object with keys should pass validation
-        expect(validator({ a: 1 })).toBe(true);
+        expect(objects.hasKeys({})).toBe(true);
       });
 
       it('#07.05.05 => should work with complex object types', () => {
-        interface ComplexObject {
-          id: number;
-          name: string;
-          metadata?: {
-            tags: string[];
-            created: Date;
-          };
-        }
-
-        const validator = objects.hasKeys.strict<ComplexObject>();
-
         const validObj = {
           id: 1,
           name: 'test',
@@ -521,25 +486,22 @@ describe('objects', () => {
           },
         };
 
-        expect(validator(validObj, 'id', 'name', 'metadata')).toBe(true);
-        expect(validator({ id: 1, name: 'test' }, 'id', 'name')).toBe(
+        expect(objects.hasKeys(validObj, 'id', 'name', 'metadata')).toBe(
           true,
         );
+        expect(
+          objects.hasKeys({ id: 1, name: 'test' }, 'id', 'name'),
+        ).toBe(true);
       });
 
       it('#07.05.06 should validate objects with optional properties', () => {
-        interface ObjectWithOptional {
-          required: string;
-          optional?: number;
-        }
-
-        const validator = objects.hasKeys.strict<ObjectWithOptional>();
-
         // Should work with just required properties
-        expect(validator({ required: 'test' }, 'required')).toBe(true);
+        expect(objects.hasKeys({ required: 'test' }, 'required')).toBe(
+          true,
+        );
         // Should work with both required and optional
         expect(
-          validator(
+          objects.hasKeys(
             { required: 'test', optional: 42 },
             'required',
             'optional',
@@ -547,136 +509,86 @@ describe('objects', () => {
         ).toBe(true);
         // Should pass with extra properties
         expect(
-          validator({ required: 'test', extra: 'value' }, 'required'),
+          objects.hasKeys(
+            { required: 'test', extra: 'value' },
+            'required',
+          ),
         ).toBe(true);
       });
 
       it('#07.05.07 should handle nested object validation', () => {
-        interface NestedObject {
-          outer: {
-            inner: string;
-          };
-          simple: number;
-        }
-
-        const validator = objects.hasKeys.strict<NestedObject>();
-
         const nestedObj = {
           outer: { inner: 'value' },
           simple: 42,
         };
 
-        expect(validator(nestedObj, 'outer', 'simple')).toBe(true);
-        expect(validator({ outer: { inner: 'value' } }, 'outer')).toBe(
-          true,
-        );
+        expect(objects.hasKeys(nestedObj, 'outer', 'simple')).toBe(true);
+        expect(
+          objects.hasKeys({ outer: { inner: 'value' } }, 'outer'),
+        ).toBe(true);
       });
 
       it('#07.05.08 should validate arrays as object values', () => {
-        interface ObjectWithArray {
-          items: string[];
-          count: number;
-        }
-
-        const validator = objects.hasKeys.strict<ObjectWithArray>();
-
         const objWithArray = {
           items: ['a', 'b', 'c'],
           count: 3,
         };
 
-        expect(validator(objWithArray, 'items', 'count')).toBe(true);
-        expect(validator({ items: [] }, 'items')).toBe(true);
+        expect(objects.hasKeys(objWithArray, 'items', 'count')).toBe(true);
+        expect(objects.hasKeys({ items: [] }, 'items')).toBe(true);
       });
     });
 
-    describe('#07.06 => objects.hasKeys.const', () => {
-      it('#07.06.01 => should create const type guard for object keys', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const testObj = { a: 1, b: 'test', c: true } as const;
-        type TestObject = typeof testObj;
-
-        const validator = objects.hasKeys.const<TestObject>();
-
-        // Should return true for objects that have exactly the specified keys
-        expect(validator({ a: 1, b: 'test' }, 'a', 'b')).toBe(true);
+    describe('#07.06 => objects.hasKeys (const-like behavior)', () => {
+      it('#07.06.01 => should check keys for const object types', () => {
+        // Should return true for objects that have the specified keys
+        expect(objects.hasKeys({ a: 1, b: 'test' }, 'a', 'b')).toBe(true);
         expect(
-          validator({ a: 1, b: 'test', c: true }, 'a', 'b', 'c'),
+          objects.hasKeys({ a: 1, b: 'test', c: true }, 'a', 'b', 'c'),
         ).toBe(true);
       });
 
       it('#07.06.02 => should work with const assertions', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const constObj = { readonly: 'value', fixed: 42 } as const;
-        type ConstObject = typeof constObj;
-
-        const validator = objects.hasKeys.const<ConstObject>();
-
         expect(
-          validator({ readonly: 'value', fixed: 42 }, 'readonly', 'fixed'),
+          objects.hasKeys(
+            { readonly: 'value', fixed: 42 },
+            'readonly',
+            'fixed',
+          ),
         ).toBe(true);
-        expect(validator({ readonly: 'value' }, 'readonly')).toBe(true);
+        expect(objects.hasKeys({ readonly: 'value' }, 'readonly')).toBe(
+          true,
+        );
       });
 
       it('#07.06.03 => should handle const objects with literal types', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const literalObj = {
-          type: 'user' as const,
-          status: 'active' as const,
-          id: 123,
-        };
-        type LiteralObject = typeof literalObj;
-
-        const validator = objects.hasKeys.const<LiteralObject>();
-
         expect(
-          validator(
+          objects.hasKeys(
             { type: 'user', status: 'active', id: 123 },
             'type',
             'status',
             'id',
           ),
         ).toBe(true);
-        expect(validator({ type: 'user', id: 123 }, 'type', 'id')).toBe(
-          true,
-        );
+        expect(
+          objects.hasKeys({ type: 'user', id: 123 }, 'type', 'id'),
+        ).toBe(true);
       });
 
       it('#07.06.04 => should validate const tuples as object properties', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const objWithTuple = {
-          coordinates: [10, 20] as const,
-          name: 'point',
-        } as const;
-        type ObjectWithTuple = typeof objWithTuple;
-
-        const validator = objects.hasKeys.const<ObjectWithTuple>();
-
         expect(
-          validator(
+          objects.hasKeys(
             { coordinates: [10, 20], name: 'point' },
             'coordinates',
             'name',
           ),
         ).toBe(true);
-        expect(validator({ name: 'point' }, 'name')).toBe(true);
+        expect(objects.hasKeys({ name: 'point' }, 'name')).toBe(true);
       });
 
       it('#07.06.05 => should work with const nested objects', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const nestedConstObj = {
-          config: {
-            enabled: true,
-            mode: 'production' as const,
-          },
-          version: '1.0.0',
-        } as const;
-        type NestedConstObject = typeof nestedConstObj;
-
-        const validator = objects.hasKeys.const<NestedConstObject>();
-
         expect(
-          validator(
+          objects.hasKeys(
             {
               config: { enabled: true, mode: 'production' },
               version: '1.0.0',
@@ -686,7 +598,7 @@ describe('objects', () => {
           ),
         ).toBe(true);
         expect(
-          validator(
+          objects.hasKeys(
             { config: { enabled: true, mode: 'production' } },
             'config',
           ),
@@ -694,58 +606,32 @@ describe('objects', () => {
       });
 
       it('#07.06.06 => should handle const arrays with specific elements', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const objWithConstArray = {
-          tags: ['typescript', 'javascript', 'node'] as const,
-          priority: 1,
-        } as const;
-        type ObjectWithConstArray = typeof objWithConstArray;
-
-        const validator = objects.hasKeys.const<ObjectWithConstArray>();
-
         expect(
-          validator(
+          objects.hasKeys(
             { tags: ['typescript', 'javascript', 'node'], priority: 1 },
             'tags',
             'priority',
           ),
         ).toBe(true);
-        expect(validator({ priority: 1 }, 'priority')).toBe(true);
+        expect(objects.hasKeys({ priority: 1 }, 'priority')).toBe(true);
       });
 
       it('#07.06.07 => should validate const objects with readonly properties', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const readonlyObj = Object.freeze({
-          readonly: 'value',
-          immutable: 42,
-        });
-        type ReadonlyObject = typeof readonlyObj;
-
-        const validator = objects.hasKeys.const<ReadonlyObject>();
-
         expect(
-          validator(
+          objects.hasKeys(
             { readonly: 'value', immutable: 42 },
             'readonly',
             'immutable',
           ),
         ).toBe(true);
-        expect(validator({ readonly: 'value' }, 'readonly')).toBe(true);
+        expect(objects.hasKeys({ readonly: 'value' }, 'readonly')).toBe(
+          true,
+        );
       });
 
       it('#07.06.08 => should handle const objects with union types', () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const unionObj = {
-          status: 'active' as 'active' | 'inactive',
-          count: 5,
-          enabled: true,
-        } as const;
-        type UnionObject = typeof unionObj;
-
-        const validator = objects.hasKeys.const<UnionObject>();
-
         expect(
-          validator(
+          objects.hasKeys(
             { status: 'active', count: 5, enabled: true },
             'status',
             'count',
@@ -753,53 +639,170 @@ describe('objects', () => {
           ),
         ).toBe(true);
         expect(
-          validator({ status: 'active', count: 5 }, 'status', 'count'),
+          objects.hasKeys(
+            { status: 'active', count: 5 },
+            'status',
+            'count',
+          ),
         ).toBe(true);
       });
     });
   });
 
-  describe('#10 => objects.hasAllKeys', () => {
+  describe('#10 => objects.hasKeys.all', () => {
     it('#08.01 => should return true when all object keys are provided', () => {
       const obj = { a: 1, b: 2 };
-      expect(objects.hasAllKeys(obj, 'a', 'b')).toBe(true);
+      expect(objects.hasKeys.all(obj, 'a', 'b')).toBe(true);
     });
 
     it('#08.02 => should return false when not all object keys are provided', () => {
       const obj = { a: 1, b: 2, c: 3 };
-      expect(objects.hasAllKeys(obj, 'a', 'b')).toBe(false);
+      expect(objects.hasKeys.all(obj, 'a', 'b')).toBe(false);
     });
 
     it('#08.03 => should return true for empty object with no keys', () => {
-      expect(objects.hasAllKeys({} as any)).toBe(true);
+      expect(objects.hasKeys.all({})).toBe(true);
     });
 
     it('#08.04 => should return false when extra keys are provided', () => {
       const obj = { a: 1 };
-      expect(objects.hasAllKeys(obj, 'a', 'b')).toBe(false);
+      expect(objects.hasKeys.all(obj, 'a', 'b')).toBe(false);
     });
 
-    it('#08.01 => should return true when all object keys are provided', () => {
-      const obj = { a: 1, b: 2 };
-      expect(objects.hasAllKeys(obj, 'a', 'b')).toBe(true);
-    });
-
-    it('#08.02 => should return false when not all object keys are provided', () => {
+    it('#08.05 => should return false when object has more keys than provided', () => {
       const obj = { a: 1, b: 2, c: 3 };
-      expect(objects.hasAllKeys(obj, 'a', 'b')).toBe(false);
+      expect(objects.hasKeys.all(obj, 'a', 'b')).toBe(false);
     });
 
-    it('#08.03 => should return true for empty object with no keys', () => {
-      expect(objects.hasAllKeys({} as any)).toBe(true);
-    });
-
-    it('#08.04 => should return false when extra keys are provided', () => {
+    it('#08.06 => should work with single key object', () => {
       const obj = { a: 1 };
-      expect(objects.hasAllKeys(obj, 'a', 'b')).toBe(false);
+      expect(objects.hasKeys.all(obj, 'a')).toBe(true);
+    });
+
+    describe('#08.07 => objects.hasKeys.all.typings', () => {
+      it('#08.07.01 => should validate object keys with type checking', () => {
+        const obj = { a: 1, b: 'test' };
+        const keyTypes = commons.const({ a: 'number', b: 'string' });
+        expect(objects.hasKeys.all.typings(obj, keyTypes)).toBe(true);
+      });
+
+      it("#08.07.02 => should return false when types don't match", () => {
+        const obj = { a: 'wrong', b: 'test' };
+        const keyTypes = commons.const({ a: 'number', b: 'string' });
+        expect(objects.hasKeys.all.typings(obj, keyTypes)).toBe(false);
+      });
+
+      it('#08.07.03 => should return false when object has extra keys', () => {
+        const obj = { a: 1, b: 'test', c: true };
+        const keyTypes = commons.const({ a: 'number', b: 'string' });
+        expect(objects.hasKeys.all.typings(obj, keyTypes)).toBe(false);
+      });
+
+      it('#08.07.04 => should return false when object missing keys', () => {
+        const obj = { a: 1 };
+        const keyTypes = commons.const({ a: 'number', b: 'string' });
+        expect(objects.hasKeys.all.typings(obj, keyTypes)).toBe(false);
+      });
+
+      it('#08.07.05 => should work with function type validators', () => {
+        const obj = { a: 1, b: 'test' };
+        const keyTypes = {
+          a: (v: unknown): v is number => typeof v === 'number' && v > 0,
+          b: (v: unknown): v is string =>
+            typeof v === 'string' && v.length > 0,
+        };
+        expect(objects.hasKeys.all.typings(obj, keyTypes)).toBe(true);
+      });
+
+      it('#08.07.06 => should return false with failing function validators', () => {
+        const obj = { a: -1, b: '' };
+        const keyTypes = {
+          a: (v: unknown): v is number => typeof v === 'number' && v > 0,
+          b: (v: unknown): v is string =>
+            typeof v === 'string' && v.length > 0,
+        };
+        expect(objects.hasKeys.all.typings(obj, keyTypes)).toBe(false);
+      });
+
+      it('#08.07.07 => should work with empty object and empty keyTypes', () => {
+        expect(objects.hasKeys.all.typings({}, {})).toBe(true);
+      });
+
+      it('#08.07.08 =>cov, not well formatted - keyTpes', () => {
+        const obj = { a: 1, b: 'test' };
+        const keyTypes = {
+          a: 'number' as const,
+          b: 45,
+        };
+        expect(
+          objects.hasKeys.all.typings(obj, commons.any(keyTypes)),
+        ).toBe(false);
+      });
     });
   });
 
-  describe('#11 => objects.omit', () => {
+  describe('#11 => objects.hasKeys.typings', () => {
+    it('#09.01 => should validate object keys with type checking', () => {
+      const obj = { a: 1, b: 'test', c: true };
+      const keyTypes = { a: 'number' as const, b: 'string' as const };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(true);
+    });
+
+    it("#09.02 => should return false when types don't match", () => {
+      const obj = { a: 'wrong', b: 'test' };
+      const keyTypes = { a: 'number' as const, b: 'string' as const };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(false);
+    });
+
+    it('#09.03 => should return true when object has extra keys (unlike all.typings)', () => {
+      const obj = { a: 1, b: 'test', c: true };
+      const keyTypes = { a: 'number' as const, b: 'string' as const };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(true);
+    });
+
+    it('#09.04 => should return false when object missing required keys', () => {
+      const obj = { a: 1 };
+      const keyTypes = { a: 'number' as const, b: 'string' as const };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(false);
+    });
+
+    it('#09.05 => should work with function type validators', () => {
+      const obj = { a: 1, b: 'test', c: false };
+      const keyTypes = {
+        a: (v: unknown): v is number => typeof v === 'number' && v > 0,
+        b: (v: unknown): v is string =>
+          typeof v === 'string' && v.length > 0,
+      };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(true);
+    });
+
+    it('#09.06 => should return false with failing function validators', () => {
+      const obj = { a: -1, b: '' };
+      const keyTypes = {
+        a: (v: unknown): v is number => typeof v === 'number' && v > 0,
+        b: (v: unknown): v is string =>
+          typeof v === 'string' && v.length > 0,
+      };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(false);
+    });
+
+    it('#09.07 => should work with mixed string and function validators', () => {
+      const obj = { a: 1, b: 'test', c: true };
+      const keyTypes = {
+        a: 'number' as const,
+        b: (v: unknown): v is string =>
+          typeof v === 'string' && v.startsWith('t'),
+      };
+      expect(objects.hasKeys.typings(obj, keyTypes)).toBe(true);
+    });
+
+    it('#09.08 => should work with empty keyTypes object', () => {
+      const obj = { a: 1, b: 'test' };
+      expect(objects.hasKeys.typings(obj, {})).toBe(true);
+    });
+  });
+
+  describe('#12 => objects.omit', () => {
     it('#09.01 => should omit specified keys', () => {
       const obj = { a: 1, b: 2, c: 3, d: 4 };
       const result = objects.omit(obj, 'b', 'd');
@@ -1100,7 +1103,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#12 => objects.reverse', () => {
+  describe('#13 => objects.reverse', () => {
     it('#10.01 => should reverse key-value pairs', () => {
       const obj = { a: 'x', b: 'y', c: 'z' };
       const result = objects.reverse(obj);
@@ -1119,7 +1122,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#13 => objects.readonly', () => {
+  describe('#14 => objects.readonly', () => {
     it('#11.01 => should make object readonly', () => {
       const obj = { a: 1, b: 2 };
       const result = objects.readonly(obj);
@@ -1281,7 +1284,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#14 => objects.freeze', () => {
+  describe('#15 => objects.freeze', () => {
     it('#12.01 => should freeze object', () => {
       const obj = { a: 1, b: 2 };
       const result = objects.freeze(obj);
@@ -1418,7 +1421,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#15 => objects.require', () => {
+  describe('#16 => objects.require', () => {
     it('#13.01 => should add required properties', () => {
       const obj = { a: 1, b: undefined };
       const result = objects.required(obj, { b: 2 });
@@ -1618,7 +1621,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#16 => objects.pick', () => {
+  describe('#17 => objects.pick', () => {
     it('#14.01 => should pick specified keys', () => {
       const obj = { a: 1, b: 2, c: 3, d: 4 };
       const result = objects.pick(obj, 'a', 'c');
@@ -1795,7 +1798,7 @@ describe('objects', () => {
       });
     });
 
-    describe('#17 => objects.pick.by', () => {
+    describe('#18 => objects.pick.by', () => {
       it('#17.01 => should pick by values', () => {
         const obj = { a: 1, b: 2, c: 1, d: 3 };
         const result = objects.pick.by(obj, 1);
@@ -1816,7 +1819,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#17 => objects.ru', () => {
+  describe('#19 => objects.ru', () => {
     it('#15.01 => should cast value to Record<string, unknown>', () => {
       const obj = { a: 1, b: 'test', c: true };
       const result = objects.ru(obj);
@@ -1872,7 +1875,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#18 => objects.ra', () => {
+  describe('#20 => objects.ra', () => {
     it('#16.01 => should cast value to Record<string, any>', () => {
       const obj = { a: 1, b: 'test', c: true };
       const result = objects.ra(obj);
@@ -1946,7 +1949,7 @@ describe('objects', () => {
     });
   });
 
-  describe('#19 => objects.primitive', () => {
+  describe('#21 => objects.primitive', () => {
     describe('#17.00 => main', () => {
       it('#17.00.01 => should cast value to primitive object', () => {
         const obj = { a: 1, b: 'test' };

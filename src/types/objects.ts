@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { _unknown } from '../functions/commons';
 import { typeFn, typeFnBasic } from './commons';
-import type { Equals, Keys, PrimitiveObjectMap } from './commons.types';
+import type {
+  Equals,
+  Keys,
+  KeyTypes,
+  KeyTypesFrom,
+  PrimitiveObjectMap,
+} from './commons.types';
 import type {
   AllowedNames,
   DeepNotReadonly,
@@ -82,11 +88,25 @@ export const objects = typeFn<object>()({
   byKey: <T extends object, K extends keyof T>(_?: T, __?: K) =>
     _unknown<T[K]>(),
 
-  hasKeys: <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
-    _unknown<K[number] extends keyof T ? true : false>(),
+  keyTypes: typeFn<KeyTypes>()({
+    from: <T extends KeyTypes>(_?: T) => _unknown<KeyTypesFrom<T>>(),
+  }),
 
-  hasAllKeys: <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
-    _unknown<Equals<K[number], keyof T>>(),
+  hasKeys: typeFnBasic(
+    <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
+      _unknown<K[number] extends keyof T ? true : false>(),
+    {
+      typings: <K extends KeyTypes>(_?: K) => {
+        const _out = <T extends object>(_?: T) =>
+          _unknown<T extends KeyTypesFrom<K> ? true : false>();
+
+        return _out;
+      },
+
+      all: <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
+        _unknown<Equals<K[number], keyof T>>(),
+    },
+  ),
 
   omit: typeFnBasic(
     <T, K extends Keys[]>(_?: T, ...__: K) =>

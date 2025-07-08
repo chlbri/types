@@ -6,72 +6,145 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
-## [0.2.3] - **2025/07/08** _12:00_
+<details>
+<summary> [0.2.4] - 2025/07/08 => 12:00</summary>
 
-- Better function.checker
-- tests(cov): 100%
+### 📋 Functions added since the last commit
+
+#### 🔧 New types and utilities (commons.types.ts)
+
+- **TypeStrings** - New union type for JavaScript primitive types
+- **KeyTypes** - Type to define objects with key type checking
+- **KeyTypesFrom<T>** - Utility type to extract types from KeyTypes
+- **Checker<T>** - Extended type for checker functions
+- **Checker2<T>** - New type for strict type guard functions
+
+#### 🏗️ Functions in objects (objects.ts)
+
+- **checkEntries** - New helper function to check property types of an
+  object
+- **objects.hasKeys.typings** - New method to check keys AND their types
+- **objects.hasKeys.all** - Method to check that the object has EXACTLY the
+  specified keys
+- **objects.hasKeys.all.typings** - Combination of all and typings for full
+  strict checking
+
+#### 🎭 Functions in types/objects (objects.ts)
+
+- **objects.keyTypes** - New namespace for key types
+- **objects.keyTypes.from** - Type function to extract types from KeyTypes
+- **objects.hasKeys.typings** (type version) - Type version of the check
+  with types
+- **objects.hasKeys.all** (type version) - Type version of the full check
+
+#### 🔄 Modified functions (improvements)
+
+- **commons.function.checker.is** - Improved return type (Checker2<T>)
+- **commons.function.checker.byType.forceCast** - Improved types
+- **arrays.tupleOf.number.is** - Updated to use Checker2<T>
+- **arrays.tupleOf.is** - Updated to use Checker2<T>
+- **objects.hasKeys** - Complete refactor for better type safety
+
+#### 🎯 Removed functions
+
+- **objects.hasAllKeys** - Replaced by objects.hasKeys.all
+
+#### 📊 Summary of changes
+
+- ✅ 13 new functions/types added
+- 🔄 6 functions improved
+- ❌ 1 function removed (replaced)
+- 📈 Test coverage: 100%
+
+</details>
 
 <br/>
 
-## [0.2.2] - **2025/07/08** _11:11_
+<details>
+<summary> [0.2.3] - 2025/07/08 => 12:00</summary>
 
 - Better function.checker
 - tests(cov): 100%
+</details>
 
 <br/>
 
-## [0.2.1] - **2025/07/08** _11:11_
+<details>
+<summary> [0.2.2] - 2025/07/08 => 11:11</summary>
 
 - Better function.checker
 - tests(cov): 100%
+</details>
 
 <br/>
 
-## [0.2.0] - **2025/07/07** _23:40_
+<details>
+<summary> [0.2.1] - 2025/07/08 => 11:11</summary>
+
+- Better function.checker
+- tests(cov): 100%
+</details>
+
+<br/>
+
+<details>
+<summary> [0.2.0] - 2025/07/07 => 23:40</summary>
 
 - Fix PrimitiveObject, not longer use of TrueObject
 - tests(cov): 100%
+</details>
 
 <br/>
 
-## [0.1.9] - **2025/07/07** _22:40_
+<details>
+<summary> [0.1.9] - 2025/07/07 => 22:40</summary>
 
 - Fix PrimitiveObject
 - tests(cov): 100%
+</details>
 
 <br/>
 
-## [0.1.8] - **2025/07/07** _18:15_
+<details>
+<summary> [0.1.8] - 2025/07/07 => 18:15</summary>
 
 - Add TrueObject type
 - tests(cov): 100%
+</details>
 
 <br/>
 
-## [0.1.7] - **2025/07/07** _04:55_
+<details>
+<summary> [0.1.7] - 2025/07/07 => 04:55</summary>
 
 - Better docs
+</details>
 
 <br/>
 
-## [0.1.6] - **2025/07/07** _04:50_
+<details>
+<summary> [0.1.6] - 2025/07/07 => 04:50</summary>
 
 - Functions typings
 - Functions castings
 - tests(cov): 100%
+</details>
 
 <br/>
 
-## [0.1.5] - 2025/02/18 16:00
+<details>
+<summary> [0.1.5] - 2025/02/18 => 16:00</summary>
 
 ### Added
 
 - Add type TrueObject
 - Add function for FlatMapByKeys
+</details>
 
 <br/>
 
-## [0.1.4] - 2025/02/17 16:30
+<details>
+<summary> [0.1.4] - 2025/02/17 => 16:30</summary>
 
 ### Added
 
@@ -99,6 +172,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - N/A
+</details>
 
 <br/>
 

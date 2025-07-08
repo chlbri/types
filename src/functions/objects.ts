@@ -5,8 +5,9 @@ import type {
   DeepOmit,
   DeepReadonly,
   DeepRequired,
-  Equals,
   Keys,
+  KeyTypes,
+  KeyTypesFrom,
   NotReadonly,
   NotSubType,
   Primitive2,
@@ -240,6 +241,22 @@ const _pick = (by: Picker, object: object, ...keys: any[]) => {
   return result;
 };
 
+const checkEntries = (keys: KeyTypes, object: object) => {
+  const entries = Object.entries(keys);
+  return entries.every(([key, type]) => {
+    const check1 = key in object;
+    if (!check1) return false;
+
+    const value = (object as any)[key];
+    if (typeof type === 'string') {
+      return typeof value === type;
+    } else if (typeof type === 'function') {
+      return type(value);
+    }
+    return false;
+  });
+};
+
 // #endregion
 
 export const objects = castFn<object>()({
@@ -267,46 +284,46 @@ export const objects = castFn<object>()({
   },
 
   hasKeys: castFnBasic(
-    <T extends object, K extends Keys[]>(
-      object: T,
+    <K extends Keys[]>(
+      object: object,
       ...keys: K
-    ): K[number] extends keyof T ? true : false => {
-      return keys.every(key => key in object) as any;
+    ): object is Record<K[number], unknown> => {
+      return keys.every(key => key in object);
     },
     {
-      strict: <T extends object>() => {
-        const _out = <K extends (keyof T)[]>(
-          object: object,
-          ...keys: K
-        ): object is Pick<T, K[number]> => {
-          return keys.every(key => key in object);
-        };
-
-        return _out;
+      typings: <K extends KeyTypes>(
+        object: object,
+        keys: K,
+      ): object is KeyTypesFrom<K> => {
+        return checkEntries(keys, object);
       },
 
-      const: <const T extends object>() => {
-        const _out = <K extends (keyof T)[]>(
+      all: castFnBasic(
+        <K extends Keys[]>(
           object: object,
           ...keys: K
-        ): object is Pick<T, K[number]> => {
-          return keys.every(key => key in object);
-        };
+        ): object is Record<K[number], unknown> => {
+          return (
+            Object.keys(object).every(key => keys.includes(key)) &&
+            keys.every(key => key in object)
+          );
+        },
+        {
+          typings: <K extends KeyTypes>(
+            object: object,
+            keys: K,
+          ): object is KeyTypesFrom<K> => {
+            const check0 = Object.keys(object).every(key =>
+              Object.keys(keys).includes(key),
+            );
+            if (!check0) return false;
 
-        return _out;
-      },
+            return checkEntries(keys, object);
+          },
+        },
+      ),
     },
   ),
-
-  hasAllKeys: <T extends object, K extends Keys[]>(
-    object: T,
-    ...keys: K
-  ): Equals<keyof T, K[number]> => {
-    return (
-      Object.keys(object).every(key => keys.includes(key)) &&
-      (keys.every(key => key in object) as any)
-    );
-  },
 
   omit: castFnBasic(
     partialCall(_omit, 'key') as <

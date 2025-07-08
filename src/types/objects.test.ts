@@ -163,6 +163,125 @@ describe('#objects type functions', () => {
     });
   });
 
+  describe('#06.01 => keyTypes', () => {
+    it('#06.01.01 => should call objects.keyTypes', () => {
+      const result = objects.keyTypes();
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.02 => should call objects.keyTypes with parameter', () => {
+      const keyTypesSchema = { a: 'string', b: 'number' } as const;
+      const result = objects.keyTypes(keyTypesSchema);
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.03 => should call objects.keyTypes.forceCast', () => {
+      const result = objects.keyTypes.forceCast();
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.04 => should call objects.keyTypes.forceCast with parameter', () => {
+      const keyTypesSchema = { a: 'string', b: 'number' } as const;
+      const result = objects.keyTypes.forceCast(keyTypesSchema);
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.05 => should call objects.keyTypes.dynamic', () => {
+      const result = objects.keyTypes.dynamic();
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.06 => should call objects.keyTypes.dynamic with parameter', () => {
+      const keyTypesSchema = { a: 'string', b: 'number' } as const;
+      const result = objects.keyTypes.dynamic(keyTypesSchema);
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.07 => should call objects.keyTypes.is', () => {
+      const result = objects.keyTypes.is();
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.08 => should call objects.keyTypes.is with parameter', () => {
+      const keyTypesSchema = { a: 'string', b: 'number' } as const;
+      const result = objects.keyTypes.is(keyTypesSchema);
+      expect(result).toBeUndefined();
+    });
+
+    it('#06.01.09 => should call objects.keyTypes.type', () => {
+      const result = objects.keyTypes.type;
+      expect(result).toBeUndefined();
+    });
+
+    describe('#06.01.01 => keyTypes.from', () => {
+      it('#06.01.01.01 => should call objects.keyTypes.from', () => {
+        const result = objects.keyTypes.from();
+        expect(result).toBeUndefined();
+      });
+
+      it('#06.01.01.02 => should call objects.keyTypes.from with parameter', () => {
+        const keyTypesSchema = { a: 'string', b: 'number' } as const;
+        const result = objects.keyTypes.from(keyTypesSchema);
+        expect(result).toBeUndefined();
+      });
+
+      it('#06.01.01.03 => should test objects.keyTypes.from functionality', () => {
+        const simpleSchema = { name: 'string', age: 'number' } as const;
+        const result = objects.keyTypes.from(simpleSchema);
+        expect(result).toBeUndefined();
+      });
+
+      it('#06.01.01.04 => should test objects.keyTypes.from with complex types', () => {
+        const complexSchema = {
+          id: 'number',
+          name: 'string',
+          active: 'boolean',
+          created: 'object',
+        } as const;
+        const result = objects.keyTypes.from(complexSchema);
+        expect(result).toBeUndefined();
+      });
+
+      it('#06.01.01.05 => should test objects.keyTypes.from with function checkers', () => {
+        const customChecker = (value: unknown): value is Date =>
+          value instanceof Date;
+        const schemaWithChecker = {
+          name: 'string',
+          created: customChecker,
+        } as const;
+        const result = objects.keyTypes.from(schemaWithChecker);
+        expect(result).toBeUndefined();
+      });
+
+      it('#06.01.01.06 => should test objects.keyTypes.from edge cases', () => {
+        // Test with empty schema
+        const emptySchema = {} as const;
+        const result1 = objects.keyTypes.from(emptySchema);
+        expect(result1).toBeUndefined();
+
+        // Test with single property
+        const singleSchema = { prop: 'string' } as const;
+        const result2 = objects.keyTypes.from(singleSchema);
+        expect(result2).toBeUndefined();
+      });
+
+      it('#06.01.01.07 => should test objects.keyTypes.from with all primitive types', () => {
+        const allTypesSchema = {
+          str: 'string',
+          num: 'number',
+          bool: 'boolean',
+          big: 'bigint',
+          sym: 'symbol',
+          undef: 'undefined',
+          obj: 'object',
+          func: 'function',
+        } as const;
+        const result = objects.keyTypes.from(allTypesSchema);
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
   describe('#07 => hasKeys', () => {
     it('#07.01 => should call objects.hasKeys', () => {
       const result = objects.hasKeys();
@@ -175,15 +294,106 @@ describe('#objects type functions', () => {
     });
   });
 
-  describe('#08 => hasAllKeys', () => {
-    it('#08.01 => should call objects.hasAllKeys', () => {
-      const result = objects.hasAllKeys();
+  describe('#08 => hasKeys.all', () => {
+    it('#08.01 => should call objects.hasKeys.all', () => {
+      const result = objects.hasKeys.all();
       expect(result).toBeUndefined();
     });
 
-    it('#08.02 => should call objects.hasAllKeys with parameters', () => {
-      const result = objects.hasAllKeys({ a: 1, b: 2 }, 'a', 'b');
+    it('#08.02 => should call objects.hasKeys.all with parameters', () => {
+      const result = objects.hasKeys.all({ a: 1, b: 2 }, 'a', 'b');
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe('#08.01 => hasKeys.typings', () => {
+    it('#08.01.01 => should call objects.hasKeys.typings', () => {
+      const result = objects.hasKeys.typings();
+      expect(typeof result).toBe('function');
+    });
+
+    it('#08.01.02 => should call objects.hasKeys.typings with parameter', () => {
+      const typingCheck = objects.hasKeys.typings({
+        a: 'string',
+        b: 'number',
+      } as const);
+      expect(typeof typingCheck).toBe('function');
+    });
+
+    it('#08.01.03 => should test objects.hasKeys.typings functionality', () => {
+      const typingCheck = objects.hasKeys.typings({
+        a: 'string',
+        b: 'number',
+      } as const);
+
+      // Test with object that matches the key types
+      const result1 = typingCheck({ a: 'hello', b: 42 });
+      expect(result1).toBeUndefined();
+
+      // Test with object that doesn't match
+      const result2 = typingCheck({ a: 123, b: 'world' });
+      expect(result2).toBeUndefined();
+
+      // Test without parameters
+      const result3 = typingCheck();
+      expect(result3).toBeUndefined();
+    });
+
+    it('#08.01.04 => should test objects.hasKeys.typings with complex types', () => {
+      const complexTypings = {
+        id: 'number',
+        name: 'string',
+        active: 'boolean',
+      } as const;
+
+      const typingCheck = objects.hasKeys.typings(complexTypings);
+      expect(typeof typingCheck).toBe('function');
+
+      // Test with matching object
+      const result1 = typingCheck({ id: 1, name: 'test', active: true });
+      expect(result1).toBeUndefined();
+
+      // Test with additional properties
+      const result2 = typingCheck({
+        id: 1,
+        name: 'test',
+        active: true,
+        extra: 'value',
+      });
+      expect(result2).toBeUndefined();
+    });
+
+    it('#08.01.05 => should test objects.hasKeys.typings edge cases', () => {
+      // Test with empty typing object
+      const emptyTypingCheck = objects.hasKeys.typings({} as const);
+      expect(typeof emptyTypingCheck).toBe('function');
+      expect(emptyTypingCheck({})).toBeUndefined();
+
+      // Test with single property
+      const singleTypingCheck = objects.hasKeys.typings({
+        prop: 'string',
+      } as const);
+      expect(typeof singleTypingCheck).toBe('function');
+      expect(singleTypingCheck({ prop: 'value' })).toBeUndefined();
+    });
+
+    it('#08.01.06 => should test objects.hasKeys.typings with function checkers', () => {
+      const customChecker = (value: unknown): value is Date =>
+        value instanceof Date;
+      const typingCheck = objects.hasKeys.typings({
+        created: customChecker,
+        name: 'string',
+      } as const);
+
+      expect(typeof typingCheck).toBe('function');
+
+      // Test with matching object
+      const result1 = typingCheck({ created: new Date(), name: 'test' });
+      expect(result1).toBeUndefined();
+
+      // Test with non-matching object
+      const result2 = typingCheck({ created: 'not-a-date', name: 'test' });
+      expect(result2).toBeUndefined();
     });
   });
 
