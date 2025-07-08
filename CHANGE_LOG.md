@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 <br/>
 
+## [0.2.2] - **2025/07/08** _11:11_
+
+- Better function.checker
+- tests(cov): 100%
+
+<br/>
+
 ## [0.2.1] - **2025/07/08** _11:11_
 
 - Better function.checker

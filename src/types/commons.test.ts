@@ -731,7 +731,7 @@ describe('common type functions', () => {
       });
 
       it('#18.04.09 => should call commons.function.checker.byType with checker', () => {
-        const checker = (x: unknown): x is string => typeof x === 'string';
+        const checker = (x: unknown) => typeof x === 'string';
         const result = commons.function.checker.byType(checker);
         expect(result).toBeUndefined();
       });
