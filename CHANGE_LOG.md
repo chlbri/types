@@ -7,6 +7,17 @@ All notable changes to this project will be documented in this file.
 <br/>
 
 <details>
+<summary> [0.2.6] - 2025/07/14 => 12:30</summary>
+
+- tests(js): 100% coverage
+- tests(ts): 100% coverage
+- Upgrade deps
+
+</details>
+
+<br/>
+
+<details>
 <summary> [0.2.5] - 2025/07/08 => 16:00</summary>
 
 - tests(js): 100% coverage

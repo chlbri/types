@@ -1,5 +1,6 @@
 import type {
   AnyArray,
+  Checker,
   Checker2,
   ExcludeArray,
   ExtractArray,
@@ -64,7 +65,7 @@ export const arrays = castFnBasic(<T>(...values: T[]) => values, {
       },
     ),
 
-    is: <const T>(fn: Checker2<T>) => {
+    is: <const T>(fn: Checker<T>) => {
       const _out = (value: unknown): value is Array<T> => {
         return Array.isArray(value) && value.every(fn);
       };
