@@ -174,13 +174,13 @@ describe('Numbers Types Type Tests', () => {
         (value: unknown) => number
       >();
 
-      expectTypeOf(numbers.getString).toExtend<
-        <const T extends number>(value: T) => `${T}`
-      >();
-
       expectTypeOf(numbers.digit).toExtend<(value: Digit) => Digit>();
 
       expectTypeOf(numbers.bigint).toExtend<(value: bigint) => bigint>();
     });
   });
 });
+
+expectTypeOf(numbers.getString).toExtend<
+  <const T extends number>(value: T) => `${T}`
+>();
