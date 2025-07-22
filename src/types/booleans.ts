@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { expandFn } from '~utils';
 import { _unknown } from '../functions/commons';
-import { typeFn, typeFnBasic } from './commons';
+import { typeFn } from './commons';
 
-export const booleans = typeFnBasic(
+export const booleans = expandFn(
   <T extends boolean>(_: T) => _unknown<T>(),
   {
     forceCast: <T extends boolean>(_: unknown) => _unknown<T>(),

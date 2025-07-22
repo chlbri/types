@@ -1,3 +1,4 @@
+import { expandFn } from '~utils';
 import { ENGLISH_LETTERS } from '../constants/strings';
 import type {
   AddString,
@@ -7,7 +8,7 @@ import type {
   SplitStringBy,
   UpperLetters,
 } from '../types/types';
-import { _unknown, castFn, castFnBasic } from './commons';
+import { _unknown, castFn } from './commons';
 
 /**
  *
@@ -44,7 +45,7 @@ const _contains = <U extends string[]>(
 };
 
 export const strings = castFn<string>()({
-  is: castFnBasic(
+  is: expandFn(
     (value: unknown) => {
       return typeof value === 'string';
     },

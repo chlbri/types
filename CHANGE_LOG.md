@@ -9,6 +9,22 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+### **[0.3.1] --> 2025/07/22** => _20:50_
+
+</summary>
+
+- tests(js): 100% coverage
+- tests(ts): 100% coverage
+- Upgrade deps
+- Improve transform module
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ### **[0.3.0] --> 2025/07/22** => _19:50_
 
 </summary>

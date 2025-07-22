@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { expandFn } from '~utils';
 import { _unknown } from '../functions/commons';
 import type {
   AnyArray,
@@ -10,17 +11,16 @@ import type {
   RuA,
   TupleOf,
 } from './arrays.types';
-import { typeFnBasic } from './commons';
 import type { UnionToTuple } from './commons.types';
 
-export const arrays = typeFnBasic(
+export const arrays = expandFn(
   <T extends AnyArray>(..._: T) => _unknown<T[number][]>(),
   {
     low: <T>(..._: T[]) => _unknown<T[]>(),
 
     is: <T>(_?: T) => _unknown<T extends unknown[] ? true : false>(),
 
-    indexes: typeFnBasic(
+    indexes: expandFn(
       <const T extends RuA>(..._: T) =>
         _unknown<UnionToTuple<IndexesOfArray<T>>>(),
       {
@@ -31,8 +31,8 @@ export const arrays = typeFnBasic(
 
     lengthOf: <const T extends RuA>(_?: T) => _unknown<T['length']>(),
 
-    tupleOf: typeFnBasic(<const T extends RuA>(..._: T) => _unknown<T>(), {
-      number: typeFnBasic(
+    tupleOf: expandFn(<const T extends RuA>(..._: T) => _unknown<T>(), {
+      number: expandFn(
         <const T, N extends number>(_?: T, __?: N) =>
           _unknown<TupleOf<T, N>>(),
         {
@@ -46,7 +46,7 @@ export const arrays = typeFnBasic(
       is: <const T>(_?: T) => _unknown<T extends RuA ? true : false>(),
     }),
 
-    reduce: typeFnBasic(<T>(_: T | readonly T[] | T[]) => _unknown<T>(), {
+    reduce: expandFn(<T>(_: T | readonly T[] | T[]) => _unknown<T>(), {
       deep: <T>(_?: T) => _unknown<ReduceDeepArray<T>>(),
     }),
 

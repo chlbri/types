@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { expandFn } from '~utils';
 import { _unknown } from '../functions/commons';
-import { typeFn, typeFnBasic } from './commons';
+import { typeFn } from './commons';
 import type {
   Equals,
   Keys,
@@ -26,7 +27,7 @@ import type {
   ValuesOf,
 } from './objects.types';
 
-const _readonly = typeFnBasic(
+const _readonly = expandFn(
   <T extends object>(_?: T) => _unknown<Readonly<T>>(),
   {
     forceCast: <T extends object>(_?: unknown) => _unknown<Readonly<T>>(),
@@ -38,7 +39,7 @@ const _readonly = typeFnBasic(
     is: <T extends object>(_?: T) =>
       _unknown<T extends Readonly<T> ? true : false>(),
 
-    not: typeFnBasic(
+    not: expandFn(
       <const T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
       {
         is: <const T extends object>(_?: T) =>
@@ -46,10 +47,10 @@ const _readonly = typeFnBasic(
       },
     ),
 
-    deep: typeFnBasic(
+    deep: expandFn(
       <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
       {
-        not: typeFnBasic(
+        not: expandFn(
           <const T extends object>(_?: T) =>
             _unknown<DeepNotReadonly<T>>(),
           {
@@ -68,19 +69,13 @@ const _readonly = typeFnBasic(
 export const objects = typeFn<object>()({
   trueObject: typeFn<To>()(),
 
-  keysOf: typeFnBasic(
-    <T extends object>(_?: T) => _unknown<(keyof T)[]>(),
-    {
-      union: <T extends object>(_?: T) => _unknown<keyof T>(),
-    },
-  ),
+  keysOf: expandFn(<T extends object>(_?: T) => _unknown<(keyof T)[]>(), {
+    union: <T extends object>(_?: T) => _unknown<keyof T>(),
+  }),
 
-  values: typeFnBasic(
-    <T extends object>(_?: T) => _unknown<T[keyof T][]>(),
-    {
-      union: <T extends object>(_?: T) => _unknown<T[keyof T]>(),
-    },
-  ),
+  values: expandFn(<T extends object>(_?: T) => _unknown<T[keyof T][]>(), {
+    union: <T extends object>(_?: T) => _unknown<T[keyof T]>(),
+  }),
 
   entries: <T extends object>(_?: T) =>
     _unknown<[keyof T, T[keyof T]][]>(),
@@ -92,7 +87,7 @@ export const objects = typeFn<object>()({
     from: <T extends KeyTypes>(_?: T) => _unknown<KeyTypesFrom<T>>(),
   }),
 
-  hasKeys: typeFnBasic(
+  hasKeys: expandFn(
     <T extends object, K extends Keys[]>(_?: T, ...__: K) =>
       _unknown<K[number] extends keyof T ? true : false>(),
     {
@@ -108,11 +103,11 @@ export const objects = typeFn<object>()({
     },
   ),
 
-  omit: typeFnBasic(
+  omit: expandFn(
     <T, K extends Keys[]>(_?: T, ...__: K) =>
       _unknown<Omit<T, K[number]>>(),
     {
-      const: typeFnBasic(
+      const: expandFn(
         <const T extends object, K extends (keyof T)[]>(_?: T, ...__: K) =>
           _unknown<Omit<T, K[number]>>(),
         {
@@ -132,7 +127,7 @@ export const objects = typeFn<object>()({
         return _out;
       },
 
-      by: typeFnBasic(
+      by: expandFn(
         <T extends object, K extends any[]>(_?: T, ...__: K) =>
           _unknown<NotSubType<T, K[number]>>(),
         {
@@ -144,7 +139,7 @@ export const objects = typeFn<object>()({
             return _out;
           },
 
-          const: typeFnBasic(
+          const: expandFn(
             <const T extends object, K extends ValuesOf<T>[]>(
               _?: T,
               ...__: K
@@ -166,7 +161,7 @@ export const objects = typeFn<object>()({
         },
       ),
 
-      deep: typeFnBasic(
+      deep: expandFn(
         <T, K extends Keys[]>(_?: T, ...__: K) =>
           _unknown<DeepOmit<T, K[number]>>(),
         {
@@ -177,7 +172,7 @@ export const objects = typeFn<object>()({
             return _out;
           },
 
-          const: typeFnBasic(
+          const: expandFn(
             <const T extends object, K extends (keyof T)[]>(
               _?: T,
               ...__: K
@@ -197,7 +192,7 @@ export const objects = typeFn<object>()({
             },
           ),
 
-          by: typeFnBasic(
+          by: expandFn(
             <T extends object, K extends any[]>(_?: T, ...__: K) =>
               _unknown<DeepNotSubType<T, K[number]>>(),
             {
@@ -209,7 +204,7 @@ export const objects = typeFn<object>()({
                 return _out;
               },
 
-              const: typeFnBasic(
+              const: expandFn(
                 <const T extends object, K extends ValuesOf<T>[]>(
                   _?: T,
                   ...__: K
@@ -247,10 +242,10 @@ export const objects = typeFn<object>()({
 
   freeze: _readonly,
 
-  required: typeFnBasic(
+  required: expandFn(
     <T extends object>(_?: T) => _unknown<Required<T>>(),
     {
-      deep: typeFnBasic(
+      deep: expandFn(
         <T extends object>(_: T) => _unknown<DeepRequired<T>>(),
         {
           is: <T extends object>(_?: T) =>
@@ -263,18 +258,15 @@ export const objects = typeFn<object>()({
     },
   ),
 
-  partial: typeFnBasic(
-    <T extends object>(_: T) => _unknown<Partial<T>>(),
-    {
-      deep: <T extends object>(_: T) => _unknown<DeepPartial<T>>(),
-    },
-  ),
+  partial: expandFn(<T extends object>(_: T) => _unknown<Partial<T>>(), {
+    deep: <T extends object>(_: T) => _unknown<DeepPartial<T>>(),
+  }),
 
-  pick: typeFnBasic(
+  pick: expandFn(
     <T extends object, K extends (keyof T)[]>(_: T, ...__: K) =>
       _unknown<Pick<T, K[number]>>(),
     {
-      by: typeFnBasic(
+      by: expandFn(
         <T extends object, K>(_?: T, __?: K) => _unknown<SubType<T, K>>(),
         {
           keys: <T extends object, K>(_: T, __?: K) =>

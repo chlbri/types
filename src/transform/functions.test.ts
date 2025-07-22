@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { transform } from './functions';
 
+//TODO each test for one action in all tests files
+
 describe('#01 => transform function', () => {
   describe('#01.01 => primitive string schemas', () => {
     it('#01.01.01 => should handle string schema', () => {
@@ -630,21 +632,21 @@ describe('#01 => transform function', () => {
         const value = 'test string';
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toBe(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.01.02 => should handle number value', () => {
         const value = 42;
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toBe(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.01.03 => should handle boolean value', () => {
         const value = true;
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toBe(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.01.04 => should handle undefined value', () => {
@@ -656,7 +658,7 @@ describe('#01 => transform function', () => {
       it('#01.09.01.05 => should handle null value', () => {
         const result = transform.custom(null);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toBeNull();
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
     });
 
@@ -665,7 +667,7 @@ describe('#01 => transform function', () => {
         const value = { name: 'John', age: 30 };
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.02.02 => should handle nested object', () => {
@@ -680,14 +682,14 @@ describe('#01 => transform function', () => {
         };
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.02.03 => should handle empty object', () => {
         const value = {};
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
     });
 
@@ -696,14 +698,14 @@ describe('#01 => transform function', () => {
         const value = [1, 2, 3, 4];
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.03.02 => should handle array of objects', () => {
         const value = [{ id: 1 }, { id: 2 }, { id: 3 }];
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.03.03 => should handle nested arrays', () => {
@@ -714,14 +716,14 @@ describe('#01 => transform function', () => {
         ];
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.03.04 => should handle empty array', () => {
         const value: any[] = [];
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
     });
 
@@ -730,8 +732,7 @@ describe('#01 => transform function', () => {
         const value = () => 'test';
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toBe(value);
-        expect(result['$$app-ts => custom$$']()).toBe('test');
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.04.02 => should handle complex mixed data structure', () => {
@@ -752,17 +753,14 @@ describe('#01 => transform function', () => {
 
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
-        expect(
-          result['$$app-ts => custom$$'].specs.reviews[0].rating,
-        ).toBe(5);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.04.03 => should handle Date object', () => {
         const value = new Date('2023-01-01');
         const result = transform.custom(value);
         expect(result).toHaveProperty('$$app-ts => custom$$');
-        expect(result['$$app-ts => custom$$']).toEqual(value);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
 
       it('#01.09.04.04 => should handle circular reference gracefully', () => {
@@ -773,7 +771,7 @@ describe('#01 => transform function', () => {
         expect(result).toHaveProperty('$$app-ts => custom$$');
         // La fonction transform.custom ne traite pas spécialement les références circulaires,
         // elle enveloppe simplement l'objet dans un wrapper custom
-        expect(result['$$app-ts => custom$$']).toBe(circular);
+        expect(result['$$app-ts => custom$$']).toBeUndefined();
       });
     });
   });
@@ -974,6 +972,282 @@ describe('#01 => transform function', () => {
         expect(typedResult.config).toEqual({});
         expect(typedResult.preferences).toEqual({});
       }
+    });
+  });
+
+  describe('#01.12 => transform.tuple method', () => {
+    it('#01.12.01 => should handle tuple with primitive schemas', () => {
+      const result = transform.tuple(
+        { id: 'number', name: 'string' },
+        { active: 'boolean', config: 'object' },
+        { count: 'number', type: 'string' },
+      );
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(3);
+
+      // Utilisations d'assertions de type pour éviter les erreurs TypeScript
+      const firstElement = result[0] as any;
+      const secondElement = result[1] as any;
+      const thirdElement = result[2] as any;
+
+      expect(firstElement).toHaveProperty('id');
+      expect(firstElement).toHaveProperty('name');
+      expect(firstElement.id).toBeUndefined();
+      expect(firstElement.name).toBeUndefined();
+
+      expect(secondElement).toHaveProperty('active');
+      expect(secondElement).toHaveProperty('config');
+      expect(secondElement.active).toBeUndefined();
+      expect(secondElement.config).toEqual({});
+
+      expect(thirdElement).toHaveProperty('count');
+      expect(thirdElement).toHaveProperty('type');
+      expect(thirdElement.count).toBeUndefined();
+      expect(thirdElement.type).toBeUndefined();
+    });
+
+    it('#01.12.02 => should handle tuple with nested objects', () => {
+      const result = transform.tuple(
+        {
+          user: {
+            name: 'string',
+            profile: { age: 'number' },
+          },
+        },
+        {
+          settings: {
+            theme: 'string',
+            options: { debug: 'boolean' },
+          },
+        },
+      );
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(2);
+
+      const firstElement = result[0] as any;
+      const secondElement = result[1] as any;
+
+      expect(firstElement).toHaveProperty('user');
+      expect(firstElement.user).toHaveProperty('name');
+      expect(firstElement.user).toHaveProperty('profile');
+      expect(firstElement.user.profile).toHaveProperty('age');
+      expect(firstElement.user.name).toBeUndefined();
+      expect(firstElement.user.profile.age).toBeUndefined();
+
+      expect(secondElement).toHaveProperty('settings');
+      expect(secondElement.settings).toHaveProperty('theme');
+      expect(secondElement.settings).toHaveProperty('options');
+      expect(secondElement.settings.options).toHaveProperty('debug');
+      expect(secondElement.settings.theme).toBeUndefined();
+      expect(secondElement.settings.options.debug).toBeUndefined();
+    });
+
+    it('#01.12.03 => should handle tuple with mixed content', () => {
+      const result = transform.tuple(
+        { id: 'number' },
+        { name: 'string', config: 'object' },
+        { metadata: { created: 'date', active: 'boolean' } },
+      );
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(3);
+
+      const firstElement = result[0] as any;
+      const secondElement = result[1] as any;
+      const thirdElement = result[2] as any;
+
+      expect(firstElement.id).toBeUndefined();
+      expect(secondElement.name).toBeUndefined();
+      expect(secondElement.config).toEqual({});
+      expect(thirdElement.metadata.created).toBeUndefined();
+      expect(thirdElement.metadata.active).toBeUndefined();
+    });
+
+    it('#01.12.04 => should handle empty tuple', () => {
+      const result = transform.tuple();
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(0);
+    });
+
+    it('#01.12.05 => should handle single element tuple', () => {
+      const result = transform.tuple({ test: 'string', value: 'number' });
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(1);
+
+      const element = result[0] as any;
+      expect(element).toHaveProperty('test');
+      expect(element).toHaveProperty('value');
+      expect(element.test).toBeUndefined();
+      expect(element.value).toBeUndefined();
+    });
+
+    it('#01.12.06 => should handle tuple with array schemas', () => {
+      const result = transform.tuple(['string'], ['number'], {
+        items: ['boolean'],
+      });
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(3);
+
+      const firstElement = result[0] as any;
+      const secondElement = result[1] as any;
+      const thirdElement = result[2] as any;
+
+      expect(Array.isArray(firstElement)).toBe(true);
+      expect(Array.isArray(secondElement)).toBe(true);
+      expect(thirdElement).toHaveProperty('items');
+      expect(Array.isArray(thirdElement.items)).toBe(true);
+    });
+
+    it('#01.12.07 => should handle tuple with primitive types', () => {
+      const result = transform.tuple('string', 'number', 'boolean');
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(3);
+
+      // Les primitifs retournent undefined dans transform
+      expect(result[0]).toBeUndefined();
+      expect(result[1]).toBeUndefined();
+      expect(result[2]).toBeUndefined();
+    });
+
+    it('#01.12.08 => should handle tuple with mixed primitive and object schemas', () => {
+      const result = transform.tuple(
+        'string',
+        { name: 'string' },
+        'date',
+        ['number'],
+      );
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toHaveLength(4);
+
+      expect(result[0]).toBeUndefined(); // primitive
+      expect(result[1]).toHaveProperty('name'); // object
+      expect(result[2]).toBeUndefined(); // date primitive
+      expect(Array.isArray(result[3])).toBe(true); // array
+    });
+  });
+
+  describe('#01.13 => transform.union method', () => {
+    it('#01.13.01 => should handle union with primitive schemas', () => {
+      const result = transform.union(
+        { id: 'number', name: 'string' },
+        { active: 'boolean', config: 'object' },
+        { count: 'number', type: 'string' },
+      );
+
+      // transform.union returns a custom wrapper
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.02 => should handle union with nested objects', () => {
+      const result = transform.union(
+        {
+          user: {
+            name: 'string',
+            profile: { age: 'number' },
+          },
+        },
+        {
+          settings: {
+            theme: 'string',
+            options: { debug: 'boolean' },
+          },
+        },
+      );
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.03 => should handle union with single schema', () => {
+      const result = transform.union({ test: 'string', value: 'number' });
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.04 => should handle union with mixed content types', () => {
+      const result = transform.union(
+        { primitive: 'string' },
+        { object: 'object' },
+        { date: 'date' },
+        { complex: { nested: 'boolean' } },
+      );
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.05 => should handle empty union', () => {
+      const result = transform.union();
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.06 => should handle union with array schemas', () => {
+      const result = transform.union(['string'], ['number'], {
+        items: ['boolean'],
+      });
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.07 => should handle union with primitive types', () => {
+      const result = transform.union('string', 'number', 'boolean');
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.08 => should handle union with special object types', () => {
+      const result = transform.union('object', 'primitive', 'date', {
+        custom: 'string',
+      });
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
+    });
+
+    it('#01.13.09 => should handle union with deeply nested schemas', () => {
+      const result = transform.union(
+        {
+          level1: {
+            level2: {
+              level3: {
+                value: 'string',
+                count: 'number',
+              },
+            },
+          },
+        },
+        {
+          alternative: {
+            data: ['boolean'],
+            metadata: 'date',
+          },
+        },
+      );
+
+      expect(typeof result).toBe('object');
+      expect(result).toHaveProperty('$$app-ts => custom$$');
+      expect(result['$$app-ts => custom$$']).toBeUndefined();
     });
   });
 });

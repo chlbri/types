@@ -1,4 +1,4 @@
-import { isPlainObject } from '~utils';
+import { expandFn, isPlainObject } from '~utils';
 import type {
   Checker,
   DeepNotReadonly,
@@ -7,7 +7,6 @@ import type {
   DeepRequired,
   Defaulted,
   Fn,
-  FnBasic,
   Neverify,
   NonN,
   NotReadonly,
@@ -18,34 +17,10 @@ import type {
 import { Checker2 } from './../types/commons.types';
 import deepClone from './deepclone';
 
-type FnReturn<T, Tr extends object> = Tr & {
-  (arg: T): T;
-  forceCast(arg: unknown): T;
-  dynamic<U extends T>(arg: U): U;
-};
-
-export const castFnBasic = <
-  Main extends Fn,
-  const Tr extends object = object,
->(
-  main: Main,
-  extensions?: Tr,
-): FnBasic<Main, Tr> => {
-  const out: any = main;
-
-  if (extensions) {
-    Object.assign(out, extensions);
-  }
-
-  return out;
-};
-
 export const castFn = <T>() => {
-  const _out = <const Tr extends object = object>(
-    extensions?: Tr,
-  ): FnReturn<T, Tr> => {
-    const out: any = castFnBasic((arg: T) => arg, {
-      ...extensions,
+  const _out = <const Tr extends object = object>(extensions?: Tr) => {
+    const out = expandFn((arg: T) => arg, {
+      ...(extensions as Tr),
       forceCast: (arg: unknown) => {
         return _unknown<T>(arg);
       },
@@ -113,8 +88,8 @@ const _function = <T extends any[], R = any>(..._: [...T, R]) =>
 
 export const _unknown = <T>(value?: unknown) => value as T;
 
-export const commons = castFnBasic(<T>(value: unknown) => value as T, {
-  partial: castFnBasic(_partial, {
+export const commons = expandFn(<T>(value: unknown) => value as T, {
+  partial: expandFn(_partial, {
     deep: <T>(value: T) => {
       return _unknown<DeepPartial<T>>(value);
     },
@@ -148,14 +123,14 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
     return _unknown<Neverify<T>>(value);
   },
 
-  required: castFnBasic(_required, {
+  required: expandFn(_required, {
     deep: <T extends object | undefined>(value: T) => {
       return _unknown<DeepRequired<T>>(value);
     },
   }),
 
-  readonly: castFnBasic(<T>(value: T) => value as Readonly<T>, {
-    deep: castFnBasic(
+  readonly: expandFn(<T>(value: T) => value as Readonly<T>, {
+    deep: expandFn(
       <T extends object>(value: T) => _unknown<DeepReadonly<T>>(value),
       {
         not: <const T extends object>(value: T) =>
@@ -174,8 +149,8 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
     is: _isPrimitiveObject,
   }),
 
-  function: castFnBasic(_function, {
-    is: castFnBasic(
+  function: expandFn(_function, {
+    is: expandFn(
       (value: unknown): value is Fn => {
         return typeof value === 'function';
       },
@@ -210,7 +185,7 @@ export const commons = castFnBasic(<T>(value: unknown) => value as T, {
         );
       },
 
-      byType: castFnBasic(<T>(checker: Checker2<T>) => checker, {
+      byType: expandFn(<T>(checker: Checker2<T>) => checker, {
         forceCast: <T>(value: Checker<T>) => _unknown<Checker2<T>>(value),
       }),
     }),

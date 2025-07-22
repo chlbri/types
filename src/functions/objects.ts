@@ -1,4 +1,4 @@
-import { partialCall } from '~utils';
+import { expandFn, partialCall } from '~utils';
 import type {
   AllowedNamesLow,
   DeepNotReadonly,
@@ -17,7 +17,7 @@ import type {
   SubType,
   To,
 } from '../types/types';
-import { _unknown, castFn, castFnBasic, commons } from './commons';
+import { _unknown, castFn, commons } from './commons';
 
 // #region Helpers
 
@@ -60,7 +60,7 @@ const _isRequiredDeep = (object: any): object is DeepRequired<any> => {
   return commons.isDefined(object);
 };
 
-const _readonly = castFnBasic(
+const _readonly = expandFn(
   <T extends object>(object: T) => {
     return Object.freeze(object);
   },
@@ -82,7 +82,7 @@ const _readonly = castFnBasic(
       return _unknown<NotReadonly<T>>(object);
     },
 
-    deep: castFnBasic(
+    deep: expandFn(
       <T extends object>(object: T) => {
         const out = Object.freeze(object);
         return _unknown<DeepReadonly<T>>(out);
@@ -283,7 +283,7 @@ export const objects = castFn<object>()({
     return object[key];
   },
 
-  hasKeys: castFnBasic(
+  hasKeys: expandFn(
     <K extends Keys[]>(
       object: object,
       ...keys: K
@@ -298,7 +298,7 @@ export const objects = castFn<object>()({
         return checkEntries(keys, object);
       },
 
-      all: castFnBasic(
+      all: expandFn(
         <K extends Keys[]>(
           object: object,
           ...keys: K
@@ -325,7 +325,7 @@ export const objects = castFn<object>()({
     },
   ),
 
-  omit: castFnBasic(
+  omit: expandFn(
     partialCall(_omit, 'key') as <
       T extends PrimitiveObjectMap,
       K extends any[],
@@ -335,7 +335,7 @@ export const objects = castFn<object>()({
     ) => Omit<T, K[number]>,
 
     {
-      strict: castFnBasic(
+      strict: expandFn(
         partialCall(_omit, 'key') as <
           T extends object,
           K extends (keyof T)[],
@@ -354,7 +354,7 @@ export const objects = castFn<object>()({
         },
       ),
 
-      const: castFnBasic(
+      const: expandFn(
         partialCall(_omit, 'key') as <
           const T extends object,
           K extends (keyof T)[],
@@ -378,7 +378,7 @@ export const objects = castFn<object>()({
         ...keys: K
       ) => boolean,
 
-      by: castFnBasic(
+      by: expandFn(
         partialCall(_omit, 'element') as <
           T extends object,
           K extends any[],
@@ -391,7 +391,7 @@ export const objects = castFn<object>()({
         },
       ),
 
-      deep: castFnBasic(
+      deep: expandFn(
         partialCall(_omitDeep, 'key') as <
           T extends PrimitiveObjectMap,
           K extends Keys[],
@@ -400,7 +400,7 @@ export const objects = castFn<object>()({
           ...keys: K
         ) => DeepOmit<T, K[number]>,
         {
-          by: castFnBasic(
+          by: expandFn(
             partialCall(_omitDeep, 'element') as <
               T extends PrimitiveObjectMap,
               K extends Keys[],
@@ -435,7 +435,7 @@ export const objects = castFn<object>()({
 
   freeze: _readonly,
 
-  required: castFnBasic(require, {
+  required: expandFn(require, {
     strict: <T extends object, K extends AllowedNamesLow<T, undefined>>(
       object: T,
       requires: Pick<T, K>,
@@ -449,7 +449,7 @@ export const objects = castFn<object>()({
       requires: Pick<T, K>,
     ) => require(object, requires),
 
-    is: castFnBasic(
+    is: expandFn(
       <T extends object>(object: T): object is Required<T> => {
         const values = Object.values(object);
         return values.every(
@@ -462,13 +462,13 @@ export const objects = castFn<object>()({
     ),
   }),
 
-  pick: castFnBasic(
+  pick: expandFn(
     partialCall(_pick, 'key') as <T extends object, K extends any[]>(
       object: T,
       ...keys: K
     ) => Pick<T, K[number]>,
     {
-      deep: castFnBasic(partialCall(_pickDeep, 'key'), {
+      deep: expandFn(partialCall(_pickDeep, 'key'), {
         by: partialCall(_pickDeep, 'element'),
       }),
 

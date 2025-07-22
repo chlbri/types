@@ -1,6 +1,6 @@
 import type { PrimitiveObject } from '../types/commons.types';
 import { transform } from './functions';
-import type { ObjectS } from './types.types';
+import type { Custom, ObjectS } from './types.types';
 
 // Test des types primitifs
 const stringSchema = 'string' as const;
@@ -182,3 +182,92 @@ expectTypeOf(
   readonly config: {};
   readonly data: PrimitiveObject;
 }>();
+
+// Tests pour transform.tuple
+// transform.tuple retourne un tableau transformé
+expectTypeOf(transform.tuple('string', 'number', 'boolean')).toEqualTypeOf<
+  (string | number | boolean)[]
+>();
+
+expectTypeOf(
+  transform.tuple({ name: 'string', age: 'number' }, 'boolean', {
+    test: 'number',
+  }),
+).toEqualTypeOf<
+  ({ name: string; age: number } | boolean | { test: number })[]
+>();
+
+expectTypeOf(transform.tuple('string')).toEqualTypeOf<string[]>();
+
+expectTypeOf(
+  transform.tuple({ nested: { value: 'string' } }, ['string']),
+).toEqualTypeOf<({ nested: { value: string } } | string[])[]>();
+
+// Tests additionnels pour transform.tuple avec des tableaux
+expectTypeOf(
+  transform.tuple(['string'], ['number'], { items: ['boolean'] }),
+).toEqualTypeOf<(string[] | number[] | { items: boolean[] })[]>();
+
+// Tests additionnels pour transform.tuple avec des primitifs
+expectTypeOf(transform.tuple('string', 'number', 'boolean')).toEqualTypeOf<
+  (string | number | boolean)[]
+>();
+
+// Tests pour transform.union
+// transform.union retourne un objet Custom avec le type union
+
+expectTypeOf(transform.union('string', 'number')).toEqualTypeOf<
+  Custom<string | number>
+>();
+
+expectTypeOf(
+  transform.union({ name: 'string' }, { age: 'number' }, 'boolean'),
+).toEqualTypeOf<Custom<{ name: string } | { age: number } | boolean>>();
+
+expectTypeOf(transform.union('string')).toEqualTypeOf<Custom<string>>();
+
+expectTypeOf(
+  transform.union({ user: { name: 'string' } }, ['string'], 'date'),
+).toEqualTypeOf<Custom<{ user: { name: string } } | string[] | Date>>();
+
+// Tests additionnels pour transform.union avec des tableaux
+expectTypeOf(
+  transform.union(['string'], ['number'], { items: ['boolean'] }),
+).toEqualTypeOf<Custom<string[] | number[] | { items: boolean[] }>>();
+
+// Tests additionnels pour transform.union avec des primitifs
+expectTypeOf(transform.union('string', 'number', 'boolean')).toEqualTypeOf<
+  Custom<string | number | boolean>
+>();
+
+// Tests pour transform.union avec types spéciaux
+expectTypeOf(
+  transform.union('object', 'primitive', 'date'),
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+).toEqualTypeOf<Custom<{} | PrimitiveObject | Date>>();
+
+// Tests pour transform.tuple avec cas mixtes primitifs/objets
+expectTypeOf(
+  transform.tuple('string', { name: 'string' }, 'date', ['number']),
+).toEqualTypeOf<(string | { name: string } | Date | number[])[]>();
+
+// Tests pour transform.tuple avec types complexes
+expectTypeOf(
+  transform.tuple(
+    {
+      metadata: { created: 'date', updated: 'string' },
+      data: { values: ['number'] },
+    },
+    'primitive',
+    { status: 'boolean' },
+  ),
+).toEqualTypeOf<
+  (
+    | {
+        metadata: { created: Date; updated: string };
+        data: { values: number[] };
+      }
+    | PrimitiveObject
+    | { status: boolean }
+  )[]
+>();

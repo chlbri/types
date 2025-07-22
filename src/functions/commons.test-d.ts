@@ -8,49 +8,19 @@ import type {
   DeepRequired,
   Defaulted,
   Fn,
-  FnBasic,
   Neverify,
   NotReadonly,
   NotUndefined,
   Primitive,
   PrimitiveObject,
 } from '../types/types';
-import { _unknown, castFn, castFnBasic, commons } from './commons';
+import { _unknown, castFn, commons } from './commons';
 
 /**
  * Tests de types pour toutes les sous-fonctions de commons
  * Ces tests vérifient que les types sont correctement inférés et appliqués
  */
 describe('Commons Type Tests', () => {
-  describe('#T00 => castFnBasic types', () => {
-    it('#T00.01 => should properly type extended functions', () => {
-      const mainFn = (x: string) => x.toUpperCase();
-      const extensions = {
-        toLowerCase: (x: string) => x.toLowerCase(),
-        reverse: (x: string) => x.split('').reverse().join(''),
-      };
-
-      const result = castFnBasic(mainFn, extensions);
-
-      expectTypeOf(result).toEqualTypeOf<
-        FnBasic<typeof mainFn, typeof extensions>
-      >();
-      expectTypeOf(result).toExtend<{
-        (x: string): string;
-        toLowerCase: (x: string) => string;
-        reverse: (x: string) => string;
-      }>();
-    });
-
-    it('#T00.02 => should work without extensions', () => {
-      const mainFn = (x: number) => x * 2;
-      const result = castFnBasic(mainFn);
-
-      expectTypeOf(result).toEqualTypeOf<FnBasic<typeof mainFn, object>>();
-      expectTypeOf(result).toExtend<(x: number) => number>();
-    });
-  });
-
   describe('#T01 => castFn types', () => {
     it('#T01.01 => should return typed function with extensions', () => {
       const fn = castFn<string>()({

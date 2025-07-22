@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { expandFn } from '~utils';
 import { _unknown } from '../functions/commons';
 import type {
   Checker,
@@ -18,51 +19,17 @@ import type {
   NotReadonly,
 } from './objects.types';
 import { Neverify } from './objects.types';
-import type { Checker2, FnBasic } from './types';
-
-export const typeFnBasic = <
-  Main extends Fn,
-  const Tr extends object = object,
->(
-  main: Main,
-  extensions?: Tr,
-): FnBasic<Main, Tr> => {
-  const out: any = main;
-
-  if (extensions) {
-    Object.assign(out, extensions);
-  }
-
-  return out;
-};
-
-type FnReturn<T = any, Tr extends object = object> = FnBasic<
-  (_?: T) => T,
-  {
-    forceCast(_?: unknown): T;
-    type: T;
-    dynamic<U extends T>(_?: U): U;
-    is<U>(_?: U): U extends T ? true : false;
-  } & Tr
->;
+import type { Checker2 } from './types';
 
 export const typeFn = <T = any>() => {
-  const _out = <Tr extends object = object>(
-    extensions?: Tr,
-  ): FnReturn<T, Tr> => {
-    const out: any = (_?: T) => _unknown<T>();
-
-    out.forceCast = (_?: unknown) => _unknown<T>();
-
-    out.type = _unknown<T>();
-
-    out.dynamic = <U extends T>(_?: U) => _unknown<U>();
-
-    out.is = <U>(_?: U) => _unknown<U extends T ? true : false>();
-
-    if (extensions) {
-      Object.assign(out, extensions);
-    }
+  const _out = <Tr extends object = object>(extensions?: Tr) => {
+    const out = expandFn((_?: T) => _unknown<T>(), {
+      ...(extensions as Tr),
+      forceCast: (_?: unknown) => _unknown<T>(),
+      dynamic: <U extends T>(_?: U) => _unknown<U>(),
+      is: <U>(_?: U) => _unknown<U extends T ? true : false>(),
+      type: _unknown<T>(),
+    });
 
     return out;
   };
@@ -70,13 +37,10 @@ export const typeFn = <T = any>() => {
   return _out;
 };
 
-export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
-  partial: typeFnBasic(
-    <T extends object>(_?: T) => _unknown<Partial<T>>(),
-    {
-      deep: <T extends object>(_?: T) => _unknown<DeepPartial<T>>(),
-    },
-  ),
+export const commons = expandFn(<T>(_?: unknown) => _unknown<T>(), {
+  partial: expandFn(<T extends object>(_?: T) => _unknown<Partial<T>>(), {
+    deep: <T extends object>(_?: T) => _unknown<DeepPartial<T>>(),
+  }),
 
   const: <const T extends object>(_?: T) => _unknown<T>(),
 
@@ -96,20 +60,20 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
 
   neverify: <T>(_?: T) => _unknown<Neverify<T>>(),
 
-  required: typeFnBasic(
+  required: expandFn(
     <T extends object>(_?: T) => _unknown<Required<T>>(),
     {
       deep: <T extends object>(_?: T) => _unknown<DeepRequired<T>>(),
     },
   ),
 
-  readonly: typeFnBasic(
+  readonly: expandFn(
     <T extends object>(_?: T) => _unknown<Required<T>>(),
     {
-      deep: typeFnBasic(
+      deep: expandFn(
         <T extends object>(_?: T) => _unknown<DeepReadonly<T>>(),
         {
-          not: typeFnBasic(
+          not: expandFn(
             <T extends object>(_?: T) => _unknown<DeepNotReadonly<T>>(),
             {
               is: <T extends object>(_?: T) =>
@@ -122,7 +86,7 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
         },
       ),
 
-      not: typeFnBasic(
+      not: expandFn(
         <T extends object>(_?: T) => _unknown<NotReadonly<T>>(),
         {
           is: <T extends object>(_?: T) =>
@@ -143,7 +107,7 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
 
   date: typeFn<Date>()(),
 
-  function: typeFnBasic(
+  function: expandFn(
     <T extends any[], R = any>(..._: [...T, R]) => _unknown<Fn<T, R>>(),
     {
       forceCast: <T extends any[], R = any>(_: unknown) =>
@@ -159,20 +123,17 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
         _unknown<Fn<T, R>>(),
 
       checker: typeFn<Checker>()({
-        byType: typeFnBasic(
-          <T>(_?: Checker2<T>) => _unknown<Checker2<T>>(),
-          {
-            forceCast: <T>(_?: Fn<[unknown], boolean>) =>
-              _unknown<Checker2<T>>(),
-          },
-        ),
+        byType: expandFn(<T>(_?: Checker2<T>) => _unknown<Checker2<T>>(), {
+          forceCast: <T>(_?: Fn<[unknown], boolean>) =>
+            _unknown<Checker2<T>>(),
+        }),
       }),
     },
   ),
 
   undefiny: <T>(_?: T) => _unknown<T | undefined>(),
 
-  extract: typeFnBasic(
+  extract: expandFn(
     <T, U extends any[]>(_?: T, ...__: U) =>
       _unknown<Extract<T, U[number]>>(),
     {
@@ -181,7 +142,7 @@ export const commons = typeFnBasic(<T>(_?: unknown) => _unknown<T>(), {
     },
   ),
 
-  exclude: typeFnBasic(
+  exclude: expandFn(
     <T, U extends any[]>(_?: T, ...__: U) =>
       _unknown<Exclude<T, U[number]>>(),
     {

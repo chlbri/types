@@ -1,3 +1,4 @@
+import { expandFn } from '~utils';
 import type {
   AnyArray,
   Checker,
@@ -12,7 +13,7 @@ import type {
   UnionToTuple,
 } from '../types/types';
 
-import { _unknown, castFnBasic } from './commons';
+import { _unknown } from './commons';
 
 // #region Helpers
 
@@ -25,7 +26,7 @@ const _tupleOf = <const T extends RuA>(...args: T) => {
 
 //<T>(...values: T[]) => values
 
-export const arrays = castFnBasic(<T>(...values: T[]) => values, {
+export const arrays = expandFn(<T>(...values: T[]) => values, {
   low: <T extends unknown[]>(...values: T) => values,
 
   is: <T>(value: unknown): value is Array<T> => {
@@ -42,8 +43,8 @@ export const arrays = castFnBasic(<T>(...values: T[]) => values, {
     return _unknown<T['length']>(out);
   },
 
-  tupleOf: castFnBasic(_tupleOf, {
-    number: castFnBasic(
+  tupleOf: expandFn(_tupleOf, {
+    number: expandFn(
       <const T, N extends number>(data: T, times: N) => {
         const out = Array.from({ length: times }, () => data);
         return _unknown<TupleOf<T, N>>(out);

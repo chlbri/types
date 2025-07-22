@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   CUSTOM,
   PARTIAL,
@@ -64,9 +65,9 @@ transform.const = <const T extends ObjectS>(object?: T) => {
   return _transform<TransformO<T>>(object);
 };
 
-transform.custom = <T = any>(object?: T): Custom<T> => {
+transform.custom = <T = any>(_?: T): Custom<T> => {
   const out: any = {};
-  out[CUSTOM] = object;
+  out[CUSTOM] = undefined;
   return out;
 };
 
@@ -82,3 +83,8 @@ transform.partial = <T extends ObjectS>(value: T): T & PartialCustom => {
 
   return out;
 };
+
+transform.tuple = <T extends ObjectS[]>(...els: T) => transform(els);
+
+transform.union = <T extends ObjectS[]>(..._: T) =>
+  transform.custom<TransformO<T[number]>>();

@@ -1,37 +1,6 @@
-import { _unknown, castFn, castFnBasic, commons } from './commons';
+import { _unknown, castFn, commons } from './commons';
 
 describe('Castings common', () => {
-  describe('#00 => castFnBasic', () => {
-    it('#00.01 => should create a function with main functionality', () => {
-      const mainFn = (x: string) => x.toUpperCase();
-      const result = castFnBasic(mainFn);
-
-      expect(typeof result).toBe('function');
-      expect(result('test')).toBe('TEST');
-    });
-
-    it('#00.02 => should extend function with additional properties', () => {
-      const mainFn = (x: string) => x.toUpperCase();
-      const extensions = {
-        toLowerCase: (x: string) => x.toLowerCase(),
-        reverse: (x: string) => x.split('').reverse().join(''),
-      };
-
-      const result = castFnBasic(mainFn, extensions);
-
-      expect(result('TEST')).toBe('TEST');
-      expect(result.toLowerCase('TEST')).toBe('test');
-      expect(result.reverse('TEST')).toBe('TSET');
-    });
-
-    it('#00.03 => should work without extensions', () => {
-      const mainFn = (x: number) => x * 2;
-      const result = castFnBasic(mainFn);
-
-      expect(result(5)).toBe(10);
-    });
-  });
-
   describe('#01 => should have typeFn', () => {
     const fn = castFn()();
 
