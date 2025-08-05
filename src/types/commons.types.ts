@@ -72,18 +72,18 @@ export type Defaulted<T, U extends NonN<T>> = T extends
 
 export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
 
-type _UnionToIntersection<U> = boolean extends U
+export type _UnionToIntersection1<U> = boolean extends U
   ? U
   : (U extends any ? (k: U) => void : never) extends (k: infer I) => void
     ? I
     : never;
 
-type _UnionToIntersection2<U> = {
+export type _UnionToIntersection2<U> = {
   [K in UnionKeys<U>]: U extends Record<K, infer T> ? T : never;
 };
 
 export type UnionToIntersection<U> = _UnionToIntersection2<
-  _UnionToIntersection<U>
+  _UnionToIntersection1<U>
 >;
 
 export type UnionOmit<T, K extends Keys> = T extends any
