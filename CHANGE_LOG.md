@@ -9,6 +9,20 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+### **[0.4.0] --> 2025/08/05** => _10:20_
+
+</summary>
+
+- tests(js): 100% coverage
+- tests(ts): 100% coverage
+- Upgrade deps
+- Refinement of types
+- Refinement of functions
+
+</details>
+
+<br/>
+
 ### **[0.3.1] --> 2025/07/22** => _20:50_
 
 </summary>

@@ -1,6 +1,7 @@
 import { DIGITS } from '~constants';
+import { castFn } from '~utils';
 import type { Digit } from '../types/types';
-import { castFn, commons } from './commons';
+import { commons } from './commons';
 import { eq } from './utils';
 
 export const numbers = castFn<number>()({

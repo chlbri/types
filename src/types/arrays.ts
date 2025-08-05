@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { expandFn } from '~utils';
-import { _unknown } from '../functions/commons';
+import { _unknown, expandFn } from '~utils';
 import type {
   AnyArray,
   ExcludeArray,

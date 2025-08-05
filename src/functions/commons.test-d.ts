@@ -1,4 +1,5 @@
 import { expectTypeOf } from 'vitest';
+import { _unknown, castFn } from '~utils';
 import type {
   Checker,
   Checker2,
@@ -14,7 +15,7 @@ import type {
   Primitive,
   PrimitiveObject,
 } from '../types/types';
-import { _unknown, castFn, commons } from './commons';
+import { commons } from './commons';
 
 /**
  * Tests de types pour toutes les sous-fonctions de commons

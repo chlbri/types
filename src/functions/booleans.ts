@@ -1,4 +1,5 @@
-import { castFn, commons } from './commons';
+import { castFn } from '~utils';
+import { commons } from './commons';
 
 export const booleans = castFn<boolean>()({
   is: (data: unknown) => typeof data === 'boolean',

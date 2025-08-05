@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { expandFn } from '~utils';
-import { _unknown } from '../functions/commons';
-import { typeFn } from './commons';
+import { _unknown, expandFn, typeFn } from '~utils';
 import type {
   Equals,
   Keys,

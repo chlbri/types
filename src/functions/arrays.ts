@@ -1,4 +1,4 @@
-import { expandFn } from '~utils';
+import { _unknown, expandFn } from '~utils';
 import type {
   AnyArray,
   Checker,
@@ -12,19 +12,6 @@ import type {
   TupleOf,
   UnionToTuple,
 } from '../types/types';
-
-import { _unknown } from './commons';
-
-// #region Helpers
-
-const _tupleOf = <const T extends RuA>(...args: T) => {
-  const out = args;
-  return _unknown<T>(out);
-};
-
-// #endregion
-
-//<T>(...values: T[]) => values
 
 export const arrays = expandFn(<T>(...values: T[]) => values, {
   low: <T extends unknown[]>(...values: T) => values,
@@ -43,37 +30,43 @@ export const arrays = expandFn(<T>(...values: T[]) => values, {
     return _unknown<T['length']>(out);
   },
 
-  tupleOf: expandFn(_tupleOf, {
-    number: expandFn(
-      <const T, N extends number>(data: T, times: N) => {
-        const out = Array.from({ length: times }, () => data);
-        return _unknown<TupleOf<T, N>>(out);
-      },
-      {
-        is: <T>(fn: Checker2<T>) => {
-          const _out = <L extends number>(
-            value: unknown,
-            length: L,
-          ): value is TupleOf<T, L> => {
-            const isArray = Array.isArray(value);
-            const out =
-              isArray && value.length === length && value.every(fn);
-            return out;
-          };
-
-          return _out;
-        },
-      },
-    ),
-
-    is: <const T>(fn: Checker<T>) => {
-      const _out = (value: unknown): value is Array<T> => {
-        return Array.isArray(value) && value.every(fn);
-      };
-
-      return _out;
+  tupleOf: expandFn(
+    <const T extends RuA>(...args: T) => {
+      const out = args;
+      return _unknown<T>(out);
     },
-  }),
+    {
+      number: expandFn(
+        <const T, N extends number>(data: T, times: N) => {
+          const out = Array.from({ length: times }, () => data);
+          return _unknown<TupleOf<T, N>>(out);
+        },
+        {
+          is: <T>(fn: Checker2<T>) => {
+            const _out = <L extends number>(
+              value: unknown,
+              length: L,
+            ): value is TupleOf<T, L> => {
+              const isArray = Array.isArray(value);
+              const out =
+                isArray && value.length === length && value.every(fn);
+              return out;
+            };
+
+            return _out;
+          },
+        },
+      ),
+
+      is: <const T>(fn: Checker<T>) => {
+        const _out = (value: unknown): value is Array<T> => {
+          return Array.isArray(value) && value.every(fn);
+        };
+
+        return _out;
+      },
+    },
+  ),
 
   reduce: <T>(value: T | readonly [T] | [T]) => {
     const out = Array.isArray(value) ? value[0] : value;
@@ -93,7 +86,7 @@ export const arrays = expandFn(<T>(...values: T[]) => values, {
   },
 
   freeze: <const T extends any[]>(...args: T) =>
-    Object.freeze(_tupleOf(...args)),
+    Object.freeze(arrays.tupleOf(...args)),
 
   extract: <const T extends any[], const Ex extends T[number][]>(
     array: T,

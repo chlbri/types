@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { commons, typeFn } from './commons';
+import { typeFn } from '~utils';
+import { commons } from './commons';
 
 describe('common type functions', () => {
   describe('#01 => typeFn', () => {

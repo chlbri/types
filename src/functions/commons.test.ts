@@ -1,4 +1,5 @@
-import { _unknown, castFn, commons } from './commons';
+import { _unknown, castFn } from '~utils';
+import { commons } from './commons';
 
 describe('Castings common', () => {
   describe('#01 => should have typeFn', () => {

@@ -1,4 +1,4 @@
-import { expandFn } from '~utils';
+import { _unknown, castFn, expandFn } from '~utils';
 import { ENGLISH_LETTERS } from '../constants/strings';
 import type {
   AddString,
@@ -8,41 +8,6 @@ import type {
   SplitStringBy,
   UpperLetters,
 } from '../types/types';
-import { _unknown, castFn } from './commons';
-
-/**
- *
- * @param value To test
- * @returns A boolean to specify if value is English letters
- *
- * N.B: This function is  case insensitive
- */
-const isEnglishLetters = (value: string): value is Letters => {
-  if (value.length === 0) return false;
-
-  // Check if all characters are English letters
-  for (const char of value.toLowerCase()) {
-    if (!ENGLISH_LETTERS.includes(char as any)) {
-      return false;
-    }
-  }
-  return true;
-};
-
-const _contains = <U extends string[]>(
-  value: unknown,
-  ...segment: U
-): value is `${string}${U[number]}${string}` => {
-  if (typeof value !== 'string') return false;
-
-  // Check if the string contains any of the segments
-  for (const seg of segment) {
-    if (value.includes(seg)) {
-      return true;
-    }
-  }
-  return false;
-};
 
 export const strings = castFn<string>()({
   is: expandFn(
@@ -78,9 +43,26 @@ export const strings = castFn<string>()({
     return typeof value === 'string' && value.endsWith(suffix);
   },
 
-  includes: _contains,
+  includes: <U extends string[]>(
+    value: unknown,
+    ...segments: U
+  ): value is `${string}${U[number]}${string}` => {
+    if (typeof value !== 'string') return false;
 
-  contains: _contains,
+    // Check if the string contains any of the segments
+    for (const seg of segments) {
+      if (value.includes(seg)) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  contains: <U extends string[]>(
+    value: unknown,
+    ...segments: U
+  ): value is `${string}${U[number]}${string}` =>
+    strings.includes(value, ...segments),
 
   toLowerCase: <T extends string>(value: T) => {
     const out = value.toLowerCase();
@@ -94,14 +76,23 @@ export const strings = castFn<string>()({
 
   letters: castFn<Letters>()({
     is: (value: unknown): value is Letters => {
-      return typeof value === 'string' && isEnglishLetters(value);
+      if (typeof value !== 'string') return false;
+      if (value.length === 0) return false;
+
+      // Check if all characters are English letters
+      for (const char of value.toLowerCase()) {
+        if (!ENGLISH_LETTERS.includes(char as any)) {
+          return false;
+        }
+      }
+      return true;
     },
 
     lower: castFn<LowerLetters>()({
       is: (value: unknown): value is LowerLetters => {
         return (
           typeof value === 'string' &&
-          isEnglishLetters(value) &&
+          strings.letters.is(value) &&
           value === value.toLowerCase()
         );
       },
@@ -111,7 +102,7 @@ export const strings = castFn<string>()({
       is: (value: unknown): value is UpperLetters => {
         return (
           typeof value === 'string' &&
-          isEnglishLetters(value) &&
+          strings.letters.is(value) &&
           value === value.toUpperCase()
         );
       },

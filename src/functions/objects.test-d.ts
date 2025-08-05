@@ -145,14 +145,14 @@ describe('Objects Functions Type Tests', () => {
     it('#T09.01 => should make properties required', () => {
       const obj = { a: 1, b: 'test' };
       const requires = { c: true };
-      const result = objects.required(obj, requires);
+      const result = objects.require(obj, requires);
       expectTypeOf(result).toExtend<object>();
     });
 
     it('#T09.02 => should work with strict mode', () => {
       const obj = { a: 1, b: 'test' };
       const requires = { c: true };
-      const result = objects.required.strict(obj, requires);
+      const result = objects.require.strict(obj, requires);
       expectTypeOf(result).toExtend<object>();
     });
   });
@@ -259,7 +259,7 @@ describe('Objects Functions Type Tests', () => {
       expectTypeOf(objects.entries).toBeFunction();
       expectTypeOf(objects.pick).toBeFunction();
       expectTypeOf(objects.omit).toBeFunction();
-      expectTypeOf(objects.required).toBeFunction();
+      expectTypeOf(objects.require).toBeFunction();
       expectTypeOf(objects.readonly).toBeFunction();
       expectTypeOf(objects.freeze).toBeFunction();
     });

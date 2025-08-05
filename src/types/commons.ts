@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { expandFn } from '~utils';
-import { _unknown } from '../functions/commons';
+import { _unknown, expandFn, typeFn } from '~utils';
 import type {
   Checker,
   Defaulted,
@@ -20,22 +19,6 @@ import type {
 } from './objects.types';
 import { Neverify } from './objects.types';
 import type { Checker2 } from './types';
-
-export const typeFn = <T = any>() => {
-  const _out = <Tr extends object = object>(extensions?: Tr) => {
-    const out = expandFn((_?: T) => _unknown<T>(), {
-      ...(extensions as Tr),
-      forceCast: (_?: unknown) => _unknown<T>(),
-      dynamic: <U extends T>(_?: U) => _unknown<U>(),
-      is: <U>(_?: U) => _unknown<U extends T ? true : false>(),
-      type: _unknown<T>(),
-    });
-
-    return out;
-  };
-
-  return _out;
-};
 
 export const commons = expandFn(<T>(_?: unknown) => _unknown<T>(), {
   partial: expandFn(<T extends object>(_?: T) => _unknown<Partial<T>>(), {

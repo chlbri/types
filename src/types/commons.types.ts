@@ -22,7 +22,7 @@ type _PrimitiveObject = Primitive | PrimitiveObjectMap;
  *
  * @remark
  */
-export type PrimitiveObject = _PrimitiveObject;
+export type PrimitiveObject = SoRa<_PrimitiveObject>;
 
 export type NExtract<T, U extends T> = Extract<T, U>;
 export type NExclude<T, U extends T> = Exclude<T, U>;
@@ -72,15 +72,19 @@ export type Defaulted<T, U extends NonN<T>> = T extends
 
 export type UnionKeys<U> = U extends Record<infer K, any> ? K : never;
 
-export type UnionToIntersection<U extends object> = {
+type _UnionToIntersection<U> = boolean extends U
+  ? U
+  : (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+    ? I
+    : never;
+
+type _UnionToIntersection2<U> = {
   [K in UnionKeys<U>]: U extends Record<K, infer T> ? T : never;
 };
 
-export type UnionToIntersection2<U> = (
-  U extends any ? (k: U) => void : never
-) extends (k: infer I) => void
-  ? I
-  : never;
+export type UnionToIntersection<U> = _UnionToIntersection2<
+  _UnionToIntersection<U>
+>;
 
 export type UnionOmit<T, K extends Keys> = T extends any
   ? Omit<T, K>

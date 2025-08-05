@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { transform } from './functions';
 
-//TODO each test for one action in all tests files
-
 describe('#01 => transform function', () => {
   describe('#01.01 => primitive string schemas', () => {
     it('#01.01.01 => should handle string schema', () => {

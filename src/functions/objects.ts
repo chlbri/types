@@ -1,4 +1,10 @@
-import { expandFn, partialCall } from '~utils';
+import {
+  _unknown,
+  castFn,
+  expandFn,
+  isPlainObject,
+  partialCall,
+} from '~utils';
 import type {
   AllowedNamesLow,
   DeepNotReadonly,
@@ -17,23 +23,11 @@ import type {
   SubType,
   To,
 } from '../types/types';
-import { _unknown, castFn, commons } from './commons';
+import { commons } from './commons';
 
 // #region Helpers
 
 type Picker = 'element' | 'key';
-
-function isPlainObject(value: any): value is object {
-  return (
-    Object.prototype.toString.call(value) == '[object Object]' &&
-    value.constructor &&
-    value.constructor.name == 'Object'
-  );
-}
-
-const require = <T extends object>(object: T, requires: object) => {
-  return Object.assign(object, requires);
-};
 
 const _isRequiredDeep = (object: any): object is DeepRequired<any> => {
   const isObject = isPlainObject(object);
@@ -435,32 +429,37 @@ export const objects = castFn<object>()({
 
   freeze: _readonly,
 
-  required: expandFn(require, {
-    strict: <T extends object, K extends AllowedNamesLow<T, undefined>>(
-      object: T,
-      requires: Pick<T, K>,
-    ) => require(object, requires),
+  require: expandFn(
+    <T extends object>(object: T, requires: object) => {
+      return Object.assign(object, requires);
+    },
+    {
+      strict: <T extends object, K extends AllowedNamesLow<T, undefined>>(
+        object: T,
+        requires: Pick<T, K>,
+      ) => objects.require(object, requires),
 
-    const: <
-      const T extends object,
-      K extends AllowedNamesLow<T, undefined>,
-    >(
-      object: T,
-      requires: Pick<T, K>,
-    ) => require(object, requires),
+      const: <
+        const T extends object,
+        K extends AllowedNamesLow<T, undefined>,
+      >(
+        object: T,
+        requires: Pick<T, K>,
+      ) => objects.require(object, requires),
 
-    is: expandFn(
-      <T extends object>(object: T): object is Required<T> => {
-        const values = Object.values(object);
-        return values.every(
-          value => value !== undefined && value !== null,
-        );
-      },
-      {
-        deep: _isRequiredDeep,
-      },
-    ),
-  }),
+      is: expandFn(
+        <T extends object>(object: T): object is Required<T> => {
+          const values = Object.values(object);
+          return values.every(
+            value => value !== undefined && value !== null,
+          );
+        },
+        {
+          deep: _isRequiredDeep,
+        },
+      ),
+    },
+  ),
 
   pick: expandFn(
     partialCall(_pick, 'key') as <T extends object, K extends any[]>(

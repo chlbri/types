@@ -1,4 +1,4 @@
-import { expandFn, isPlainObject } from '~utils';
+import { _unknown, castFn, expandFn, isPlainObject } from '~utils';
 import type {
   Checker,
   DeepNotReadonly,
@@ -16,22 +16,6 @@ import type {
 } from '../types/types';
 import { Checker2 } from './../types/commons.types';
 import deepClone from './deepclone';
-
-export const castFn = <T>() => {
-  const _out = <const Tr extends object = object>(extensions?: Tr) => {
-    const out = expandFn((arg: T) => arg, {
-      ...(extensions as Tr),
-      forceCast: (arg: unknown) => {
-        return _unknown<T>(arg);
-      },
-      dynamic: <U extends T>(arg: U) => {
-        return arg;
-      },
-    });
-    return out;
-  };
-  return _out;
-};
 
 // #region Helpers
 
@@ -85,8 +69,6 @@ const _function = <T extends any[], R = any>(..._: [...T, R]) =>
   _identity<Fn<T, R>>;
 
 // #endregion
-
-export const _unknown = <T>(value?: unknown) => value as T;
 
 export const commons = expandFn(<T>(value: unknown) => value as T, {
   partial: expandFn(_partial, {
