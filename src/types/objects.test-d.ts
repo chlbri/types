@@ -1,6 +1,7 @@
 import { expectTypeOf } from 'vitest';
 import type { KeyTypes } from './commons.types';
 import { objects } from './objects';
+import type { DeepRequiredLow, RequiredLow } from './objects.types';
 
 /**
  * Tests de types pour toutes les sous-fonctions de objects (types)
@@ -277,4 +278,104 @@ describe('Objects Types Type Tests', () => {
       expectTypeOf(objects.omit).toBeFunction();
     });
   });
+});
+
+describe('Types', () => {
+  type _RL1 = {
+    a: string;
+    b: number;
+    data?: {
+      name: string;
+      age?: number;
+    };
+  };
+
+  type RL1 = RequiredLow<_RL1>;
+
+  expectTypeOf<keyof RL1>().toEqualTypeOf<
+    'a' | 'b' | 'data' | undefined
+  >();
+
+  expectTypeOf<RL1>().toEqualTypeOf<{
+    a: string;
+    b: number;
+    data:
+      | {
+          name: string;
+          age?: number;
+        }
+      | undefined;
+  }>();
+
+  type DRL1 = DeepRequiredLow<_RL1>;
+
+  expectTypeOf<keyof DRL1>().toEqualTypeOf<
+    'a' | 'b' | 'data' | undefined
+  >();
+
+  expectTypeOf<DRL1>().toEqualTypeOf<{
+    data: {
+      age: number | undefined;
+      name: string;
+    };
+    a: string;
+    b: number;
+  }>();
+
+  //_RL2 a type with deep nested optional object, deeper for 4 levels
+  type _RL2 = {
+    a: string;
+    b: number;
+    data?: {
+      name: string;
+      age?: number;
+      address?: {
+        street?: string;
+        city: string;
+        zip?: string;
+      };
+    };
+  };
+
+  type RL2 = RequiredLow<_RL2>;
+
+  expectTypeOf<keyof RL2>().toEqualTypeOf<
+    'a' | 'b' | 'data' | undefined
+  >();
+
+  expectTypeOf<RL2>().toEqualTypeOf<{
+    data:
+      | {
+          name: string;
+          age?: number;
+          address?: {
+            street?: string;
+            city: string;
+            zip?: string;
+          };
+        }
+      | undefined;
+    a: string;
+    b: number;
+  }>();
+
+  type DRL2 = DeepRequiredLow<_RL2>;
+
+  expectTypeOf<keyof DRL2>().toEqualTypeOf<
+    'a' | 'b' | 'data' | undefined
+  >();
+
+  expectTypeOf<DRL2>().toEqualTypeOf<{
+    data: {
+      age: number | undefined;
+      address: {
+        street: string | undefined;
+        city: string;
+        zip: string | undefined;
+      };
+      name: string;
+    };
+    a: string;
+    b: number;
+  }>();
 });

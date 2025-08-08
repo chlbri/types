@@ -104,8 +104,44 @@ export type ObjectValuesOf<T> = Exclude<
   Array<any>
 >;
 
+export type ExpressO<T extends object> = {
+  [K in keyof T]: T[K];
+};
+
+export type DeepExpressO<T extends object> =
+  ExpressO<T> extends infer P1
+    ? {
+        [K in keyof P1]: P1[K] extends object
+          ? DeepExpressO<P1[K]>
+          : P1[K];
+      }
+    : never;
+
+type _RequiredLow<T extends object> =
+  Required<SubTypeLow<T, undefined>> extends infer P
+    ? {
+        [K in keyof P]: P[K] | undefined;
+      } & NotSubTypeLow<T, undefined>
+    : never;
+
+export type RequiredLow<T extends object> = ExpressO<_RequiredLow<T>>;
+
+export type DeepRequiredLow<T extends object> =
+  RequiredLow<T> extends infer P1
+    ? {
+        [K1 in keyof P1]: Exclude<
+          P1[K1],
+          undefined
+        > extends infer P2 extends object
+          ? DeepRequiredLow<P2>
+          : P1[K1];
+      }
+    : never;
+
 export type Require<T, K extends keyof T> = NOmit<T, K> &
   Required<Pick<T, K>>;
+
+export type RequiredBy<T, U> = Required<PickBy<T, U>> & PickNotBy<T, U>;
 
 export type Prop<T, K> = K extends keyof T ? T[K] : never;
 

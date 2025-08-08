@@ -9,6 +9,21 @@ All notable changes to this project will be documented in this file.
 <details>
 <summary>
 
+### **[0.4.2] --> 2025/08/05** => _10:20_
+
+</summary>
+
+- tests: **100%** _coverage_
+- Upgrade deps
+- Add type DeepRequiredLow, RequiredLow
+
+</details>
+
+<br/>
+
+<details>
+<summary>
+
 ### **[0.4.0] --> 2025/08/05** => _10:20_
 
 </summary>
